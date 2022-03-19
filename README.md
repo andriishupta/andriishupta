@@ -9,11 +9,11 @@
 
 - 👯 I’m looking to collaborate on **web3-related projects**
 
-- 📝 I occasionally write articles on [andriishupta.dev](andriishupta.dev)
+- 📝 I occasionally write articles on [andriishupta.dev](https://andriishupta.dev)
 
 - 💬 Ask me about **anything related to web apps development**
 
-- 📄 Know about my experiences [bit.ly/andrii_shupta_cv](bit.ly/andrii_shupta_cv)
+- 📄 Know about my [experiences](https://bit.ly/andrii_shupta_cv)
 
 <h3 align="left">Connect with me:</h3>
 <p align="left">
