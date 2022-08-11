@@ -13,7 +13,7 @@
 
 - 💬 Ask me about **anything related to web apps development**
 
-- 📄 Know about my [experiences](https://bit.ly/andrii_shupta_cv)
+- 📄 Know about my [experiences](https://bit.ly/andriishupta_cv)
 
 <h3 align="left">Connect with me:</h3>
 <p align="left">
