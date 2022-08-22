@@ -5,7 +5,7 @@
 
 - 🔭 I’m currently working as a contractor for a Ukrainian outsourcing company **on project related to digital assets**
 
-- 🌱 I’m learning **web3 ecosystem, Solidity and Rust(for Solana)**
+- 🌱 I’m learning **web3**
 
 - 👯 I’m looking to collaborate on **web3-related projects**
 
