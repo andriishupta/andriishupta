@@ -1,5 +1,5 @@
 <h1 align="center">Hi 👋, I'm Andrii</h1>
-<h3 align="center">A full-stack developer from Ukraine interested in web3</h3>
+<h3 align="center">A Lead Full Stack Developer from Ukraine interested in web3</h3>
 
 <p align="left"> <img src="https://komarev.com/ghpvc/?username=andriishupta&label=Profile%20views&color=0e75b6&style=flat" alt="andriishupta" /> </p>
 
