@@ -13,8 +13,6 @@
 
 - 💬 Ask me about **anything related to web apps development**
 
-- 📄 Know about my [experiences](https://bit.ly/andriishupta_cv)
-
 - 🌳 My [links](https://linktr.ee/andriishupta)
 
 <h3 align="left">Connect with me:</h3>
