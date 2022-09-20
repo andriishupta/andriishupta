@@ -1,0 +1,25 @@
+---
+const currentYear = new Date().getFullYear();
+---
+
+<footer>
+	&copy; {currentYear} Andrii Shupta
+	<small class="byline">🚀 Built with Astro</small>
+</footer>
+<style>
+	footer {
+		text-align: center;
+		padding-top: 1rem;
+		padding-right: 2rem;
+		padding-bottom: 1rem;
+		padding-left: 2rem;
+	}
+
+	.byline {
+		display: block;
+		margin-top: 1rem;
+		color: var(--t-subdue);
+		font-size: var(--f-d2);
+		text-transform: uppercase;
+	}
+</style>
