@@ -9,7 +9,7 @@
 
 - 👯 I’m looking to collaborate on **web3-related projects**
 
-- 📝 I occasionally write articles on [andriishupta.dev](https://andriishupta.dev)
+- 📝 I occasionally write articles on [blog.andriishupta.dev](https://blog.andriishupta.dev)
 
 - 💬 Ask me about **anything related to web apps development**
 
