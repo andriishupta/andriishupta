@@ -3,12 +3,6 @@
 
 <p align="left"> <img src="https://komarev.com/ghpvc/?username=andriishupta&label=Profile%20views&color=0e75b6&style=flat" alt="andriishupta" /> </p>
 
-- 🔭 I’m currently working as a contractor for a Ukrainian outsourcing company **on project related to digital assets**
-
-- 🌱 I’m learning **web3**
-
-- 👯 I’m looking to collaborate on **web3-related projects**
-
 - 📝 I occasionally write articles on [blog.andriishupta.dev](https://blog.andriishupta.dev)
 
 - 💬 Ask me about **anything related to web apps development**
