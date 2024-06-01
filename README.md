@@ -1,36 +1,7 @@
-<h1 align="center">Hi 👋, I'm Andrii</h1>
-<h3 align="center">A Lead Full Stack Developer from Ukraine 🇺🇦</h3>
-<h3 align="center"><a href="https://andriishupta.dev">andriishupta.dev</a></h3>
+I efficiently build fast, reliable software applications relying on my 8 years of experience as a full-stack web developer. TypeScript, React, Next.js, Supabase, Node.js, NestJS, Tailwind.
 
-<p align="left"> <img src="https://komarev.com/ghpvc/?username=andriishupta&label=Profile%20views&color=0e75b6&style=flat" alt="andriishupta" /> </p>
+I have worked for startups building early MVP products from scratch as well as maintaining legacy features in enterprise software.
 
-- 📝 I occasionally write articles on [blog.andriishupta.dev](https://blog.andriishupta.dev)
+I'm quick to adapt to any technology stack.
 
-- 💬 Ask me about **anything related to web apps development**
-
-- 🌳 My [links](https://linktr.ee/andriishupta)
-
-<h3 align="left">Connect with me:</h3>
-<p align="left">
-<a href="https://twitter.com/andriishupta" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/twitter.svg" alt="andriishupta" height="30" width="40" /></a>
-<a href="https://linkedin.com/in/andriishupta" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/linked-in-alt.svg" alt="andriishupta" height="30" width="40" /></a>
-<a href="https://stackoverflow.com/users/3474640" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/stack-overflow.svg" alt="3474640" height="30" width="40" /></a>
-<a href="https://hashnode.com/@andriishupta" target="blank"><img align="center" src="https://raw.githubusercontent.com/rahuldkjain/github-profile-readme-generator/master/src/images/icons/Social/hashnode.svg" alt="@andriishupta" height="30" width="40" /></a>
-</p>
-
-<h3 align="left">Main Languages and Tools:</h3>
-<p>
-<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/javascript/javascript-original.svg" alt="javascript" width="40" height="40"/></a>
-<a href="https://www.typescriptlang.org/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/typescript/typescript-original.svg" alt="typescript" width="40" height="40"/></a>
-<a href="https://reactjs.org/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/react/react-original-wordmark.svg" alt="react" width="40" height="40"/></a>
-<a href="https://nextjs.org/" target="_blank" rel="noreferrer"> <img src="https://cdn.worldvectorlogo.com/logos/nextjs-2.svg" alt="nextjs" width="40" height="40"/> </a>
-<a href="https://nodejs.org" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/nodejs/nodejs-original-wordmark.svg" alt="nodejs" width="40" height="40"/> </a>
-<a href="https://nestjs.com/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/nestjs/nestjs-original-wordmark.svg" alt="nestjs" width="40" height="40"/> </a>
-<a href="https://aws.amazon.com" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/amazonwebservices/amazonwebservices-original-wordmark.svg" alt="aws" width="40" height="40"/></a>
-<a href="https://vercel.com" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/vercel/vercel-original-wordmark.svg" alt="vercel" width="40" height="40"/></a>
-<a href="https://www.postgresql.org" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/postgresql/postgresql-original-wordmark.svg" alt="postgresql" width="40" height="40"/> </a>
-<a href="https://supabase.com" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/supabase/supabase-original-wordmark.svg" alt="supabase" width="40" height="40"/> </a>
-<a href="https://www.mongodb.com/" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/mongodb/mongodb-original-wordmark.svg" alt="mongodb" width="40" height="40"/></a>
-</p>
-
-<p>&nbsp;<img align="center" src="https://github-readme-stats.vercel.app/api?username=andriishupta&show_icons=true&locale=en" alt="andriishupta" /></p>
+I know Svelte, Angular, Astro, PostgreSQL, MongoDB, Firebase, Redis, Kafka, AWS and Vercel ecosystems, different headless CMS, chrome extension development, and more. I have experience with languages like Java, Kotlin, Python, and PHP. I hold a degree in Computer Science.
