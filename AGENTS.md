@@ -3,8 +3,6 @@
 ## Project Overview
 
 This repository contains the source for the personal website at `andriishupta.dev`.
-The project was migrated from Next.js to Astro, so current work should follow the
-Astro structure and ignore the deleted Next.js app files.
 
 ## Tech Stack
 
@@ -24,7 +22,6 @@ Astro structure and ignore the deleted Next.js app files.
 - `src/pages/` - Astro routes. `src/pages/index.astro` is the home page.
 - `src/layouts/` - shared page layouts.
 - `src/components/` - reusable Astro components.
-- `src/assets/` - source assets imported by Astro components.
 - `public/` - static files served from the site root, including favicons.
 - `astro.config.mjs` - Astro configuration.
 

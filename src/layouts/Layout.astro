@@ -6,12 +6,15 @@ import '../styles/global.css';
 interface Props {
 	title?: string;
 	description?: string;
+	pathname?: string;
 }
 
 const {
 	title = 'Andrii Shupta',
 	description = 'Personal website of Andrii Shupta, building reliable tools for AI, health systems, and distributed software.',
+	pathname = Astro.url.pathname,
 } = Astro.props;
+const siteUrl = new URL(pathname, 'https://andriishupta.dev');
 ---
 
 <!doctype html>
@@ -21,11 +24,14 @@ const {
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
+		<link rel="canonical" href={siteUrl} />
 		<meta name="description" content={description} />
 		<meta name="generator" content={Astro.generator} />
 		<meta property="og:title" content={title} />
 		<meta property="og:description" content={description} />
 		<meta property="og:type" content="website" />
+		<meta property="og:url" content={siteUrl} />
+		<meta property="og:site_name" content="Andrii Shupta" />
 		<meta name="twitter:card" content="summary" />
 		<meta name="twitter:title" content={title} />
 		<meta name="twitter:description" content={description} />
