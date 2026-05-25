@@ -1,3 +1,19 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import ThemeSelector from '../components/ThemeSelector.astro';
+import '../styles/global.css';
+
+interface Props {
+	title?: string;
+	description?: string;
+}
+
+const {
+	title = 'Andrii Shupta',
+	description = 'Personal website of Andrii Shupta, building reliable tools for AI, health systems, and distributed software.',
+} = Astro.props;
+---
+
 <!doctype html>
 <html lang="en">
 	<head>
@@ -5,19 +21,28 @@
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="icon" href="/favicon.ico" />
+		<meta name="description" content={description} />
 		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:type" content="website" />
+		<meta name="twitter:card" content="summary" />
+		<meta name="twitter:title" content={title} />
+		<meta name="twitter:description" content={description} />
+		<title>{title}</title>
+		<script is:inline>
+			(() => {
+				const preference = localStorage.getItem('theme');
+				const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+				const shouldUseDark = preference === 'dark' || (!preference && systemDark);
+				document.documentElement.classList.toggle('dark', shouldUseDark);
+				document.documentElement.dataset.theme = preference || 'system';
+			})();
+		</script>
+		<ClientRouter />
 	</head>
-	<body>
+	<body class="min-h-screen">
+		<ThemeSelector />
 		<slot />
 	</body>
 </html>
-
-<style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
-</style>
