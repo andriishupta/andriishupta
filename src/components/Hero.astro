@@ -1,6 +1,13 @@
+---
+import { Icon } from "astro-icon/components";
+import AmbientField from "./AmbientField.astro";
+---
+
 <main
-	class="relative grid min-h-screen items-end overflow-hidden px-8 py-16 sm:items-center sm:px-[clamp(2rem,7vw,6rem)]"
+	class="relative grid min-h-screen place-items-center overflow-hidden px-8 py-20 sm:px-[clamp(2rem,7vw,6rem)]"
 >
+	<AmbientField />
+
 	<div
 		aria-hidden="true"
 		class="pointer-events-none fixed inset-0 opacity-[0.16] [background-image:radial-gradient(rgba(23,19,15,0.55)_0.8px,transparent_0.8px)] [background-size:22px_22px] [mask-image:linear-gradient(to_bottom,black,transparent_78%)] dark:opacity-[0.18] dark:[background-image:radial-gradient(rgba(244,240,232,0.7)_0.8px,transparent_0.8px)]"
@@ -8,36 +15,122 @@
 	</div>
 
 	<section
-		class="hero-motion w-full max-w-[760px]"
+		class="hero-motion relative z-[1] mx-auto w-full max-w-[820px] text-center"
 		aria-labelledby="hero-title"
 		transition:name="hero"
 	>
 		<p class="mb-5 font-mono text-[0.82rem] text-light-muted dark:text-muted">andriishupta.dev</p>
 		<h1
 			id="hero-title"
-			class="max-w-[11ch] text-[clamp(3.5rem,19vw,6rem)] leading-[0.9] tracking-normal text-light-ink dark:text-[#fffaf0] sm:text-[clamp(3.6rem,12vw,8.5rem)]"
+			class="mx-auto max-w-[11ch] text-[clamp(3.5rem,19vw,6rem)] leading-[0.9] tracking-normal text-light-ink dark:text-[#fffaf0] sm:text-[clamp(3.6rem,12vw,8.5rem)]"
 		>
 			Andrii Shupta
 		</h1>
-		<p class="mt-6 max-w-[660px] text-[clamp(1.25rem,2.5vw,2rem)] leading-[1.35] tracking-normal text-light-soft dark:text-paper-soft">
-			Building reliable tools for AI, health systems, and distributed software.
+		<p class="mx-auto mt-6 max-w-[680px] text-[clamp(1.25rem,2.5vw,2rem)] leading-[1.35] tracking-normal text-light-soft dark:text-paper-soft">
+			Full-stack apps, front-end websites, back-end services, prototypes, MVPs, dashboards,
+			internal tools, and landing pages.
 		</p>
-		<div class="mt-9 flex flex-wrap gap-3" aria-label="Primary links">
+		<div class="mt-9 flex flex-wrap justify-center gap-3" aria-label="Primary links">
 			<a
 				class="inline-flex min-h-11 items-center justify-center rounded-full border border-light-ink/20 bg-light-ink px-4 text-[0.95rem] text-light-paper no-underline transition hover:-translate-y-px hover:border-light-ink/40 dark:border-paper/30 dark:bg-paper dark:text-ink dark:hover:border-paper/40 motion-reduce:transition-none motion-reduce:hover:translate-y-0"
 				href="https://blog.andriishupta.dev"
+				target="_blank"
+				rel="noreferrer"
 				data-astro-reload
 			>
+				<Icon name="fa6-solid:pen-nib" class="mr-2 size-3.5" />
 				Blog
 			</a>
-			<a
-				class="inline-flex min-h-11 items-center justify-center rounded-full border border-light-ink/15 bg-light-ink/[0.04] px-4 text-[0.95rem] text-light-ink no-underline transition hover:-translate-y-px hover:border-light-ink/35 hover:bg-light-ink/[0.08] dark:border-paper/15 dark:bg-paper/[0.04] dark:text-paper dark:hover:border-paper/35 dark:hover:bg-paper/[0.08] motion-reduce:transition-none motion-reduce:hover:translate-y-0"
-				href="/links"
+			<button
+				class="inline-flex min-h-11 cursor-pointer items-center justify-center rounded-full border border-light-ink/15 bg-light-ink/[0.04] px-4 text-[0.95rem] text-light-ink transition hover:-translate-y-px hover:border-light-ink/35 hover:bg-light-ink/[0.08] dark:border-paper/15 dark:bg-paper/[0.04] dark:text-paper dark:hover:border-paper/35 dark:hover:bg-paper/[0.08] motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+				type="button"
+				data-links-open
 			>
+				<Icon name="fa6-solid:link" class="mr-2 size-3.5" />
 				Links
-			</a>
+			</button>
 		</div>
 	</section>
+
+	<dialog
+		class="links-modal w-[min(32rem,calc(100vw-2rem))] rounded-2xl border border-light-ink/12 bg-light-paper/95 p-0 text-left text-light-ink shadow-2xl shadow-light-ink/15 backdrop:bg-transparent backdrop:backdrop-blur-md dark:border-paper/12 dark:bg-ink-soft/95 dark:text-paper dark:shadow-black/40"
+		aria-labelledby="links-title"
+		data-links-modal
+	>
+		<div class="p-5 sm:p-6">
+			<div class="flex items-start justify-between gap-6">
+				<div>
+					<p class="font-mono text-[0.78rem] uppercase text-light-muted dark:text-muted">links</p>
+					<h2 id="links-title" class="mt-2 text-2xl leading-none tracking-normal">Find me elsewhere</h2>
+				</div>
+				<button
+					class="inline-grid size-9 cursor-pointer place-items-center rounded-full border border-light-ink/10 text-light-muted transition hover:border-light-ink/25 hover:text-light-ink dark:border-paper/10 dark:text-muted dark:hover:border-paper/25 dark:hover:text-paper"
+					type="button"
+					aria-label="Close links"
+					data-links-close
+				>
+					<Icon name="fa6-solid:xmark" class="size-3.5" />
+				</button>
+			</div>
+
+			<div class="mt-5 grid gap-2">
+				<a
+					class="link-row"
+					href="https://github.com/andriishupta."
+					target="_blank"
+					rel="noreferrer"
+					data-astro-reload
+				>
+					<span class="inline-flex items-center gap-3 font-medium">
+						<Icon name="fa6-solid:code" class="size-4 text-light-muted dark:text-muted" />
+						GitHub
+					</span>
+					<Icon name="fa6-solid:arrow-up-right-from-square" class="size-3 text-light-muted dark:text-muted" />
+				</a>
+				<a
+					class="link-row"
+					href="https://linkedin.com/in/andriishupta/"
+					target="_blank"
+					rel="noreferrer"
+					data-astro-reload
+				>
+					<span class="inline-flex items-center gap-3 font-medium">
+						<Icon name="fa6-solid:briefcase" class="size-4 text-light-muted dark:text-muted" />
+						LinkedIn
+					</span>
+					<Icon name="fa6-solid:arrow-up-right-from-square" class="size-3 text-light-muted dark:text-muted" />
+				</a>
+				<a class="link-row" href="#now" data-modal-anchor>
+					<span class="inline-flex items-center gap-3 font-medium">
+						<Icon name="fa6-solid:circle-info" class="size-4 text-light-muted dark:text-muted" />
+						Now
+					</span>
+					<span class="font-mono text-[0.78rem] text-light-muted dark:text-muted">current</span>
+				</a>
+				<a class="link-row" href="#services" data-modal-anchor>
+					<span class="inline-flex items-center gap-3 font-medium">
+						<Icon name="fa6-solid:screwdriver-wrench" class="size-4 text-light-muted dark:text-muted" />
+						Services
+					</span>
+					<span class="font-mono text-[0.78rem] text-light-muted dark:text-muted">work</span>
+				</a>
+				<a class="link-row" href="#focus" data-modal-anchor>
+					<span class="inline-flex items-center gap-3 font-medium">
+						<Icon name="fa6-solid:bullseye" class="size-4 text-light-muted dark:text-muted" />
+						Focus
+					</span>
+					<span class="font-mono text-[0.78rem] text-light-muted dark:text-muted">skills</span>
+				</a>
+				<a class="link-row" href="#uses" data-modal-anchor>
+					<span class="inline-flex items-center gap-3 font-medium">
+						<Icon name="fa6-solid:terminal" class="size-4 text-light-muted dark:text-muted" />
+						Uses
+					</span>
+					<span class="font-mono text-[0.78rem] text-light-muted dark:text-muted">setup</span>
+				</a>
+			</div>
+		</div>
+	</dialog>
 </main>
 
 <script>
@@ -54,4 +147,65 @@
 			);
 		}
 	}
+
+	const modal = document.querySelector('[data-links-modal]');
+	const openButton = document.querySelector('[data-links-open]');
+	const closeButton = document.querySelector('[data-links-close]');
+	const modalAnchors = document.querySelectorAll('[data-modal-anchor]');
+	const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+	const animateModalIn = () => {
+		if (!modal || prefersReducedMotion.matches) return;
+
+		animate(
+			modal,
+			{
+				opacity: [0, 1],
+				transform: ['translateY(10px) scale(0.97)', 'translateY(0) scale(1)'],
+			},
+			{ duration: 0.22, ease: 'easeOut' },
+		);
+	};
+
+	const closeModal = async () => {
+		if (!(modal instanceof HTMLDialogElement)) return;
+
+		if (!prefersReducedMotion.matches) {
+			await animate(
+				modal,
+				{
+					opacity: [1, 0],
+					transform: ['translateY(0) scale(1)', 'translateY(8px) scale(0.98)'],
+				},
+				{ duration: 0.16, ease: 'easeIn' },
+			);
+		}
+
+		modal.close();
+	};
+
+	openButton?.addEventListener('click', () => {
+		if (modal instanceof HTMLDialogElement) {
+			modal.showModal();
+			animateModalIn();
+		}
+	});
+
+	closeButton?.addEventListener('click', () => {
+		closeModal();
+	});
+
+	modal?.addEventListener('click', (event) => {
+		if (event.target === modal && modal instanceof HTMLDialogElement) {
+			closeModal();
+		}
+	});
+
+	modalAnchors.forEach((anchor) => {
+		anchor.addEventListener('click', () => {
+			if (modal instanceof HTMLDialogElement) {
+				modal.close();
+			}
+		});
+	});
 </script>

@@ -1,0 +1,257 @@
+---
+import { Icon } from "astro-icon/components";
+
+const nowItems = [
+  "Working as a full-stack, AI-first engineer across product builds, integrations, migrations, and internal tools.",
+  "Using LLMs, templates, and modern dev tooling to move faster without treating generated code as finished work.",
+  "Keeping this site intentionally small: a home base for services, current focus, tools, links, and writing.",
+];
+
+const services = [
+  "Develop full-stack applications, MVPs, dashboards, and internal tools.",
+  "Build landing pages with strong technical SEO and fast static delivery.",
+  "Fix and finish AI-generated code until it is maintainable, typed, and deployable.",
+  "Integrate third-party APIs, Supabase, PostgreSQL, auth, payments, and AI APIs.",
+  "Create deployments, CI/CD, infrastructure setup, and production handoff paths.",
+  "Help with React Native or Flutter apps when mobile work is part of the product.",
+  "Migrate legacy apps between stacks: Angular to React, React to Svelte, and more.",
+];
+
+const focusSkills = [
+  "React / Next.js / ShadCN UI",
+  "Node.js",
+  "Supabase / PostgreSQL",
+  "AI APIs and LLM product integration",
+  "Webflow / Framer when speed matters",
+];
+
+const usesItems = [
+  [
+    "Code",
+    "TypeScript, JavaScript, React, Next.js, Astro, Svelte, Node.js, Express.js, and NestJS.",
+  ],
+  [
+    "Data",
+    "Supabase, PostgreSQL, Redis, Kafka, and API integrations where the boundaries need to be clear.",
+  ],
+  [
+    "Ship",
+    "Tailwind, Material UI, Docker, AWS, Vercel, Cloudflare, CI/CD, and pragmatic observability.",
+  ],
+  [
+    "AI",
+    "Codex, Claude Code, OpenAI, Cursor, Bolt, Lovable, v0, and custom AI API workflows.",
+  ],
+  [
+    "Mobile",
+    "React Native and Flutter when the product needs a companion app.",
+  ],
+  [
+    "Fun",
+    "Gleam, Python, and other tools worth learning for better systems thinking.",
+  ],
+];
+
+const workflowItems = [
+  ["Code", "Core path for maintainable product work."],
+  [
+    "Low-code",
+    "Useful when speed and iteration matter more than custom control.",
+  ],
+  [
+    "No-code",
+    "On demand for prototypes, validation, ops, and non-core surfaces.",
+  ],
+];
+
+const RSS_URL = "https://blog.andriishupta.dev/rss.xml";
+const fallbackPosts = [
+  {
+    title: "Setup Supabase with Nest.js",
+    description:
+      "How to use Supabase's Auth and Client in the Nest.js application.",
+    meta: "Updated March 18, 2025",
+    url: "https://blog.andriishupta.dev/setup-supabase-with-nestjs",
+  },
+];
+
+type BlogPost = {
+  title: string;
+  description: string;
+  meta: string;
+  url: string;
+};
+
+const decodeXml = (value: string) =>
+  value
+    .replaceAll("<![CDATA[", "")
+    .replaceAll("]]>", "")
+    .replaceAll("&amp;", "&")
+    .replaceAll("&lt;", "<")
+    .replaceAll("&gt;", ">")
+    .replaceAll("&quot;", '"')
+    .replaceAll("&#39;", "'");
+
+const stripHtml = (value: string) =>
+  decodeXml(value)
+    .replace(/<[^>]*>/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+const readTag = (item: string, tag: string) => {
+  const match = item.match(
+    new RegExp(`<${tag}[^>]*>([\\s\\S]*?)<\\/${tag}>`, "i"),
+  );
+  return match ? decodeXml(match[1]).trim() : "";
+};
+const formatDate = (value: string) => {
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return "Latest post";
+  }
+
+  return new Intl.DateTimeFormat("en", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  }).format(date);
+};
+const parseRss = (xml: string): BlogPost[] =>
+  [...xml.matchAll(/<item\b[\s\S]*?<\/item>/gi)]
+    .slice(0, 3)
+    .map(([item]) => {
+      const date =
+        readTag(item, "pubDate") ||
+        readTag(item, "updated") ||
+        readTag(item, "published");
+
+      return {
+        title: stripHtml(readTag(item, "title")),
+        description: stripHtml(
+          readTag(item, "description") || readTag(item, "content:encoded"),
+        ),
+        meta: formatDate(date),
+        url: stripHtml(readTag(item, "link") || readTag(item, "guid")),
+      };
+    })
+    .filter((post) => post.title && post.url);
+const getLatestPosts = async () => {
+  try {
+    const response = await fetch(RSS_URL, {
+      signal: AbortSignal.timeout(2500),
+      headers: {
+        accept: "application/rss+xml, application/xml, text/xml",
+      },
+    });
+
+    if (!response.ok) {
+      return fallbackPosts;
+    }
+
+    const posts = parseRss(await response.text());
+    return posts.length ? posts : fallbackPosts;
+  } catch {
+    return fallbackPosts;
+  }
+};
+const latestPosts = await getLatestPosts();
+---
+
+<div class="relative z-[1] border-t border-light-ink/10 px-8 py-20 dark:border-paper/10 sm:px-[clamp(2rem,7vw,6rem)]">
+	<div class="mx-auto grid max-w-6xl gap-16 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
+		<section id="now" aria-labelledby="now-title">
+			<p class="section-kicker">now</p>
+			<h2 id="now-title" class="section-title">What has my attention</h2>
+			<div class="mt-8 space-y-5">
+				{nowItems.map((item) => (
+					<p class="section-copy">{item}</p>
+				))}
+			</div>
+		</section>
+
+		<div class="grid gap-12">
+			<section id="services" aria-labelledby="services-title">
+				<p class="section-kicker">services</p>
+				<h2 id="services-title" class="section-title">What I can build</h2>
+				<div class="mt-8 grid gap-3">
+					{services.map((service) => (
+						<p class="section-copy rounded-lg border border-light-ink/10 bg-light-ink/[0.025] px-4 py-3 dark:border-paper/10 dark:bg-paper/[0.025]">
+							{service}
+						</p>
+					))}
+				</div>
+			</section>
+
+			<section id="workflow" aria-labelledby="workflow-title">
+				<p class="section-kicker">workflow</p>
+				<h2 id="workflow-title" class="section-title">AI-first, not AI-only</h2>
+				<p class="section-copy mt-8">
+					As a vibe engineer, I speed up work with AI and LLMs for code generation, templates
+					for fast prototyping, and modern tools for fast results.
+				</p>
+				<div class="mt-6 grid gap-3 sm:grid-cols-3">
+					{workflowItems.map(([label, text]) => (
+						<div class="rounded-lg border border-light-ink/10 bg-light-ink/[0.025] p-4 dark:border-paper/10 dark:bg-paper/[0.025]">
+							<h3 class="font-mono text-[0.8rem] uppercase text-light-muted dark:text-muted">{label}</h3>
+							<p class="mt-3 text-[0.95rem] leading-6 text-light-soft dark:text-paper-soft">{text}</p>
+						</div>
+					))}
+				</div>
+			</section>
+
+			<section id="focus" aria-labelledby="focus-title">
+				<p class="section-kicker">focus</p>
+				<h2 id="focus-title" class="section-title">Main skills</h2>
+				<div class="mt-8 flex flex-wrap gap-2">
+					{focusSkills.map((skill) => (
+						<span class="rounded-full border border-light-ink/12 px-3 py-1.5 font-mono text-[0.78rem] text-light-ink dark:border-paper/12 dark:text-paper">
+							{skill}
+						</span>
+					))}
+				</div>
+			</section>
+
+			<section id="uses" aria-labelledby="uses-title">
+				<p class="section-kicker">uses</p>
+				<h2 id="uses-title" class="section-title">Complementary tools</h2>
+				<div class="mt-8 divide-y divide-light-ink/10 border-y border-light-ink/10 dark:divide-paper/10 dark:border-paper/10">
+					{usesItems.map(([label, text]) => (
+						<div class="grid gap-2 py-5 sm:grid-cols-[8rem_1fr] sm:gap-8">
+							<h3 class="font-mono text-[0.8rem] uppercase text-light-muted dark:text-muted">{label}</h3>
+							<p class="section-copy">{text}</p>
+						</div>
+					))}
+				</div>
+				<p class="section-copy mt-6">
+					Degree in Computer Science.
+				</p>
+			</section>
+
+			<section id="writing" aria-labelledby="writing-title">
+				<p class="section-kicker">writing</p>
+				<h2 id="writing-title" class="section-title">Latest from the blog</h2>
+				<div class="mt-8 grid gap-3">
+					{latestPosts.map((post) => (
+						<a
+							class="group block rounded-lg border border-light-ink/12 bg-light-ink/[0.035] p-5 text-light-ink no-underline transition hover:-translate-y-0.5 hover:border-light-ink/25 hover:bg-light-ink/[0.06] dark:border-paper/12 dark:bg-paper/[0.035] dark:text-paper dark:hover:border-paper/25 dark:hover:bg-paper/[0.06] motion-reduce:transition-none motion-reduce:hover:translate-y-0"
+							href={post.url}
+							target="_blank"
+							rel="noreferrer"
+							data-astro-reload
+						>
+							<p class="font-mono text-[0.78rem] text-light-muted dark:text-muted">{post.meta}</p>
+							<h3 class="mt-3 text-xl leading-tight tracking-normal sm:text-2xl">{post.title}</h3>
+							<p class="mt-3 max-w-[42rem] text-[1rem] leading-7 text-light-soft dark:text-paper-soft">
+								{post.description}
+							</p>
+							<span class="mt-5 inline-flex items-center font-mono text-[0.82rem] text-light-ink transition group-hover:translate-x-1 dark:text-paper motion-reduce:transition-none motion-reduce:group-hover:translate-x-0">
+								Read post
+								<Icon name="fa6-solid:arrow-right" class="ml-2 size-3" />
+							</span>
+						</a>
+					))}
+				</div>
+			</section>
+		</div>
+	</div>
+</div>

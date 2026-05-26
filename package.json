@@ -9,12 +9,20 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "check": "biome check .",
+    "format": "biome format --write .",
+    "lint": "biome lint ."
   },
   "dependencies": {
+    "@iconify-json/fa6-solid": "^1.2.4",
     "@tailwindcss/vite": "^4.3.0",
     "astro": "^6.3.7",
+    "astro-icon": "^1.1.5",
     "motion": "^12.40.0",
     "tailwindcss": "^4.3.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.4.15"
   }
 }

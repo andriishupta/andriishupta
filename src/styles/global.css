@@ -3,64 +3,483 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-	--font-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-	--font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
-	--color-ink: #0d0f12;
-	--color-ink-soft: #171a1f;
-	--color-paper: #f4f0e8;
-	--color-paper-soft: #d7d0c5;
-	--color-muted: #a9b1bd;
-	--color-light-ink: #17130f;
-	--color-light-soft: #5d554b;
-	--color-light-muted: #766f66;
-	--color-light-paper: #fbf7ef;
-	--color-light-paper-soft: #efe7d9;
+  --font-sans:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  --font-mono:
+    "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono", Menlo,
+    monospace;
+  --color-ink: #0d0f12;
+  --color-ink-soft: #171a1f;
+  --color-paper: #f4f0e8;
+  --color-paper-soft: #d7d0c5;
+  --color-muted: #a9b1bd;
+  --color-light-ink: #17130f;
+  --color-light-soft: #5d554b;
+  --color-light-muted: #766f66;
+  --color-light-paper: #fbf7ef;
+  --color-light-paper-soft: #efe7d9;
 }
 
 @layer base {
-	:root {
-		color-scheme: light;
-		background: var(--color-light-paper);
-		color: var(--color-light-ink);
-		font-family: var(--font-sans);
-	}
+  :root {
+    --ambient-x: 0;
+    --ambient-y: 0;
+    color-scheme: light;
+    background: var(--color-light-paper);
+    color: var(--color-light-ink);
+    font-family: var(--font-sans);
+  }
 
-	:root.dark {
-		color-scheme: dark;
-		background: var(--color-ink);
-		color: var(--color-paper);
-	}
+  :root.dark {
+    color-scheme: dark;
+    background: var(--color-ink);
+    color: var(--color-paper);
+  }
 
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		min-height: 100%;
-	}
+  html,
+  body {
+    margin: 0;
+    width: 100%;
+    min-height: 100%;
+  }
 
-	body {
-		background:
-			radial-gradient(circle at 18% 20%, rgba(65, 88, 208, 0.1), transparent 28rem),
-			radial-gradient(circle at 85% 12%, rgba(198, 133, 60, 0.17), transparent 24rem),
-			var(--color-light-paper);
-	}
+  body {
+    background:
+      radial-gradient(
+        circle at 18% 20%,
+        rgba(65, 88, 208, 0.1),
+        transparent 28rem
+      ),
+      radial-gradient(
+        circle at 85% 12%,
+        rgba(198, 133, 60, 0.17),
+        transparent 24rem
+      ),
+      var(--color-light-paper);
+  }
 
-	:root.dark body {
-		background:
-			radial-gradient(circle at 18% 20%, rgba(65, 88, 208, 0.16), transparent 28rem),
-			radial-gradient(circle at 85% 12%, rgba(198, 133, 60, 0.13), transparent 24rem),
-			var(--color-ink);
-	}
+  :root.dark body {
+    background:
+      radial-gradient(
+        circle at 18% 20%,
+        rgba(65, 88, 208, 0.16),
+        transparent 28rem
+      ),
+      radial-gradient(
+        circle at 85% 12%,
+        rgba(198, 133, 60, 0.13),
+        transparent 24rem
+      ),
+      var(--color-ink);
+  }
 
-	a {
-		color: inherit;
-	}
+  a {
+    color: inherit;
+  }
 
-	::selection {
-		background: rgba(23, 19, 15, 0.14);
-	}
+  html {
+    scroll-behavior: smooth;
+  }
 
-	:root.dark ::selection {
-		background: rgba(244, 240, 232, 0.18);
-	}
+  ::selection {
+    background: rgba(23, 19, 15, 0.14);
+  }
+
+  :root.dark ::selection {
+    background: rgba(244, 240, 232, 0.18);
+  }
+}
+
+@layer components {
+  .ambient-field {
+    --field-translate-x: calc(var(--ambient-x) * 18px);
+    --field-translate-y: calc(var(--ambient-y) * 14px);
+    --field-line-x: calc(var(--ambient-x) * -24px);
+    --field-line-y: calc(var(--ambient-y) * -18px);
+    pointer-events: none;
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .ambient-field__wash,
+  .ambient-field__grid,
+  .ambient-field__wave,
+  .ambient-field__pulse,
+  .ambient-field__line {
+    position: absolute;
+    inset: -18%;
+    transform: translate3d(
+      var(--field-translate-x),
+      var(--field-translate-y),
+      0
+    );
+    transition: transform 180ms ease-out;
+    will-change: transform;
+  }
+
+  .ambient-field__lines {
+    position: absolute;
+    inset: 0;
+  }
+
+  .ambient-field__wash {
+    background:
+      radial-gradient(
+        circle at 28% 26%,
+        rgba(35, 80, 122, 0.16),
+        transparent 28rem
+      ),
+      radial-gradient(
+        circle at 74% 20%,
+        rgba(189, 93, 45, 0.16),
+        transparent 24rem
+      ),
+      radial-gradient(
+        circle at 56% 74%,
+        rgba(38, 112, 89, 0.1),
+        transparent 30rem
+      );
+    filter: blur(6px);
+    opacity: 0.78;
+  }
+
+  .ambient-field__grid {
+    background-image:
+      linear-gradient(110deg, rgba(23, 19, 15, 0.07) 1px, transparent 1px),
+      linear-gradient(20deg, rgba(23, 19, 15, 0.045) 1px, transparent 1px);
+    background-position:
+      calc(50% + var(--field-line-x)) calc(50% + var(--field-line-y)),
+      calc(50% - var(--field-line-x)) calc(50% - var(--field-line-y));
+    background-size:
+      18rem 11rem,
+      14rem 10rem;
+    mask-image: radial-gradient(ellipse at 42% 47%, black, transparent 68%);
+    opacity: 0.58;
+  }
+
+  .ambient-field__wave {
+    inset: auto -18% 10% -18%;
+    height: 38rem;
+    background: repeating-radial-gradient(
+      ellipse at 50% 50%,
+      transparent 0 6.2rem,
+      rgba(23, 19, 15, 0.07) 6.25rem 6.35rem
+    );
+    mask-image: linear-gradient(to top, black, transparent 72%);
+    opacity: 0.52;
+    transform: translate3d(
+        calc(var(--field-line-x) * 0.55),
+        calc(var(--field-line-y) * 0.5),
+        0
+      )
+      rotate(-7deg);
+    animation: ambient-wave 18s ease-in-out infinite alternate;
+  }
+
+  .ambient-field__wave--two {
+    inset: 4% -20% auto -16%;
+    height: 32rem;
+    opacity: 0.34;
+    transform: translate3d(
+        calc(var(--field-line-x) * -0.45),
+        calc(var(--field-line-y) * -0.55),
+        0
+      )
+      rotate(13deg);
+    animation-duration: 24s;
+    animation-direction: alternate-reverse;
+  }
+
+  .ambient-field__pulse {
+    inset: 8% 4% auto auto;
+    width: min(36rem, 74vw);
+    height: min(36rem, 74vw);
+    border-radius: 999px;
+    background:
+      radial-gradient(
+        circle at 42% 38%,
+        rgba(255, 255, 255, 0.2),
+        transparent 16rem
+      ),
+      conic-gradient(
+        from 130deg,
+        rgba(35, 80, 122, 0.2),
+        rgba(189, 93, 45, 0.1),
+        rgba(38, 112, 89, 0.14),
+        rgba(35, 80, 122, 0.2)
+      );
+    filter: blur(28px);
+    opacity: 0.36;
+    transform: translate3d(
+        calc(var(--field-translate-x) * -0.75),
+        calc(var(--field-translate-y) * 0.65),
+        0
+      )
+      rotate(0deg);
+    animation: ambient-drift 26s linear infinite;
+  }
+
+  .ambient-field__line {
+    --line-x-factor: 1;
+    --line-y-factor: 1;
+    --line-angle: 0deg;
+    --line-sway-angle: 7deg;
+    --line-sway-x: 12px;
+    --line-sway-y: 8px;
+    --line-width: 32rem;
+    --line-height: 18rem;
+    --line-left: 10%;
+    --line-top: 10%;
+    --line-origin-x: 50%;
+    --line-origin-y: 78%;
+    --line-opacity: 0.58;
+    --line-alpha: 0.06;
+    --line-duration: 18s;
+    --line-delay: -4s;
+    inset: auto;
+    left: var(--line-left);
+    top: var(--line-top);
+    width: var(--line-width);
+    height: var(--line-height);
+    border: 1px solid rgba(23, 19, 15, var(--line-alpha));
+    border-radius: 999px;
+    opacity: var(--line-opacity);
+    transform-origin: var(--line-origin-x) var(--line-origin-y);
+    transform: translate3d(
+        calc(var(--field-line-x) * var(--line-x-factor)),
+        calc(var(--field-line-y) * var(--line-y-factor)),
+        0
+      )
+      rotate(var(--line-angle));
+    animation: ambient-pendulum var(--line-duration)
+      cubic-bezier(0.45, 0, 0.55, 1) var(--line-delay) infinite alternate;
+  }
+
+  :root.dark .ambient-field__wash {
+    background:
+      radial-gradient(
+        circle at 28% 26%,
+        rgba(81, 111, 205, 0.22),
+        transparent 28rem
+      ),
+      radial-gradient(
+        circle at 74% 20%,
+        rgba(203, 126, 70, 0.13),
+        transparent 24rem
+      ),
+      radial-gradient(
+        circle at 56% 74%,
+        rgba(73, 144, 117, 0.13),
+        transparent 30rem
+      );
+    opacity: 0.68;
+  }
+
+  :root.dark .ambient-field__grid {
+    background-image:
+      linear-gradient(110deg, rgba(244, 240, 232, 0.07) 1px, transparent 1px),
+      linear-gradient(20deg, rgba(244, 240, 232, 0.04) 1px, transparent 1px);
+    opacity: 0.52;
+  }
+
+  :root.dark .ambient-field__wave {
+    background: repeating-radial-gradient(
+      ellipse at 50% 50%,
+      transparent 0 6.2rem,
+      rgba(244, 240, 232, 0.075) 6.25rem 6.35rem
+    );
+    opacity: 0.48;
+  }
+
+  :root.dark .ambient-field__pulse {
+    background:
+      radial-gradient(
+        circle at 42% 38%,
+        rgba(244, 240, 232, 0.16),
+        transparent 16rem
+      ),
+      conic-gradient(
+        from 130deg,
+        rgba(81, 111, 205, 0.28),
+        rgba(203, 126, 70, 0.12),
+        rgba(73, 144, 117, 0.15),
+        rgba(81, 111, 205, 0.28)
+      );
+    opacity: 0.34;
+  }
+
+  :root.dark .ambient-field__line {
+    border-color: rgba(244, 240, 232, calc(var(--line-alpha) + 0.012));
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ambient-field__wash,
+    .ambient-field__grid,
+    .ambient-field__wave,
+    .ambient-field__pulse,
+    .ambient-field__line {
+      animation: none;
+      transition: none;
+      transform: none;
+      will-change: auto;
+    }
+  }
+
+  .link-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    border-radius: 0.375rem;
+    padding: 0.75rem 0.875rem;
+    color: var(--color-light-ink);
+    font-size: 0.95rem;
+    line-height: 1.4;
+    text-decoration: none;
+    transition:
+      background-color 160ms ease,
+      transform 160ms ease;
+  }
+
+  .links-modal::backdrop {
+    background: rgba(13, 15, 18, 0.42);
+    backdrop-filter: blur(12px);
+  }
+
+  .links-modal {
+    margin: auto;
+    opacity: 0;
+    transform: translateY(10px) scale(0.97);
+  }
+
+  .links-modal[open] {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+
+  .link-row:hover {
+    background: color-mix(in srgb, var(--color-light-ink) 7%, transparent);
+    transform: translateX(2px);
+  }
+
+  :root.dark .link-row {
+    color: var(--color-paper);
+  }
+
+  :root.dark .link-row:hover {
+    background: color-mix(in srgb, var(--color-paper) 7%, transparent);
+  }
+
+  .section-kicker {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    line-height: 1.4;
+    text-transform: uppercase;
+    color: var(--color-light-muted);
+  }
+
+  :root.dark .section-kicker {
+    color: var(--color-muted);
+  }
+
+  .section-title {
+    margin-top: 0.75rem;
+    max-width: 13ch;
+    color: var(--color-light-ink);
+    font-size: clamp(2.1rem, 5vw, 4.5rem);
+    font-weight: 500;
+    letter-spacing: 0;
+    line-height: 0.98;
+  }
+
+  :root.dark .section-title {
+    color: var(--color-paper);
+  }
+
+  .section-copy {
+    margin: 0;
+    color: var(--color-light-soft);
+    font-size: clamp(1rem, 1.4vw, 1.12rem);
+    line-height: 1.75;
+  }
+
+  :root.dark .section-copy {
+    color: var(--color-paper-soft);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    .link-row {
+      transition: none;
+    }
+
+    .link-row:hover {
+      transform: none;
+    }
+  }
+
+  @keyframes ambient-wave {
+    from {
+      border-radius: 46% 54% 48% 52%;
+      scale: 1;
+    }
+
+    to {
+      border-radius: 54% 46% 55% 45%;
+      scale: 1.04;
+    }
+  }
+
+  @keyframes ambient-drift {
+    to {
+      rotate: 360deg;
+    }
+  }
+
+  @keyframes ambient-pendulum {
+    0% {
+      transform: translate3d(
+          calc(
+            (var(--field-line-x) * var(--line-x-factor)) -
+            var(--line-sway-x)
+          ),
+          calc(
+            (var(--field-line-y) * var(--line-y-factor)) +
+            var(--line-sway-y)
+          ),
+          0
+        )
+        rotate(calc(var(--line-angle) - var(--line-sway-angle)));
+    }
+
+    42% {
+      transform: translate3d(
+          calc(var(--field-line-x) * var(--line-x-factor)),
+          calc(var(--field-line-y) * var(--line-y-factor)),
+          0
+        )
+        rotate(var(--line-angle));
+    }
+
+    100% {
+      transform: translate3d(
+          calc(
+            (var(--field-line-x) * var(--line-x-factor)) +
+            var(--line-sway-x)
+          ),
+          calc(
+            (var(--field-line-y) * var(--line-y-factor)) -
+            var(--line-sway-y)
+          ),
+          0
+        )
+        rotate(calc(var(--line-angle) + var(--line-sway-angle)));
+    }
+  }
 }

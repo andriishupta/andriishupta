@@ -1,0 +1,7 @@
+#!/bin/sh
+set -eu
+
+if ! grep -qi '^Signed-off-by:' "$1"; then
+	echo "commit-msg: missing Signed-off-by trailer. Commit with: git commit -s"
+	exit 1
+fi

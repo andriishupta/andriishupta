@@ -1,20 +1,20 @@
 ---
-import { ClientRouter } from 'astro:transitions';
-import ThemeSelector from '../components/ThemeSelector.astro';
-import '../styles/global.css';
+import { ClientRouter } from "astro:transitions";
+import ThemeSelector from "../components/ThemeSelector.astro";
+import "../styles/global.css";
 
 interface Props {
-	title?: string;
-	description?: string;
-	pathname?: string;
+  title?: string;
+  description?: string;
+  pathname?: string;
 }
 
 const {
-	title = 'Andrii Shupta',
-	description = 'Personal website of Andrii Shupta, building reliable tools for AI, health systems, and distributed software.',
-	pathname = Astro.url.pathname,
+  title = "Andrii Shupta",
+  description = "Personal website of Andrii Shupta, building reliable tools for AI, health systems, and distributed software.",
+  pathname = Astro.url.pathname,
 } = Astro.props;
-const siteUrl = new URL(pathname, 'https://andriishupta.dev');
+const siteUrl = new URL(pathname, "https://andriishupta.dev");
 ---
 
 <!doctype html>

@@ -1,0 +1,19 @@
+#!/bin/sh
+set -eu
+
+check_no_unstaged_changes() {
+	if ! git diff --quiet -- .; then
+		echo "pre-commit: command produced unstaged changes. Review and stage them before committing."
+		git status --short
+		exit 1
+	fi
+}
+
+npm install
+check_no_unstaged_changes
+
+ASTRO_TELEMETRY_DISABLED=1 npm run build
+npm run lint
+npm run format
+check_no_unstaged_changes
+npm run check
