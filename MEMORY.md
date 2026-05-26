@@ -27,6 +27,9 @@
   - RSS fetch has a fallback post for blocked/offline builds.
 - SEO:
   - Layout supports title, description, canonical URL, Open Graph, and Twitter metadata.
+  - Global metadata includes author, creator, robots, keywords, theme colors, OG locale, and image fallback.
+- Favicon:
+  - `public/favicon.svg` is a custom `A` letter mark.
 - Tooling:
   - `npm run check` runs `biome check .`.
   - `npm run format` runs `biome format --write .`.
