@@ -1,100 +1,127 @@
 <div class="ambient-field" aria-hidden="true" data-ambient-field>
-	<div class="ambient-field__wash"></div>
-	<div class="ambient-field__grid"></div>
-	<div class="ambient-field__wave ambient-field__wave--one"></div>
-	<div class="ambient-field__wave ambient-field__wave--two"></div>
-	<div class="ambient-field__pulse"></div>
-	<div class="ambient-field__lines" data-ambient-lines></div>
+    <div class="ambient-field__wash"></div>
+    <div class="ambient-field__grid"></div>
+    <div class="ambient-field__wave ambient-field__wave--one"></div>
+    <div class="ambient-field__wave ambient-field__wave--two"></div>
+    <div class="ambient-field__pulse"></div>
+    <div class="ambient-field__lines" data-ambient-lines></div>
 </div>
 
 <script is:inline>
-	(() => {
-		const field = document.querySelector('[data-ambient-field]');
-		const lines = field?.querySelector('[data-ambient-lines]');
-		const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    (() => {
+        const field = document.querySelector("[data-ambient-field]");
+        const lines = field?.querySelector("[data-ambient-lines]");
+        const reduceMotion = window.matchMedia(
+            "(prefers-reduced-motion: reduce)",
+        );
 
-		if (!field) return;
+        if (!field) return;
 
-		const random = (min, max) => min + Math.random() * (max - min);
-		const randomSign = () => (Math.random() > 0.5 ? 1 : -1);
+        const random = (min, max) => min + Math.random() * (max - min);
+        const randomSign = () => (Math.random() > 0.5 ? 1 : -1);
 
-		if (lines) {
-			const fragment = document.createDocumentFragment();
-			const lineCount = Math.floor(random(10, 15));
+        if (lines) {
+            const fragment = document.createDocumentFragment();
+            const lineCount = Math.floor(random(10, 15));
 
-			for (let index = 0; index < lineCount; index += 1) {
-				const line = document.createElement('div');
-				const width = random(22, 78);
-				const height = random(7, 32);
-				const x = random(-18, 88);
-				const y = random(-12, 92);
-				const angle = random(-82, 82);
-				const opacity = random(0.24, 0.72);
-				const duration = random(11, 34);
-				const delay = random(-30, -1);
-				const swayAngle = random(5, 20) * randomSign();
+            for (let index = 0; index < lineCount; index += 1) {
+                const line = document.createElement("div");
+                const width = random(22, 78);
+                const height = random(7, 32);
+                const x = random(-18, 88);
+                const y = random(-12, 92);
+                const angle = random(-82, 82);
+                const opacity = random(0.24, 0.72);
+                const duration = random(11, 34);
+                const delay = random(-30, -1);
+                const swayAngle = random(5, 20) * randomSign();
 
-				line.className = 'ambient-field__line';
-				line.style.setProperty('--line-width', `${width}rem`);
-				line.style.setProperty('--line-height', `${height}rem`);
-				line.style.setProperty('--line-left', `${x}%`);
-				line.style.setProperty('--line-top', `${y}%`);
-				line.style.setProperty('--line-angle', `${angle}deg`);
-				line.style.setProperty('--line-sway-angle', `${swayAngle}deg`);
-				line.style.setProperty('--line-sway-x', `${random(8, 36)}px`);
-				line.style.setProperty('--line-sway-y', `${random(6, 28)}px`);
-				line.style.setProperty('--line-x-factor', random(-1.7, 1.7).toFixed(3));
-				line.style.setProperty('--line-y-factor', random(-1.4, 1.4).toFixed(3));
-				line.style.setProperty('--line-opacity', opacity.toFixed(3));
-				line.style.setProperty('--line-alpha', random(0.028, 0.09).toFixed(3));
-				line.style.setProperty('--line-duration', `${duration.toFixed(2)}s`);
-				line.style.setProperty('--line-delay', `${delay.toFixed(2)}s`);
-				line.style.setProperty('--line-origin-x', `${random(18, 82).toFixed(1)}%`);
-				line.style.setProperty('--line-origin-y', `${random(32, 96).toFixed(1)}%`);
-				fragment.append(line);
-			}
+                line.className = "ambient-field__line";
+                line.style.setProperty("--line-width", `${width}rem`);
+                line.style.setProperty("--line-height", `${height}rem`);
+                line.style.setProperty("--line-left", `${x}%`);
+                line.style.setProperty("--line-top", `${y}%`);
+                line.style.setProperty("--line-angle", `${angle}deg`);
+                line.style.setProperty("--line-sway-angle", `${swayAngle}deg`);
+                line.style.setProperty("--line-sway-x", `${random(8, 36)}px`);
+                line.style.setProperty("--line-sway-y", `${random(6, 28)}px`);
+                line.style.setProperty(
+                    "--line-x-factor",
+                    random(-1.7, 1.7).toFixed(3),
+                );
+                line.style.setProperty(
+                    "--line-y-factor",
+                    random(-1.4, 1.4).toFixed(3),
+                );
+                line.style.setProperty("--line-opacity", opacity.toFixed(3));
+                line.style.setProperty(
+                    "--line-alpha",
+                    random(0.028, 0.09).toFixed(3),
+                );
+                line.style.setProperty(
+                    "--line-duration",
+                    `${duration.toFixed(2)}s`,
+                );
+                line.style.setProperty("--line-delay", `${delay.toFixed(2)}s`);
+                line.style.setProperty(
+                    "--line-origin-x",
+                    `${random(18, 82).toFixed(1)}%`,
+                );
+                line.style.setProperty(
+                    "--line-origin-y",
+                    `${random(32, 96).toFixed(1)}%`,
+                );
+                fragment.append(line);
+            }
 
-			lines.replaceChildren(fragment);
-		}
+            lines.replaceChildren(fragment);
+        }
 
-		if (reduceMotion.matches) return;
+        if (reduceMotion.matches) return;
 
-		let frame = 0;
-		let targetX = 0;
-		let targetY = 0;
-		let currentX = 0;
-		let currentY = 0;
+        let frame = 0;
+        let targetX = 0;
+        let targetY = 0;
+        let currentX = 0;
+        let currentY = 0;
 
-		const setTarget = (event) => {
-			targetX = (event.clientX / window.innerWidth - 0.5) * 2;
-			targetY = (event.clientY / window.innerHeight - 0.5) * 2;
+        const setTarget = (event) => {
+            targetX = (event.clientX / window.innerWidth - 0.5) * 2;
+            targetY = (event.clientY / window.innerHeight - 0.5) * 2;
 
-			if (!frame) {
-				frame = window.requestAnimationFrame(updateField);
-			}
-		};
+            if (!frame) {
+                frame = window.requestAnimationFrame(updateField);
+            }
+        };
 
-		const updateField = () => {
-			currentX += (targetX - currentX) * 0.08;
-			currentY += (targetY - currentY) * 0.08;
+        const updateField = () => {
+            currentX += (targetX - currentX) * 0.08;
+            currentY += (targetY - currentY) * 0.08;
 
-			field.style.setProperty('--ambient-x', currentX.toFixed(3));
-			field.style.setProperty('--ambient-y', currentY.toFixed(3));
+            field.style.setProperty("--ambient-x", currentX.toFixed(3));
+            field.style.setProperty("--ambient-y", currentY.toFixed(3));
 
-			if (Math.abs(targetX - currentX) > 0.001 || Math.abs(targetY - currentY) > 0.001) {
-				frame = window.requestAnimationFrame(updateField);
-				return;
-			}
+            if (
+                Math.abs(targetX - currentX) > 0.001 ||
+                Math.abs(targetY - currentY) > 0.001
+            ) {
+                frame = window.requestAnimationFrame(updateField);
+                return;
+            }
 
-			frame = 0;
-		};
+            frame = 0;
+        };
 
-		window.addEventListener('pointermove', setTarget, { passive: true });
-		document.addEventListener('astro:before-swap', () => {
-			window.removeEventListener('pointermove', setTarget);
-			if (frame) {
-				window.cancelAnimationFrame(frame);
-			}
-		}, { once: true });
-	})();
+        window.addEventListener("pointermove", setTarget, { passive: true });
+        document.addEventListener(
+            "astro:before-swap",
+            () => {
+                window.removeEventListener("pointermove", setTarget);
+                if (frame) {
+                    window.cancelAnimationFrame(frame);
+                }
+            },
+            { once: true },
+        );
+    })();
 </script>
