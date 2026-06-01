@@ -4,22 +4,21 @@ import ThemeSelector from "../components/ThemeSelector.astro";
 import "../styles/global.css";
 
 interface Props {
-  title?: string;
-  description?: string;
+  title: string;
+  description: string;
   pathname?: string;
-  image?: string;
+  image: string;
 }
 
 const {
-  title = "Andrii Shupta",
-  description = "Andrii Shupta is a full-stack web developer and AI-first software engineer building apps, landing pages, back-end services, prototypes, dashboards, integrations, and internal tools.",
+  title,
+  description,
   pathname = Astro.url.pathname,
-  image = "/favicon.svg",
+  image,
 } = Astro.props;
 const siteUrl = new URL(pathname, "https://andriishupta.dev");
 const imageUrl = new URL(image, siteUrl);
-const pageTitle =
-  title === "Andrii Shupta" ? title : `${title} | Andrii Shupta`;
+const pageTitle = title;
 const keywords = [
   "Andrii Shupta",
   "full-stack web developer",
