@@ -6,7 +6,14 @@
     "useIgnoreFile": true
   },
   "files": {
-    "includes": ["**", "!!**/dist"]
+    "includes": [
+      "**",
+      "!!**/dist",
+      "!astro.config.mjs",
+      "!package-lock.json",
+      "!worker-configuration.d.ts",
+      "!wrangler.jsonc"
+    ]
   },
   "formatter": {
     "enabled": true,
