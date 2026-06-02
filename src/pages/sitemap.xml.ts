@@ -1,16 +1,25 @@
-const pages = ["/"];
+const pages = [
+  { path: "/", priority: "1.0", changefreq: "monthly" },
+  {
+    path: "/Andrii_Shupta_Lead_Full_Stack_CV.pdf",
+    priority: "0.4",
+    changefreq: "yearly",
+  },
+];
 const siteUrl = "https://andriishupta.dev";
+const lastmod = "2026-06-02";
 
 export function GET() {
   const urls = pages
-    .map((path) => {
+    .map(({ path, priority, changefreq }) => {
       const loc = new URL(path, siteUrl).toString();
 
       return [
         "    <url>",
         `        <loc>${loc}</loc>`,
-        "        <changefreq>monthly</changefreq>",
-        "        <priority>1.0</priority>",
+        `        <lastmod>${lastmod}</lastmod>`,
+        `        <changefreq>${changefreq}</changefreq>`,
+        `        <priority>${priority}</priority>`,
         "    </url>",
       ].join("\n");
     })

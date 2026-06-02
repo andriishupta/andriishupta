@@ -8,6 +8,7 @@ interface Props {
   description: string;
   pathname?: string;
   image: string;
+  structuredData?: Record<string, unknown>;
 }
 
 const {
@@ -15,6 +16,7 @@ const {
   description,
   pathname = Astro.url.pathname,
   image,
+  structuredData,
 } = Astro.props;
 const siteUrl = new URL(pathname, "https://andriishupta.dev");
 const imageUrl = new URL(image, siteUrl);
@@ -71,6 +73,14 @@ const keywords = [
         <meta name="twitter:title" content={pageTitle} />
         <meta name="twitter:description" content={description} />
         <meta name="twitter:image" content={imageUrl} />
+        {
+            structuredData && (
+                <script
+                    type="application/ld+json"
+                    set:html={JSON.stringify(structuredData)}
+                />
+            )
+        }
         <title>{pageTitle}</title>
         <script is:inline>
             (() => {

@@ -2,13 +2,42 @@
 import Hero from "../components/Hero.astro";
 import HomeSections from "../components/HomeSections.astro";
 import Layout from "../layouts/Layout.astro";
+
+const siteUrl = "https://andriishupta.dev";
+const description =
+  "Andrii Shupta is a full-stack web developer and AI-first software engineer building apps, landing pages, back-end services, prototypes, dashboards, integrations, and internal tools.";
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Andrii Shupta",
+  url: siteUrl,
+  jobTitle: "Lead Full Stack Developer",
+  description,
+  sameAs: [
+    "https://github.com/andriishupta/",
+    "https://linkedin.com/in/andriishupta/",
+    "https://blog.andriishupta.dev",
+  ],
+  knowsAbout: [
+    "Full-stack web development",
+    "Frontend development",
+    "Backend services",
+    "React",
+    "Next.js",
+    "Node.js",
+    "TypeScript",
+    "Supabase",
+    "AI integrations",
+  ],
+};
 ---
 
 <Layout
     title="Andrii Shupta | Lead Full Stack Developer"
-    description="Andrii Shupta is a full-stack web developer and AI-first software engineer building apps, landing pages, back-end services, prototypes, dashboards, integrations, and internal tools."
+    description={description}
     image="/favicon.svg"
+    structuredData={structuredData}
 >
-	<Hero />
-	<HomeSections />
+    <Hero />
+    <HomeSections />
 </Layout>
