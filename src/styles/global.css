@@ -66,13 +66,12 @@
 
 html {
   min-width: 20rem;
-  overflow-y: auto;
   background: var(--page);
-  overscroll-behavior-y: contain;
+  scroll-behavior: smooth;
   scroll-snap-type: y mandatory;
 }
 
-html[data-snap-ready="true"] {
+html[data-section-scroll-ready="true"] {
   scroll-snap-type: none;
 }
 
@@ -103,9 +102,8 @@ a {
   color: var(--page);
 }
 
-.snap-section {
+.scroll-section {
   scroll-snap-align: start;
-  scroll-snap-stop: always;
 }
 
 .site-controls {
@@ -927,6 +925,7 @@ a {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+    scroll-snap-type: none;
   }
 
   .social-link,

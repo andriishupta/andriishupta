@@ -1,0 +1,154 @@
+<script>
+  import { gsap } from "gsap";
+  import { ScrollToPlugin } from "gsap/ScrollToPlugin";
+
+  gsap.registerPlugin(ScrollToPlugin);
+
+  const sections = Array.from(
+    document.querySelectorAll<HTMLElement>(".scroll-section"),
+  );
+  const root = document.documentElement;
+  const desktopPointer = window.matchMedia("(hover: hover) and (pointer: fine)");
+
+  if (sections.length > 1 && desktopPointer.matches) {
+    root.dataset.sectionScrollReady = "true";
+
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const gestureThreshold = 32;
+    const boundaryTolerance = 3;
+    const intentResetDelay = 120;
+    const postAnimationCooldown = 180;
+
+    let accumulatedDelta = 0;
+    let gestureDirection = 0;
+    let animating = false;
+    let lastStepDirection = 0;
+    let cooldownUntil = 0;
+    let intentResetTimer: number | undefined;
+
+    const resetIntent = () => {
+      window.clearTimeout(intentResetTimer);
+      accumulatedDelta = 0;
+      gestureDirection = 0;
+    };
+
+    const scheduleIntentReset = () => {
+      window.clearTimeout(intentResetTimer);
+      intentResetTimer = window.setTimeout(resetIntent, intentResetDelay);
+    };
+
+    const normalizedDelta = (event: WheelEvent) =>
+      Math.abs(event.deltaY) *
+      (event.deltaMode === WheelEvent.DOM_DELTA_LINE
+        ? 16
+        : event.deltaMode === WheelEvent.DOM_DELTA_PAGE
+          ? window.innerHeight
+          : 1);
+
+    const currentSectionIndex = () => {
+      const scrollPosition = window.scrollY + boundaryTolerance;
+      let currentIndex = 0;
+
+      sections.forEach((section, index) => {
+        if (section.offsetTop <= scrollPosition) currentIndex = index;
+      });
+
+      return currentIndex;
+    };
+
+    const sectionTarget = (direction: number) => {
+      const index = currentSectionIndex();
+      const section = sections[index];
+      if (!section) return;
+
+      const sectionTop = section.offsetTop;
+      const sectionHeight = section.offsetHeight;
+      const atTop = Math.abs(window.scrollY - sectionTop) <= boundaryTolerance;
+      const atBottom =
+        Math.abs(window.scrollY + window.innerHeight - (sectionTop + sectionHeight)) <=
+        boundaryTolerance;
+
+      if (direction < 0 && atTop) return sections[index - 1];
+      if (
+        direction > 0 &&
+        (sectionHeight <= window.innerHeight + boundaryTolerance || atBottom)
+      ) {
+        return sections[index + 1];
+      }
+    };
+
+    const moveToSection = (target: HTMLElement, direction: number) => {
+      animating = true;
+      lastStepDirection = direction;
+      const previousScrollBehavior = root.style.scrollBehavior;
+
+      const complete = () => {
+        root.style.scrollBehavior = previousScrollBehavior;
+        resetIntent();
+        cooldownUntil = performance.now() + postAnimationCooldown;
+        animating = false;
+      };
+
+      if (reducedMotion.matches) {
+        window.scrollTo({ top: target.offsetTop, behavior: "auto" });
+        complete();
+        return;
+      }
+
+      gsap.killTweensOf(window);
+      root.style.scrollBehavior = "auto";
+
+      gsap.to(window, {
+        duration: 0.52,
+        ease: "power3.out",
+        overwrite: true,
+        scrollTo: { y: target.offsetTop, autoKill: false },
+        onComplete: complete,
+        onInterrupt: complete,
+      });
+    };
+
+    window.addEventListener(
+      "wheel",
+      (event) => {
+        if (event.ctrlKey || Math.abs(event.deltaY) < 0.5) return;
+
+        const direction = Math.sign(event.deltaY);
+
+        if (animating) {
+          event.preventDefault();
+          return;
+        }
+
+        if (performance.now() < cooldownUntil) {
+          if (direction === lastStepDirection) {
+            event.preventDefault();
+            return;
+          }
+          cooldownUntil = 0;
+        }
+
+        const target = sectionTarget(direction);
+        if (!target) {
+          resetIntent();
+          return;
+        }
+
+        event.preventDefault();
+
+        if (gestureDirection !== direction) {
+          accumulatedDelta = 0;
+          gestureDirection = direction;
+        }
+
+        accumulatedDelta += normalizedDelta(event);
+        scheduleIntentReset();
+
+        if (accumulatedDelta < gestureThreshold) return;
+
+        moveToSection(target, direction);
+      },
+      { passive: false },
+    );
+  }
+</script>
