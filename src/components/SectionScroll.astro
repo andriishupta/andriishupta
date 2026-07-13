@@ -17,14 +17,20 @@
     const gestureThreshold = 32;
     const boundaryTolerance = 3;
     const intentResetDelay = 120;
-    const postAnimationCooldown = 180;
+    const momentumQuietDelay = 140;
+    const freshGestureDelta = 18;
+    const freshGestureAcceleration = 1.65;
 
     let accumulatedDelta = 0;
     let gestureDirection = 0;
     let animating = false;
-    let lastStepDirection = 0;
-    let cooldownUntil = 0;
+    let activeStepDirection = 0;
+    let guardingMomentum = false;
+    let guardedDirection = 0;
+    let lastGuardedDelta = 0;
+    let lastGuardedEventAt = 0;
     let intentResetTimer: number | undefined;
+    let momentumResetTimer: number | undefined;
 
     const resetIntent = () => {
       window.clearTimeout(intentResetTimer);
@@ -35,6 +41,40 @@
     const scheduleIntentReset = () => {
       window.clearTimeout(intentResetTimer);
       intentResetTimer = window.setTimeout(resetIntent, intentResetDelay);
+    };
+
+    const clearMomentumGuard = () => {
+      window.clearTimeout(momentumResetTimer);
+      guardingMomentum = false;
+      guardedDirection = 0;
+      lastGuardedDelta = 0;
+      lastGuardedEventAt = 0;
+    };
+
+    const recordGuardedEvent = (delta: number) => {
+      guardingMomentum = true;
+      lastGuardedDelta = delta;
+      lastGuardedEventAt = performance.now();
+      window.clearTimeout(momentumResetTimer);
+      momentumResetTimer = window.setTimeout(
+        clearMomentumGuard,
+        momentumQuietDelay,
+      );
+    };
+
+    const startMomentumGuard = (direction: number, delta: number) => {
+      guardedDirection = direction;
+      recordGuardedEvent(delta);
+    };
+
+    const isFreshGesture = (direction: number, delta: number) => {
+      if (direction !== guardedDirection) return true;
+      if (performance.now() - lastGuardedEventAt > momentumQuietDelay) return true;
+
+      return (
+        delta >= freshGestureDelta &&
+        delta > lastGuardedDelta * freshGestureAcceleration
+      );
     };
 
     const normalizedDelta = (event: WheelEvent) =>
@@ -79,13 +119,12 @@
 
     const moveToSection = (target: HTMLElement, direction: number) => {
       animating = true;
-      lastStepDirection = direction;
+      activeStepDirection = direction;
       const previousScrollBehavior = root.style.scrollBehavior;
 
       const complete = () => {
         root.style.scrollBehavior = previousScrollBehavior;
         resetIntent();
-        cooldownUntil = performance.now() + postAnimationCooldown;
         animating = false;
       };
 
@@ -114,18 +153,25 @@
         if (event.ctrlKey || Math.abs(event.deltaY) < 0.5) return;
 
         const direction = Math.sign(event.deltaY);
+        const delta = normalizedDelta(event);
 
         if (animating) {
           event.preventDefault();
+          if (direction === activeStepDirection) {
+            if (!guardingMomentum) guardedDirection = direction;
+            recordGuardedEvent(delta);
+          }
           return;
         }
 
-        if (performance.now() < cooldownUntil) {
-          if (direction === lastStepDirection) {
+        if (guardingMomentum) {
+          if (isFreshGesture(direction, delta)) {
+            clearMomentumGuard();
+          } else {
             event.preventDefault();
+            recordGuardedEvent(delta);
             return;
           }
-          cooldownUntil = 0;
         }
 
         const target = sectionTarget(direction);
@@ -141,11 +187,12 @@
           gestureDirection = direction;
         }
 
-        accumulatedDelta += normalizedDelta(event);
+        accumulatedDelta += delta;
         scheduleIntentReset();
 
         if (accumulatedDelta < gestureThreshold) return;
 
+        startMomentumGuard(direction, delta);
         moveToSection(target, direction);
       },
       { passive: false },
