@@ -1,18 +1,55 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
-	<rect width="128" height="128" rx="28" fill="#0d0f12" />
-	<path
-		d="M28 96 56.5 30h15L100 96H82.5l-5.2-13.2H50.7L45.5 96H28Zm27.9-27.2h16.2L64 47.5l-8.1 21.3Z"
-		fill="#f4f0e8"
-	/>
-	<style>
-		@media (prefers-color-scheme: light) {
-			rect {
-				fill: #fbf7ef;
-			}
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 128 128"
+  role="img"
+  aria-labelledby="favicon-title"
+  shape-rendering="geometricPrecision"
+>
+  <title id="favicon-title">Andrii Shupta</title>
 
-			path {
-				fill: #17130f;
-			}
-		}
-	</style>
+  <defs>
+    <clipPath id="left-half">
+      <rect width="64" height="128" />
+    </clipPath>
+    <clipPath id="right-half">
+      <rect x="64" width="64" height="128" />
+    </clipPath>
+    <path
+      id="a-mark"
+      fill-rule="evenodd"
+      d="M27 100 52.5 27h23L101 100H80.5l-4.8-15H52.3l-4.8 15H27Zm31-35h12L64 44.5 58 65Z"
+    />
+  </defs>
+
+  <style>
+    .surface { fill: #080808; }
+    .left-mark { fill: #f7f7f7; }
+    .right-mark { fill: #a3a3a3; }
+    .micro-mark { display: none; fill: #f7f7f7; }
+
+    @media (prefers-color-scheme: dark) {
+      .surface { fill: #f7f7f7; }
+      .left-mark { fill: #080808; }
+      .right-mark { fill: #5f5f5f; }
+      .micro-mark { fill: #080808; }
+    }
+
+    @media (max-width: 20px), (max-height: 20px) {
+      .mark-detail { display: none; }
+      .micro-mark { display: block; }
+    }
+  </style>
+
+  <rect
+    class="surface"
+    x="4"
+    y="4"
+    width="120"
+    height="120"
+    rx="26"
+  />
+
+  <use class="left-mark mark-detail" href="#a-mark" clip-path="url(#left-half)" />
+  <use class="right-mark mark-detail" href="#a-mark" clip-path="url(#right-half)" />
+  <use class="micro-mark" href="#a-mark" />
 </svg>

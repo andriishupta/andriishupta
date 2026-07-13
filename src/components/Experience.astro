@@ -1,0 +1,117 @@
+---
+import ArrowUpRight from "@lucide/astro/icons/arrow-up-right";
+import CodeXml from "@lucide/astro/icons/code-xml";
+import Star from "@lucide/astro/icons/star";
+import { copy } from "../copy";
+
+const { experience } = copy.mainPage;
+---
+
+<section
+  class="experience snap-section"
+  id="experience"
+  aria-labelledby="experience-title"
+>
+  <div class="experience__inner">
+    <div class="experience__intro">
+      <h2 id="experience-title">{experience.heading}</h2>
+      <a
+        class="experience__more"
+        href={experience.moreHref}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={experience.moreAriaLabel}
+      >
+        <span>{experience.moreLabel}</span>
+        <ArrowUpRight aria-hidden="true" />
+      </a>
+    </div>
+
+    <ol class="experience__companies" aria-label={experience.companiesLabel}>
+      {
+        experience.companies.map((company) => (
+          <li class="experience__company">
+            <article>
+              <header class="experience__company-header">
+                <h3>{company.name}</h3>
+                <ul class="experience__roles" aria-label={`Roles at ${company.name}`}>
+                  {company.roles.map((role) => (
+                    <li>
+                      <span class="experience__role-title">{role.title}</span>
+                      <span class="experience__role-dates">{role.dates}</span>
+                    </li>
+                  ))}
+                </ul>
+              </header>
+
+              <div class="experience__projects">
+                {company.projects.map((project) => (
+                  <section class="experience__project">
+                    <h4>
+                      {project.href ? (
+                        <a href={project.href} target="_blank" rel="noopener noreferrer">
+                          <span>{project.name}</span>
+                          <ArrowUpRight aria-hidden="true" />
+                        </a>
+                      ) : (
+                        <span>{project.name}</span>
+                      )}
+                      {project.description && (
+                        <span class="experience__project-description">
+                          {" - "}{project.description}
+                        </span>
+                      )}
+                    </h4>
+
+                    <ul class="experience__responsibilities" aria-label="Responsibilities">
+                      {project.responsibilities.map((responsibility) => (
+                        <li>{responsibility}</li>
+                      ))}
+                    </ul>
+
+                    {project.achievements.length > 0 && (
+                      <ul class="experience__achievements" aria-label="Achievements">
+                        {project.achievements.map((achievement) => (
+                          <li>
+                            <Star aria-hidden="true" />
+                            <span>{achievement}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+
+                    <div class="experience__tech">
+                      <CodeXml aria-hidden="true" />
+                      <span class="experience__tech-label">Tech:</span>
+                      <ul aria-label={`Technology stack for ${project.name}`}>
+                        {project.tech.map((technology) => <li>{technology}</li>)}
+                      </ul>
+                    </div>
+                  </section>
+                ))}
+              </div>
+
+              {company.note && <p class="experience__note">{company.note}</p>}
+
+              {company.additionalAchievements.length > 0 && (
+                <div class="experience__additional">
+                  {company.additionalAchievementsLabel && (
+                    <p>{company.additionalAchievementsLabel}</p>
+                  )}
+                  <ul class="experience__achievements" aria-label="Additional achievements">
+                    {company.additionalAchievements.map((achievement) => (
+                      <li>
+                        <Star aria-hidden="true" />
+                        <span>{achievement}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </article>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>

@@ -1,43 +1,59 @@
 ---
+import About from "../components/About.astro";
+import Experience from "../components/Experience.astro";
 import Hero from "../components/Hero.astro";
-import HomeSections from "../components/HomeSections.astro";
+import SectionSnap from "../components/SectionSnap.astro";
+import { copy, urls } from "../copy";
 import Layout from "../layouts/Layout.astro";
 
 const siteUrl = "https://andriishupta.dev";
-const description =
-  "Andrii Shupta is a full-stack web developer and AI-first software engineer building apps, landing pages, back-end services, prototypes, dashboards, integrations, and internal tools.";
+const { seo } = copy;
 const structuredData = {
   "@context": "https://schema.org",
-  "@type": "Person",
-  name: "Andrii Shupta",
-  url: siteUrl,
-  jobTitle: "Lead Full Stack Developer",
-  description,
-  sameAs: [
-    "https://github.com/andriishupta/",
-    "https://linkedin.com/in/andriishupta/",
-    "https://blog.andriishupta.dev",
-  ],
-  knowsAbout: [
-    "Full-stack web development",
-    "Frontend development",
-    "Backend services",
-    "React",
-    "Next.js",
-    "Node.js",
-    "TypeScript",
-    "Supabase",
-    "AI integrations",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": `${siteUrl}/#website`,
+      url: siteUrl,
+      name: copy.identity.fullName,
+      description: seo.description,
+      inLanguage: "en",
+    },
+    {
+      "@type": "ProfilePage",
+      "@id": `${siteUrl}/#profile`,
+      url: siteUrl,
+      name: seo.title,
+      description: seo.description,
+      isPartOf: { "@id": `${siteUrl}/#website` },
+      mainEntity: { "@id": `${siteUrl}/#person` },
+      inLanguage: "en",
+    },
+    {
+      "@type": "Person",
+      "@id": `${siteUrl}/#person`,
+      name: copy.identity.fullName,
+      url: siteUrl,
+      image: `${siteUrl}/og-image.png`,
+      jobTitle: "Full-Stack Engineer",
+      description: seo.description,
+      sameAs: [urls.linkedin, urls.upwork, urls.github, urls.x, urls.blog],
+      knowsAbout: seo.knowsAbout,
+    },
   ],
 };
 ---
 
 <Layout
-    title="Andrii Shupta | Lead Full Stack Developer"
-    description={description}
-    image="/favicon.svg"
+    title={seo.title}
+    description={seo.description}
+    image="/og-image.png"
+    imageAlt={seo.imageAlt}
+    ogType="profile"
     structuredData={structuredData}
 >
     <Hero />
-    <HomeSections />
+    <About />
+    <Experience />
+    <SectionSnap />
 </Layout>

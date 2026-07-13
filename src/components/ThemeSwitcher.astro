@@ -1,0 +1,103 @@
+---
+import Monitor from "@lucide/astro/icons/monitor";
+import Moon from "@lucide/astro/icons/moon";
+import Sun from "@lucide/astro/icons/sun";
+
+const options = [
+  { mode: "device", label: "Use device theme", Icon: Monitor },
+  { mode: "light", label: "Use light theme", Icon: Sun },
+  { mode: "dark", label: "Use dark theme", Icon: Moon },
+] as const;
+---
+
+<header class="site-controls" aria-label="Appearance settings">
+  <div class="theme-switcher" role="group" aria-label="Color theme">
+    {
+      options.map(({ mode, label, Icon }) => (
+        <button
+          class="theme-switcher__button"
+          type="button"
+          data-theme-option={mode}
+          aria-label={label}
+          aria-pressed={mode === "device" ? "true" : "false"}
+          title={label}
+        >
+          <Icon aria-hidden="true" />
+        </button>
+      ))
+    }
+  </div>
+</header>
+
+<script>
+  type ThemeMode = "device" | "light" | "dark";
+
+  const storageKey = "andrii-theme";
+  const root = document.documentElement;
+  const systemDark = window.matchMedia("(prefers-color-scheme: dark)");
+  const themeColor = document.querySelector<HTMLMetaElement>("[data-theme-color]");
+  const buttons = Array.from(
+    document.querySelectorAll<HTMLButtonElement>("[data-theme-option]"),
+  );
+  let transitionTimer: number | undefined;
+
+  const isThemeMode = (value: string | undefined): value is ThemeMode =>
+    value === "device" || value === "light" || value === "dark";
+
+  const resolvedTheme = (mode: ThemeMode) =>
+    mode === "dark" || (mode === "device" && systemDark.matches)
+      ? "dark"
+      : "light";
+
+  const syncTheme = (mode: ThemeMode, persist = false, animate = false) => {
+    const resolved = resolvedTheme(mode);
+    root.dataset.theme = mode;
+    root.style.colorScheme = resolved;
+    themeColor?.setAttribute("content", resolved === "dark" ? "#151619" : "#fafafa");
+
+    buttons.forEach((button) => {
+      button.setAttribute(
+        "aria-pressed",
+        String(button.dataset.themeOption === mode),
+      );
+    });
+
+    if (persist) {
+      try {
+        window.localStorage.setItem(storageKey, mode);
+      } catch {
+        // Theme selection still works when storage is unavailable.
+      }
+    }
+
+    if (animate) {
+      root.dataset.themeTransitioning = "true";
+      window.clearTimeout(transitionTimer);
+      transitionTimer = window.setTimeout(() => {
+        delete root.dataset.themeTransitioning;
+      }, 360);
+    }
+  };
+
+  buttons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const mode = button.dataset.themeOption;
+      if (!isThemeMode(mode)) return;
+
+      button.dataset.animating = "true";
+      window.setTimeout(() => {
+        delete button.dataset.animating;
+      }, 360);
+      syncTheme(mode, true, true);
+    });
+  });
+
+  systemDark.addEventListener("change", () => {
+    if (root.dataset.theme === "device") syncTheme("device");
+  });
+
+  const initialMode = isThemeMode(root.dataset.theme)
+    ? root.dataset.theme
+    : "device";
+  syncTheme(initialMode);
+</script>

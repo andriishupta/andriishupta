@@ -1,6 +1,9 @@
 {
-  "name": "",
-  "short_name": "",
+  "name": "Andrii Shupta",
+  "short_name": "Andrii Shupta",
+  "description": "Full-stack engineer building production-ready software with AI.",
+  "start_url": "/",
+  "scope": "/",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
