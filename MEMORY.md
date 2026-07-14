@@ -47,3 +47,5 @@
   - `SectionScroll.astro` provides one-section-per-gesture navigation only for fine-pointer desktop viewports at least 1024px wide.
   - Trackpad momentum is guarded so a single gesture cannot skip multiple sections.
   - Viewports below 1024px use regular native scrolling with no CSS scroll snapping.
+- Hero intro:
+  - `Layout.astro` sets `data-hero-intro` before first paint when motion is allowed; global CSS uses it to hide and offset the right-side hero profile until GSAP animates it in, preventing a first-load flash without altering layout.

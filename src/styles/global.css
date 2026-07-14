@@ -191,6 +191,12 @@ a {
   color: var(--contrast-ink);
 }
 
+/* Set before the hero module loads to prevent its GSAP intro from flashing visible first. */
+html[data-hero-intro="true"] .hero__profile {
+  opacity: 0;
+  transform: translateY(22px);
+}
+
 .hero__name {
   max-width: 8ch;
   margin: 0;
