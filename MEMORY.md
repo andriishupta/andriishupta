@@ -35,7 +35,8 @@
   - `npm run format` runs `biome format --write .`.
   - `npm run lint` runs `biome lint .`.
   - Native Git hooks live in `.githooks`.
-  - Pre-commit runs install, build, lint, format, and check.
+- Pre-commit runs install, build, lint, format, and check.
+- Pre-commit uses `pnpm install --frozen-lockfile`; npm crashes on this pnpm-managed dependency layout.
   - Commit messages require `Signed-off-by`; use `git commit -s`.
 - Preferences:
   - Keep the site one-page.

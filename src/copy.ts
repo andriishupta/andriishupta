@@ -199,7 +199,7 @@ export const copy = {
               achievements: [],
               tech: [
                 "React",
-                "Node.js(Nest.js)",
+                "Node.js(NestJS)",
                 "AWS EC2",
                 "SNS/SQS",
                 "DynamoDB",
@@ -221,7 +221,7 @@ export const copy = {
               ],
               tech: [
                 "React",
-                "Node.js(Nest.js) with AWS Lambda and StepFunctions",
+                "Node.js with AWS Lambda and StepFunctions",
                 "MongoDB Atlas",
                 "extensive StripeAPI usage",
               ],

@@ -9,6 +9,7 @@ This repository contains the source for the personal website at `andriishupta.de
 - Astro
 - TypeScript-enabled configuration
 - Node.js `>=22.12.0`
+- pnpm (the lockfile and Git hooks use pnpm; do not run `npm install` here)
 
 ## Common Commands
 
