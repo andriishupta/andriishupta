@@ -8,7 +8,9 @@
     document.querySelectorAll<HTMLElement>(".scroll-section"),
   );
   const root = document.documentElement;
-  const desktopPointer = window.matchMedia("(hover: hover) and (pointer: fine)");
+  const desktopPointer = window.matchMedia(
+    "(min-width: 64rem) and (hover: hover) and (pointer: fine)",
+  );
 
   if (sections.length > 1 && desktopPointer.matches) {
     root.dataset.sectionScrollReady = "true";

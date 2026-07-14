@@ -42,3 +42,7 @@
   - Do not add a projects section unless asked.
   - Do not mention VS Code.
   - Keep animation creative but subtle; avoid heavy WebGL, large counters, visitor counters, and generic GitHub stats cards.
+- Scrolling:
+  - `SectionScroll.astro` provides one-section-per-gesture navigation only for fine-pointer desktop viewports at least 1024px wide.
+  - Trackpad momentum is guarded so a single gesture cannot skip multiple sections.
+  - Viewports below 1024px use regular native scrolling with no CSS scroll snapping.

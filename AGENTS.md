@@ -45,4 +45,7 @@ This repository contains the source for the personal website at `andriishupta.de
   routing, configuration, or dependencies.
 - The repository may contain git changes from the Next.js-to-Astro migration;
   do not restore deleted Next.js, shadcn, Tailwind, or React files unless asked.
+- Keep custom section-by-section scrolling limited to fine-pointer desktop
+  viewports at least 1024px wide. Tablets, phones, and narrower windows must use
+  regular native scrolling without CSS scroll snapping.
 - Read MEMORY.md and update both AGENTS.md and MEMORY.md when code/approaches changed

@@ -68,11 +68,6 @@ html {
   min-width: 20rem;
   background: var(--page);
   scroll-behavior: smooth;
-  scroll-snap-type: y mandatory;
-}
-
-html[data-section-scroll-ready="true"] {
-  scroll-snap-type: none;
 }
 
 body {
@@ -100,10 +95,6 @@ a {
 ::selection {
   background: var(--ink);
   color: var(--page);
-}
-
-.scroll-section {
-  scroll-snap-align: start;
 }
 
 .site-controls {
@@ -925,7 +916,6 @@ a {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
-    scroll-snap-type: none;
   }
 
   .social-link,
