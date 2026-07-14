@@ -1,0 +1,22 @@
+# Canonical home URL
+/index.html / 301
+
+# Articles moved from the apex domain to Hashnode
+/simplify-usage-of-lens-api-with-use-lens-and-graphql-codegen https://blog.andriishupta.dev/simplify-usage-of-lens-api-with-use-lens-and-graphql-codegen 301
+/simplify-usage-of-lens-api-with-use-lens-and-graphql-codegen/ https://blog.andriishupta.dev/simplify-usage-of-lens-api-with-use-lens-and-graphql-codegen 301
+/create-lens-subgraph-on-the-graph-protocol https://blog.andriishupta.dev/create-lens-subgraph-on-the-graph-protocol 301
+/create-lens-subgraph-on-the-graph-protocol/ https://blog.andriishupta.dev/create-lens-subgraph-on-the-graph-protocol 301
+/connect-polkadot-to-a-nextjs-website-with-polkadotextension-dapp https://blog.andriishupta.dev/connect-polkadot-to-a-nextjs-website-with-polkadotextension-dapp 301
+/connect-polkadot-to-a-nextjs-website-with-polkadotextension-dapp/ https://blog.andriishupta.dev/connect-polkadot-to-a-nextjs-website-with-polkadotextension-dapp 301
+/generate-dummy-data-in-strapi https://blog.andriishupta.dev/generate-dummy-data-in-strapi 301
+/generate-dummy-data-in-strapi/ https://blog.andriishupta.dev/generate-dummy-data-in-strapi 301
+/setup-supabase-with-nestjs https://blog.andriishupta.dev/setup-supabase-with-nestjs 301
+/setup-supabase-with-nestjs/ https://blog.andriishupta.dev/setup-supabase-with-nestjs 301
+/cross-origin-iframe-communication-with-window-post-message https://blog.andriishupta.dev/cross-origin-iframe-communication-with-window-post-message 301
+/cross-origin-iframe-communication-with-window-post-message/ https://blog.andriishupta.dev/cross-origin-iframe-communication-with-window-post-message 301
+/starting-my-web3-journey https://blog.andriishupta.dev/starting-my-web3-journey 301
+/starting-my-web3-journey/ https://blog.andriishupta.dev/starting-my-web3-journey 301
+
+# Preserve old /blog/... links while Hashnode owns the blog subdomain
+/blog https://blog.andriishupta.dev 301
+/blog/* https://blog.andriishupta.dev/:splat 301

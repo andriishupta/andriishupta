@@ -45,3 +45,4 @@ This repository contains the source for the personal website at `andriishupta.de
   routing, configuration, or dependencies.
 - The repository may contain git changes from the Next.js-to-Astro migration;
   do not restore deleted Next.js, shadcn, Tailwind, or React files unless asked.
+- Read MEMORY.md and update both AGENTS.md and MEMORY.md when code/approaches changed

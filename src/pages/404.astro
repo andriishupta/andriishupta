@@ -1,0 +1,153 @@
+---
+import ArrowLeft from "@lucide/astro/icons/arrow-left";
+import ArrowUpRight from "@lucide/astro/icons/arrow-up-right";
+import { copy, urls } from "../copy";
+import Layout from "../layouts/Layout.astro";
+
+const title = `Page not found | ${copy.identity.fullName}`;
+const description =
+  "This page does not exist. Return to Andrii Shupta's website or continue to the blog.";
+---
+
+<Layout
+    title={title}
+    description={description}
+    image="/og-image.png"
+    robots="noindex, follow"
+    canonical={false}
+>
+    <main class="not-found">
+        <section class="not-found__identity" aria-labelledby="not-found-title">
+            <p class="not-found__code" aria-hidden="true">404</p>
+            <h1 id="not-found-title">Lost route.</h1>
+        </section>
+
+        <section class="not-found__next" aria-label="Where to go next">
+            <p>
+                This page is not here. If you followed an old article link, the post may
+                have moved to the blog.
+            </p>
+
+            <nav class="not-found__links" aria-label="404 navigation">
+                <a href="/">
+                    <ArrowLeft aria-hidden="true" />
+                    <span>Back home</span>
+                </a>
+                <a href={urls.blog}>
+                    <span>Open the blog</span>
+                    <ArrowUpRight aria-hidden="true" />
+                </a>
+            </nav>
+        </section>
+    </main>
+</Layout>
+
+<style>
+    .not-found {
+        display: grid;
+        grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+        min-height: 100svh;
+    }
+
+    .not-found__identity,
+    .not-found__next {
+        display: flex;
+        min-width: 0;
+        flex-direction: column;
+        justify-content: center;
+        padding: clamp(5rem, 9vh, 8rem) var(--gutter);
+    }
+
+    .not-found__identity {
+        background: var(--page);
+        color: var(--ink);
+    }
+
+    .not-found__next {
+        border-left: 1px solid var(--line-on-contrast);
+        background: var(--contrast);
+        color: var(--contrast-ink);
+    }
+
+    .not-found__code {
+        margin: 0 0 1rem;
+        color: var(--muted-on-page);
+        font-size: 0.78rem;
+        font-weight: 650;
+        letter-spacing: 0.18em;
+    }
+
+    h1 {
+        max-width: 7ch;
+        margin: 0;
+        font-size: var(--text-display);
+        font-variation-settings: "wdth" 118;
+        font-weight: 820;
+        letter-spacing: -0.04em;
+        line-height: 0.92;
+        text-wrap: balance;
+    }
+
+    .not-found__next > p {
+        max-width: 34ch;
+        margin: 0;
+        font-size: var(--text-heading);
+        font-weight: 620;
+        letter-spacing: -0.025em;
+        line-height: 1.2;
+        text-wrap: balance;
+    }
+
+    .not-found__links {
+        display: grid;
+        width: min(100%, 31rem);
+        margin-top: clamp(2.75rem, 7vh, 5rem);
+    }
+
+    .not-found__links a {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        gap: 0.75rem;
+        align-items: center;
+        min-height: 3.75rem;
+        border-bottom: 1px solid var(--line-on-contrast);
+        font-size: 0.9rem;
+        font-weight: 580;
+        text-decoration: none;
+        transition: opacity 200ms ease;
+    }
+
+    .not-found__links a:hover,
+    .not-found__links a:focus-visible {
+        opacity: 0.62;
+    }
+
+    .not-found__links svg {
+        width: 0.9rem;
+        height: 0.9rem;
+    }
+
+    .not-found__links a:first-child span {
+        grid-column: 2;
+    }
+
+    @media (max-width: 48rem) {
+        .not-found {
+            grid-template-columns: 1fr;
+        }
+
+        .not-found__identity,
+        .not-found__next {
+            min-height: 50svh;
+        }
+
+        .not-found__next {
+            border-top: 1px solid var(--line-on-contrast);
+            border-left: 0;
+        }
+
+        .not-found__next > p {
+            font-size: clamp(1.5rem, 7vw, 2rem);
+        }
+    }
+</style>
