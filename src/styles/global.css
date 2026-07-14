@@ -445,13 +445,6 @@ a {
   stroke-width: 1.7;
 }
 
-.about__degree {
-  margin: 1.25rem 0 0;
-  font-size: var(--text-label);
-  font-weight: 600;
-  line-height: 1.5;
-}
-
 .experience {
   display: grid;
   min-height: 100svh;
@@ -841,8 +834,7 @@ a {
   }
 
   .about__notes,
-  .about__resources,
-  .about__degree {
+  .about__resources {
     font-size: 1rem;
   }
 

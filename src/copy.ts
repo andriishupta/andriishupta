@@ -68,7 +68,7 @@ export const copy = {
     intro: {
       heading: "Full-stack engineer - 10+ years of experience",
       description:
-        "I build and modernize full-stack products - SaaS, internal tools, APIs, and AI-powered applications. I work across architecture, security, performance, integrations, and production delivery, using AI when it helps without treating generated code as finished work.",
+        "I work across architecture, security, performance, integrations, and production delivery",
       scrollLabel: "About",
       scrollAriaLabel: "Scroll to about",
     },
@@ -77,12 +77,7 @@ export const copy = {
       scrollLabel: "Experience",
       scrollAriaLabel: "Scroll to experience",
       areasLabel: "Areas of work",
-      areas: [
-        "AI-powered applications",
-        "AI code review & cleanup",
-        "SaaS, MVPs & internal tools",
-        "Architecture, APIs & delivery",
-      ],
+      areas: ["SaaS, MVPs & internal tools", "Architecture, APIs & delivery"],
       coreStack: {
         heading: "Core stack",
         listLabel: "Core technologies",
@@ -90,20 +85,29 @@ export const copy = {
           { name: "TypeScript", icon: "code" },
           { name: "React / Next.js", icon: "react" },
           { name: "Node.js / Hono.js", icon: "server" },
-          { name: "Supabase / PostgreSQL", icon: "database" },
+          { name: "PostgreSQL / Supabase", icon: "database" },
+          { name: "AWS / Cloudflare", icon: "cloud" },
+          { name: "Codex / Claude", icon: "rocket" },
         ],
       },
-      degree: "Degree in Computer Science.",
       description:
-        "I’ve built MVPs with early-stage teams and helped enterprise teams modernize large applications. My work covers product development, architecture, APIs, performance, security, code reviews, and AI integrations. I’m comfortable moving between technologies and getting unfamiliar codebases into a shape that teams can ship and maintain.",
+        "I build production-ready software and modernize complex systems - SaaS, internal tools, APIs, and AI-enabled applications. Across 10+ years, I’ve worked with startups shipping MVPs and enterprise teams evolving large-scale products, from architecture and APIs through performance, code review, and production delivery.",
       additional: [
         {
-          label: "Also work with:",
-          text: "NestJS, Tailwind CSS, Cloudflare, AWS, Vercel, Docker, Redis, Kafka, React Native, and Flutter.",
+          label: "Worked with:",
+          text: "NestJS, Tailwind CSS, Docker, Redis, Kafka, Vercel, React Native, and different AI APIs / MCPs.",
+        },
+        {
+          label: "Other tech:",
+          text: "Astro, Svelte, Angular, Flutter, MongoDB, headless CMSs, Chrome extensions, PHP, Python, and Gleam.",
         },
         {
           label: "For fun:",
-          text: "Gleam, Python, and emerging technologies.",
+          text: "Codex, Claude Code, OpenCode, and emerging tools.",
+        },
+        {
+          label: "",
+          text: "Degree in Computer Science.",
         },
       ],
       linksIntro: "Find",

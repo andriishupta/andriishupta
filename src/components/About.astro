@@ -1,6 +1,8 @@
 ---
 import ArrowDown from "@lucide/astro/icons/arrow-down";
 import Atom from "@lucide/astro/icons/atom";
+import Cloud from "@lucide/astro/icons/cloud";
+import Rocket from "@lucide/astro/icons/rocket";
 import Database from "@lucide/astro/icons/database";
 import FileCode from "@lucide/astro/icons/file-code";
 import Server from "@lucide/astro/icons/server";
@@ -12,6 +14,8 @@ const technologyIcons = {
   react: Atom,
   server: Server,
   database: Database,
+  cloud: Cloud,
+  rocket: Rocket,
 };
 ---
 
@@ -39,8 +43,6 @@ const technologyIcons = {
           }
         </ul>
       </div>
-
-      <p class="about__degree">{about.degree}</p>
     </div>
 
     <div class="about__content">
@@ -51,7 +53,9 @@ const technologyIcons = {
       <div class="about__notes">
         {
           about.additional.map((item) => (
-            <p><strong>{item.label}</strong> {item.text}</p>
+            <p>
+              <strong>{item.label}</strong> {item.text}
+            </p>
           ))
         }
       </div>
@@ -61,9 +65,12 @@ const technologyIcons = {
         {
           about.links.map((link, index) => (
             <>
-              {index > 0 && (index === about.links.length - 1 ? ", and " : ", ")}
+              {index > 0 &&
+                (index === about.links.length - 1 ? ", and " : ", ")}
               {link.before}{" "}
-              <a href={link.href} target="_blank" rel="noopener noreferrer">{link.label}</a>
+              <a href={link.href} target="_blank" rel="noopener noreferrer">
+                {link.label}
+              </a>
             </>
           ))
         }.
