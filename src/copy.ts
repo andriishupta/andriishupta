@@ -17,7 +17,7 @@ export const copy = {
   seo: {
     title: "Andrii Shupta - Full-Stack Engineer",
     description:
-      "Full-stack engineer with 10+ years of experience building secure, maintainable software, modernizing products, and turning AI-generated code into production-ready systems.",
+      "Full-stack engineer with 10+ years building secure, maintainable software, modernizing products, and bringing AI-assisted code to production.",
     imageAlt:
       "Andrii Shupta - Full-stack engineer building production-ready software with AI",
     twitterHandle: "@andriishupta",

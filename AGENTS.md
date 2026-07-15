@@ -32,6 +32,8 @@ This repository contains the source for the personal website at `andriishupta.de
 - Keep the site static unless a feature clearly needs client-side JavaScript.
 - Treat SEO as a first-class concern: every page should have a clear title,
   description, canonical path when relevant, and share metadata.
+- Keep homepage meta descriptions within roughly 110–160 characters; update both
+  `public/og-image.svg` and its 1200×630 PNG export when refreshing the share preview.
 - Keep the visual direction creative but restrained: minimal, personal,
   terminal/founder/developer energy, with strong typography and spacing.
 - Use animation sparingly. Prefer subtle fades, hover response, and small

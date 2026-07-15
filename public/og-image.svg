@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title description">
   <title id="title">Andrii Shupta — Full-stack engineer</title>
-  <desc id="description">A monochrome social preview for Andrii Shupta’s personal website.</desc>
+  <desc id="description">A monochrome social preview for Andrii Shupta, a full-stack engineer building secure, production-ready software.</desc>
   <rect width="1200" height="630" fill="#ffffff" />
   <rect width="620" height="630" fill="#080808" />
 
@@ -15,7 +15,7 @@
     <text x="700" y="236" font-size="50" font-weight="700" letter-spacing="-1.5">engineer</text>
     <text x="700" y="288" font-size="24" font-weight="600">10+ years of experience</text>
     <line x1="700" y1="348" x2="1128" y2="348" stroke="#080808" stroke-width="2" />
-    <text x="700" y="410" font-size="29" font-weight="500">Production-ready software</text>
-    <text x="700" y="450" font-size="29" font-weight="500">built with AI, ready to ship.</text>
+    <text x="700" y="410" font-size="29" font-weight="500">Secure, maintainable systems</text>
+    <text x="700" y="450" font-size="29" font-weight="500">with AI-assisted delivery.</text>
   </g>
 </svg>

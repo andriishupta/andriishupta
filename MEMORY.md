@@ -28,6 +28,7 @@
 - SEO:
   - Layout supports title, description, canonical URL, Open Graph, and Twitter metadata.
   - Global metadata includes author, creator, robots, keywords, theme colors, OG locale, and image fallback.
+  - Homepage meta/OG description is kept at 141 characters to avoid search and social truncation; `public/og-image.svg` is the editable source for the 1200×630 PNG preview.
 - Favicon:
   - `public/favicon.svg` is a custom `A` letter mark.
 - Tooling:
