@@ -1,4 +1,4 @@
-const pages = ["/", "/Andrii_Shupta_Lead_Full_Stack_CV.pdf"];
+const pages = ["/", "/Andrii_Shupta_Lead_Full_Stack_CV.pdf", "/llms.txt"];
 const siteUrl = "https://andriishupta.dev";
 
 export function GET() {

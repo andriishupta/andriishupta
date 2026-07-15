@@ -13,4 +13,10 @@
 - React.js: Next.js, TanStack and more
 - PostgreSQL and Supabase
 - AWS, Cloudflare, and more
-- AI-first approaches
+- AI-assisted approaches
+
+## Socials
+- LinkedIn: https://www.linkedin.com/in/andriishupta/
+- GitHub: https://github.com/andriishupta
+- X(Twitter): https://x.com/andriishupta
+- Upwork: https://www.upwork.com/freelancers/andriishupta
