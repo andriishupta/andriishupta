@@ -23,7 +23,7 @@ const additionalFacts = copy.mainPage.about.additional
 const llmsContent = `
 # ${copy.identity.fullName}
 
-> ${copy.seo.description}
+${copy.seo.description}
 
 ## Primary pages
 
