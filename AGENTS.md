@@ -54,4 +54,4 @@ This repository contains the source for the personal website at `andriishupta.de
 - For first-load hero animation states, set a pre-paint HTML data attribute in
   `Layout.astro` and style the initial visual state in CSS; do not use
   layout-changing hiding such as `display: none` or zero height.
-- Read MEMORY.md and update both AGENTS.md and MEMORY.md when code/approaches changed
+- update AGENTS.md when code/approaches changed
