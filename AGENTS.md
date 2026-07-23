@@ -61,6 +61,9 @@ This repository contains the source for the personal website at `andriishupta.de
 - Keep blog chrome visually aligned with the homepage: reuse the same Geologica
   widths and weights, icon sizing, monochrome theme control, ruled links, and
   restrained hover treatment instead of blog-only avatar or card motifs.
+- At widths up to 64rem, the blog list and grid controls intentionally render
+  the same single-column cards with their OG images; their layouts diverge only
+  on larger desktop viewports.
 - Reuse `BlogBreadcrumbs.astro` for the blog index and article hierarchy, and
   keep its visible route labels aligned with `BreadcrumbList` structured data.
 - Render valid Hashnode, DEV Community, and Medium distribution links directly
