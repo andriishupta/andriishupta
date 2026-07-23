@@ -1,0 +1,160 @@
+---
+title: "Cross-Origin iframe communication with Window.postMessage"
+slug: "cross-origin-iframe-communication-with-window-post-message"
+ogImage: "/blog/cross-origin-iframe-communication-with-window-post-message/og.png"
+subtitle: "Securely message between a page and a cross-origin iframe"
+description: "Use the browser postMessage API to exchange tokens and theme state safely between a page and a cross-origin iframe."
+publishedAt: 2022-04-13
+tags:
+  - web-development
+  - web-api
+  - cors
+  - nextjs
+  - reactjs
+distribution:
+  hashnode: "https://blog.andriishupta.dev/cross-origin-iframe-communication-with-window-post-message"
+---
+
+## 🤔 Why do we need cross-origin iframe communication?
+
+Imagine that you need to integrate with the "3rd party service" that would be used as part of your application.
+
+Both of your companies are just start-ups, and we don't have a complete variety of tools that will make our lives easier, so we choose `iframe` as the first option. We *must* integrate what we have now for the beta version. After that, we will refactor the code and will use edge technologies, as our manager promised(😉)
+
+Their app(as an example) could show private information, possibly, some real-time bank details / shipping / trading details, and only available after user authorization.
+
+### 🤓 What could be a better solution?
+
+The best version of integration(IMHO) would be to get a react library with components, hooks, utils, etc., that will do everything for us. For example, check out [React Stripe.js Components](https://stripe.com/docs/stripe-js/react). Second best - take an Open API(example [Stripe API](https://stripe.com/docs/api)) and implement our own components.
+
+## 🤨 What are we going to build?
+
+#### 💭 Idea summary
+
+As the Parent app, we want to login within the `iframe` with some token, so the `iframe` could show relative information. Every N mins(5 secs in this case), our token would expire, and the `iframe` needs to request another. As a bonus, we can change a theme from *dark* to *light*, which could happen from both sides.
+
+---
+
+Mostly I would list code that is only related to the `iframe` and `Web API` part and won't focus on things like an app creation or an explanation of [*"how to deploy to Vercel"*](https://nextjs.org/docs/deployment#managed-nextjs-with-vercel).
+
+The Parent and the Child apps would be our actual implementation of what we need. For the front-end, we are going to use [Next.js](https://nextjs.org/) and [Chakra-UI](https://chakra-ui.com/) for components. We would deploy apps on [Vercel](https://vercel.com/) and [Netlify](https://www.netlify.com/)(to be truly cross-origin).
+
+Also, I would use [Nrwl Nx's workspaces](https://nx.dev/) to have monorepo, keeping run/build processes seamless.
+
+## 👨‍💻 Code(skip to this if you don't want to read the Intro)
+
+### 🤖 "The Communicator."
+
+🔗 [https://iframe-communicator.vercel.app](https://iframe-communicator.vercel.app)
+
+🔗 Github: [https://github.com/andriishupta/iframe-communicator](https://github.com/andriishupta/iframe-communicator)
+
+It is a "special" app you could use for ***real-world testing*** to see how messaging works in your app.
+
+![Iframe Communicator test application](/images/blog/cross-origin-iframe-communication-with-window-post-message/01-iframe-communicator.png)
+
+### 🧑 Parent code
+
+🔗 [link](https://cross-origin-iframe-communication-with-nextjs-parent-app.vercel.app/) to the deployed app
+
+🔗 source code is available for copying [here](https://github.com/andriishupta/cross-origin-iframe-communication-with-nextjs/blob/main/packages/parent-app/pages/index.tsx)
+
+As for the Parent app, we will surely have `iframe` rendered on our side. Let's start from it:
+
+![Parent React component rendering the child application in an iframe](/images/blog/cross-origin-iframe-communication-with-window-post-message/02-iframe3.png)
+
+- **iframeRef** is our [React.js reference](https://reactjs.org/docs/hooks-reference.html#useref) to the DOM element, so we can later use it
+- *onLoad* - this would send my initial token
+
+---
+
+Next: how we send the message is [Window.postMessage](https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage)
+
+> The window.postMessage() method safely enables cross-origin communication between Window objects; e.g., between a page and a pop-up that it spawned, or between a page and an iframe embedded within it.
+
+![Parent application postMessage helper](/images/blog/cross-origin-iframe-communication-with-window-post-message/03-post-message.png)
+
+```ts
+const postMessage = (message: Message) => {
+    iframeRef.current.contentWindow.postMessage(message, CHILD_APP_URL); // OR use '*' to handle all origins
+};
+```
+`postMessage` takes a `message: Message` as the argument - it is our own message **kind** that we selected and agreed with the Child app to pass through:
+
+> The data is serialized using the structured clone algorithm. This means you can pass a broad variety of data objects safely to the destination window without having to serialize them yourself.
+
+---
+
+To send actual message we are using `iframeRef.current.contentWindow` as our `targetWindow`(from documentation) and the function's second parameter is `targetOrigin`:
+
+> Specifies what the origin of targetWindow must be for the event to be dispatched, either as the literal string "*"
+
+I know my `targetOrigin`, so I am passing it and suggesting you not neglect [security risks](https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage#security_concerns).
+
+---
+
+Last but not least, we want to listen to messages from the Child!
+
+![Parent application message event listener](/images/blog/cross-origin-iframe-communication-with-window-post-message/04-listener.png)
+
+Security and filtering: we accept only our messages that we are sure in
+```
+// skip other messages for security reasons and avoid extensions alerts in console
+if (event.origin !== CHILD_APP_URL) {
+  return;
+}
+```
+
+Now, let's get the data from the *MessageEvent* and do some checks and act by business logic:
+
+```
+if (message?.type === 'token-expired-from-child') {
+  ...
+} else if (message?.type === 'theme-from-child') {
+  ...
+} else {
+  //  in case of some random message
+}
+```
+**for more options this code could be improved with switch/case(who likes), ternary operator, or object literals.*
+
+Finish up by adding a listener and return a callback for removal, so when a component goes down, you navigate to another page, where you don't need to listen for an `iframe`.
+
+```
+window.addEventListener('message', handler);
+return () => window.removeEventListener('message', handler);
+```
+
+### 👶 Child code
+
+🔗 [link](https://lustrous-donut-e3b29a.netlify.app) to the deployed app
+
+🔗 source code is available for copying [here](https://github.com/andriishupta/cross-origin-iframe-communication-with-nextjs/blob/main/packages/child-app/pages/index.tsx)
+
+The approach is the same for the Child app, with a twist of where to call *postMessage* - `window.parent`.
+
+![Child application sending a message through window.parent](/images/blog/cross-origin-iframe-communication-with-window-post-message/05-child-post-message.png)
+
+---
+
+And listening to the messages differs in `type`.
+
+![Child application message event listener](/images/blog/cross-origin-iframe-communication-with-window-post-message/06-child-listener.png)
+
+## 🔗 Links
+
+🎨 Parent app: [https://cross-origin-iframe-communication-with-nextjs-parent-app.vercel.app](https://cross-origin-iframe-communication-with-nextjs-parent-app.vercel.app)
+
+👨‍💻 Github: [https://github.com/andriishupta/cross-origin-iframe-communication-with-nextjs](https://github.com/andriishupta/cross-origin-iframe-communication-with-nextjs)
+
+---
+
+🤖 "The Communicator": [https://iframe-communicator.vercel.app](https://iframe-communicator.vercel.app)
+
+👨‍💻 Github for "The Communicator": [https://github.com/andriishupta/cross-origin-iframe-communication-with-nextjs](https://github.com/andriishupta/cross-origin-iframe-communication-with-nextjs)
+
+## 📝 Summary
+
+Cross-Origin iframe communication could come in quite handy in specific situations, and we totally could take advantage of two-way messaging to make that even more dynamic. Check for yourself by clicking the examples.
+
+Thanks for reading!

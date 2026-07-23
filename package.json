@@ -9,21 +9,25 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "npm run build && wrangler dev",
+    "blog:import": "node scripts/import-hashnode-articles.mjs",
+    "blog:verify": "node scripts/verify-blog-content.mjs",
+    "blog:release-check": "pnpm blog:verify && astro build && node scripts/verify-blog-release.mjs",
+    "preview": "npm run build && wrangler pages dev dist",
     "astro": "astro",
     "check": "biome check .",
     "format": "biome format --write .",
     "lint": "biome lint .",
-    "generate-types": "wrangler types",
-    "deploy": "npm run build && wrangler deploy"
+    "deploy": "npm run build && wrangler pages deploy dist"
   },
   "dependencies": {
-    "@astrojs/cloudflare": "^13.6.0",
+    "@astrojs/mdx": "^6.0.3",
+    "@astrojs/rss": "^4.0.19",
     "@fontsource-variable/geologica": "^5.2.8",
     "@lucide/astro": "^1.24.0",
     "@tailwindcss/vite": "^4.3.0",
     "astro": "^6.3.7",
     "gsap": "^3.15.0",
+    "marked": "^18.0.7",
     "tailwindcss": "^4.3.0"
   },
   "devDependencies": {

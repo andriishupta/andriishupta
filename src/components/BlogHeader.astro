@@ -1,0 +1,132 @@
+---
+import ArrowUpRight from "@lucide/astro/icons/arrow-up-right";
+import BriefcaseBusiness from "@lucide/astro/icons/briefcase-business";
+import FileDown from "@lucide/astro/icons/file-down";
+import Mail from "@lucide/astro/icons/mail";
+import Menu from "@lucide/astro/icons/menu";
+import PenLine from "@lucide/astro/icons/pen-line";
+import Rss from "@lucide/astro/icons/rss";
+import UserRound from "@lucide/astro/icons/user-round";
+import { copy } from "../copy";
+import BrandIcon from "./BrandIcon.astro";
+import ThemeSwitcher from "./ThemeSwitcher.astro";
+
+const { outerLinks, innerLinks } = copy.mainPage.header;
+const links = [
+  ...outerLinks.filter((link) => link.id !== "blog"),
+  ...innerLinks,
+];
+const opensNewTab = (href: string) => href.startsWith("http");
+---
+
+<header class="blog-header">
+  <a class="blog-brand" href="/" aria-label={`${copy.identity.fullName} — home`}>
+    <span>{copy.identity.fullName}</span>
+  </a>
+
+  <div class="blog-header__actions">
+    <nav class="blog-socials" aria-label="Elsewhere and feeds">
+      {
+        links.map((link) => (
+          <a
+            class:list={[
+              opensNewTab(link.href) && "blog-socials__external",
+            ]}
+            href={link.href}
+            target={opensNewTab(link.href) ? "_blank" : undefined}
+            rel={opensNewTab(link.href)
+              ? "me noopener noreferrer"
+              : undefined}
+            aria-label={link.label}
+            title={link.label}
+          >
+            {"brand" in link && <BrandIcon name={link.brand} />}
+            {"icon" in link && link.icon === "upwork" && (
+              <BriefcaseBusiness aria-hidden="true" />
+            )}
+            {"icon" in link && link.icon === "cv" && (
+              <FileDown aria-hidden="true" />
+            )}
+            {"icon" in link && link.icon === "blog" && (
+              <PenLine aria-hidden="true" />
+            )}
+            {"icon" in link && link.icon === "about" && (
+              <UserRound aria-hidden="true" />
+            )}
+            {"icon" in link && link.icon === "experience" && (
+              <BriefcaseBusiness aria-hidden="true" />
+            )}
+            {"icon" in link && link.icon === "email" && (
+              <Mail aria-hidden="true" />
+            )}
+            {
+              opensNewTab(link.href) && (
+                <ArrowUpRight
+                  class="blog-socials__out"
+                  aria-hidden="true"
+                />
+              )
+            }
+          </a>
+        ))
+      }
+      <a href="/blog/rss.xml" aria-label="RSS feed" title="RSS feed">
+        <Rss aria-hidden="true" />
+      </a>
+    </nav>
+
+    <details class="blog-menu">
+      <summary aria-label="Open blog menu" title="Menu">
+        <Menu aria-hidden="true" />
+      </summary>
+      <nav aria-label="Blog menu">
+        {
+          links.map((link) => (
+            <a
+              href={link.href}
+              target={opensNewTab(link.href) ? "_blank" : undefined}
+              rel={opensNewTab(link.href)
+                ? "me noopener noreferrer"
+                : undefined}
+            >
+              {"brand" in link && <BrandIcon name={link.brand} />}
+              {"icon" in link && link.icon === "upwork" && (
+                <BriefcaseBusiness aria-hidden="true" />
+              )}
+              {"icon" in link && link.icon === "cv" && (
+                <FileDown aria-hidden="true" />
+              )}
+              {"icon" in link && link.icon === "blog" && (
+                <PenLine aria-hidden="true" />
+              )}
+              {"icon" in link && link.icon === "about" && (
+                <UserRound aria-hidden="true" />
+              )}
+              {"icon" in link && link.icon === "experience" && (
+                <BriefcaseBusiness aria-hidden="true" />
+              )}
+              {"icon" in link && link.icon === "email" && (
+                <Mail aria-hidden="true" />
+              )}
+              <span>{link.label}</span>
+              {
+                opensNewTab(link.href) && (
+                  <ArrowUpRight
+                    class="blog-menu__arrow"
+                    aria-hidden="true"
+                  />
+                )
+              }
+            </a>
+          ))
+        }
+        <a href="/blog/rss.xml">
+          <Rss aria-hidden="true" />
+          <span>RSS feed</span>
+        </a>
+      </nav>
+    </details>
+
+    <ThemeSwitcher embedded />
+  </div>
+</header>

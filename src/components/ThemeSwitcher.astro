@@ -3,6 +3,12 @@ import Monitor from "@lucide/astro/icons/monitor";
 import Moon from "@lucide/astro/icons/moon";
 import Sun from "@lucide/astro/icons/sun";
 
+interface Props {
+  embedded?: boolean;
+}
+
+const { embedded = false } = Astro.props;
+
 const options = [
   { mode: "device", label: "Use device theme", Icon: Monitor },
   { mode: "light", label: "Use light theme", Icon: Sun },
@@ -10,7 +16,10 @@ const options = [
 ] as const;
 ---
 
-<header class="site-controls" aria-label="Appearance settings">
+<div
+  class:list={["site-controls", { "site-controls--embedded": embedded }]}
+  aria-label="Appearance settings"
+>
   <div class="theme-switcher" role="group" aria-label="Color theme">
     {
       options.map(({ mode, label, Icon }) => (
@@ -27,7 +36,7 @@ const options = [
       ))
     }
   </div>
-</header>
+</div>
 
 <script>
   type ThemeMode = "device" | "light" | "dark";

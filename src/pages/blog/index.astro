@@ -1,0 +1,321 @@
+---
+import ArrowRight from "@lucide/astro/icons/arrow-right";
+import LayoutGrid from "@lucide/astro/icons/layout-grid";
+import ListIcon from "@lucide/astro/icons/list";
+import BlogBreadcrumbs from "../../components/BlogBreadcrumbs.astro";
+import BlogFooter from "../../components/BlogFooter.astro";
+import BlogHeader from "../../components/BlogHeader.astro";
+import { copy } from "../../copy";
+import {
+  formatBlogDate,
+  getBlogPosts,
+  getPostPath,
+  getReadingStats,
+  hasMeaningfulUpdate,
+  toIsoDate,
+} from "../../lib/blog";
+import Layout from "../../layouts/Layout.astro";
+import "../../styles/blog.css";
+
+const posts = await getBlogPosts();
+const tagCounts = new Map<string, number>();
+
+for (const post of posts) {
+  for (const tag of post.data.tags) {
+    tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1);
+  }
+}
+
+const topicFilters = Array.from(tagCounts.entries()).sort(
+  ([tagA, countA], [tagB, countB]) =>
+    countB - countA || tagA.localeCompare(tagB),
+);
+const title = `Blog | ${copy.identity.fullName}`;
+const description =
+  "Technical notes by Andrii Shupta on software architecture, web development, integrations, security, and production engineering.";
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Blog",
+      "@id": "https://andriishupta.dev/blog/#blog",
+      url: "https://andriishupta.dev/blog",
+      name: `${copy.identity.fullName} — Blog`,
+      description,
+      inLanguage: "en",
+      author: { "@id": "https://andriishupta.dev/#person" },
+      blogPost: posts.map((post) => ({
+        "@type": "BlogPosting",
+        headline: post.data.title,
+        url: new URL(getPostPath(post), "https://andriishupta.dev").toString(),
+        datePublished: toIsoDate(post.data.publishedAt),
+        dateModified: toIsoDate(post.data.updatedAt ?? post.data.publishedAt),
+      })),
+    },
+    {
+      "@type": "CollectionPage",
+      url: "https://andriishupta.dev/blog",
+      name: title,
+      isPartOf: { "@id": "https://andriishupta.dev/#website" },
+      mainEntity: { "@id": "https://andriishupta.dev/blog/#blog" },
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://andriishupta.dev/blog/#breadcrumb",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: "Home",
+          item: "https://andriishupta.dev/",
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: "Blog",
+          item: "https://andriishupta.dev/blog",
+        },
+      ],
+    },
+  ],
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  pathname="/blog"
+  image="/blog/og.png"
+  imageAlt="Andrii Shupta — technical writing on software and systems"
+  structuredData={structuredData}
+  showThemeSwitcher={false}
+  rss
+>
+  <BlogHeader />
+
+  <main class="blog-index">
+    <header class="blog-index__intro">
+      <BlogBreadcrumbs items={[{ label: "Blog" }]} />
+      <h1>Blog</h1>
+      <p>Notes on software, systems, and the work behind them.</p>
+    </header>
+
+    <section class="blog-controls" aria-label="Browse articles" data-blog-controls>
+      <div class="blog-controls__topics">
+        <p>Topics</p>
+        <div class="blog-topic-filters" role="group" aria-label="Filter by topic">
+          <button
+            type="button"
+            data-blog-filter="all"
+            aria-pressed="true"
+            aria-controls="blog-archive"
+          >
+            <span>All</span>
+            <small>{posts.length}</small>
+          </button>
+          {
+            topicFilters.map(([tag, count]) => (
+              <button
+                type="button"
+                data-blog-filter={tag}
+                aria-pressed="false"
+                aria-controls="blog-archive"
+              >
+                <span>#{tag}</span>
+                <small>{count}</small>
+              </button>
+            ))
+          }
+        </div>
+      </div>
+
+      <div class="blog-view-switcher" role="group" aria-label="Article layout">
+        <button
+          type="button"
+          data-blog-view="list"
+          aria-label="Show articles as a list"
+          aria-pressed="true"
+          title="List view"
+        >
+          <ListIcon aria-hidden="true" />
+        </button>
+        <button
+          type="button"
+          data-blog-view="grid"
+          aria-label="Show articles as a grid"
+          aria-pressed="false"
+          title="Grid view"
+        >
+          <LayoutGrid aria-hidden="true" />
+        </button>
+      </div>
+    </section>
+
+    <p class="blog-results" aria-live="polite" data-blog-results>
+      {posts.length} articles
+    </p>
+
+    <section
+      class="blog-archive"
+      id="blog-archive"
+      aria-label="Articles"
+      data-blog-archive
+      data-view="list"
+    >
+      {
+        posts.map((post) => {
+          const stats = getReadingStats(
+            post.body,
+            post.data.originalReadingMinutes,
+          );
+          const image = post.data.ogImage ?? "/blog/og.png";
+
+          return (
+            <article
+              class="blog-entry"
+              data-blog-entry
+              data-tags={post.data.tags.join(",")}
+            >
+              <a class="blog-entry__link" href={getPostPath(post)}>
+                <div class="blog-entry__content">
+                  <div class="blog-entry__meta">
+                    <time datetime={toIsoDate(post.data.publishedAt)}>
+                      {formatBlogDate(post.data.publishedAt)}
+                    </time>
+                    {stats.readingMinutes > 0 && (
+                      <span>
+                        {stats.readingMinutes} min {stats.isStub ? "original " : ""}read
+                      </span>
+                    )}
+                    {hasMeaningfulUpdate(post) && post.data.updatedAt && (
+                      <span>
+                        Updated {formatBlogDate(post.data.updatedAt)}
+                      </span>
+                    )}
+                  </div>
+
+                  {stats.isStub && (
+                    <span class="blog-entry__status">Import pending</span>
+                  )}
+
+                  <h2>{post.data.title}</h2>
+                  {(post.data.subtitle || post.data.description) && (
+                    <p>{post.data.subtitle ?? post.data.description}</p>
+                  )}
+
+                  <div class="blog-entry__footer">
+                    <ul class="blog-entry__tags" aria-label="Topics">
+                      {post.data.tags.map((tag) => (
+                        <li>#{tag}</li>
+                      ))}
+                    </ul>
+                    <span class="blog-entry__read">
+                      <span class="blog-entry__read-label">Read article</span>
+                      <ArrowRight aria-hidden="true" />
+                    </span>
+                  </div>
+                </div>
+
+                <figure class="blog-entry__image">
+                  <img
+                    src={image}
+                    alt=""
+                    width="1200"
+                    height="630"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </figure>
+              </a>
+            </article>
+          );
+        })
+      }
+    </section>
+  </main>
+
+  <BlogFooter />
+</Layout>
+
+<script>
+  type BlogView = "list" | "grid";
+
+  const archive = document.querySelector<HTMLElement>("[data-blog-archive]");
+  const entries = Array.from(
+    document.querySelectorAll<HTMLElement>("[data-blog-entry]"),
+  );
+  const filterButtons = Array.from(
+    document.querySelectorAll<HTMLButtonElement>("[data-blog-filter]"),
+  );
+  const viewButtons = Array.from(
+    document.querySelectorAll<HTMLButtonElement>("[data-blog-view]"),
+  );
+  const results = document.querySelector<HTMLElement>("[data-blog-results]");
+  const viewStorageKey = "andrii-blog-view";
+
+  const isBlogView = (value: string | null): value is BlogView =>
+    value === "list" || value === "grid";
+
+  const setView = (view: BlogView, persist = true) => {
+    if (!archive) return;
+
+    archive.dataset.view = view;
+    viewButtons.forEach((button) => {
+      button.setAttribute(
+        "aria-pressed",
+        String(button.dataset.blogView === view),
+      );
+    });
+
+    if (persist) {
+      try {
+        window.localStorage.setItem(viewStorageKey, view);
+      } catch {
+        // The view still changes when storage is unavailable.
+      }
+    }
+  };
+
+  const setFilter = (tag: string) => {
+    let visibleCount = 0;
+
+    entries.forEach((entry) => {
+      const entryTags = (entry.dataset.tags ?? "").split(",");
+      const matches = tag === "all" || entryTags.includes(tag);
+      entry.hidden = !matches;
+      if (matches) visibleCount += 1;
+    });
+
+    filterButtons.forEach((button) => {
+      button.setAttribute(
+        "aria-pressed",
+        String(button.dataset.blogFilter === tag),
+      );
+    });
+
+    if (results) {
+      results.textContent =
+        visibleCount === 1 ? "1 article" : `${visibleCount} articles`;
+    }
+  };
+
+  viewButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const view = button.dataset.blogView;
+      if (isBlogView(view ?? null)) setView(view);
+    });
+  });
+
+  filterButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      setFilter(button.dataset.blogFilter ?? "all");
+    });
+  });
+
+  try {
+    const storedView = window.localStorage.getItem(viewStorageKey);
+    if (isBlogView(storedView)) setView(storedView, false);
+  } catch {
+    // List view remains the safe default.
+  }
+</script>

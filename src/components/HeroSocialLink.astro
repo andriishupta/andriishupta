@@ -1,0 +1,62 @@
+---
+import ArrowUpRight from "@lucide/astro/icons/arrow-up-right";
+import BriefcaseBusiness from "@lucide/astro/icons/briefcase-business";
+import FileDown from "@lucide/astro/icons/file-down";
+import Mail from "@lucide/astro/icons/mail";
+import PenLine from "@lucide/astro/icons/pen-line";
+import UserRound from "@lucide/astro/icons/user-round";
+import BrandIcon from "./BrandIcon.astro";
+
+interface Props {
+  link: {
+    label: string;
+    href: string;
+    brand?: "linkedin" | "github" | "x";
+    icon?: "upwork" | "cv" | "about" | "experience" | "blog" | "email";
+  };
+}
+
+const { link } = Astro.props;
+const opensNewTab = link.href.startsWith("http");
+---
+
+<a
+  class="social-link"
+  href={link.href}
+  target={opensNewTab ? "_blank" : undefined}
+  rel={opensNewTab ? "noopener noreferrer" : undefined}
+>
+  {link.brand && <BrandIcon name={link.brand} class="social-link__icon" />}
+  {
+    link.icon === "upwork" && (
+      <BriefcaseBusiness class="social-link__icon" aria-hidden="true" />
+    )
+  }
+  {
+    link.icon === "cv" && (
+      <FileDown class="social-link__icon" aria-hidden="true" />
+    )
+  }
+  {
+    link.icon === "blog" && (
+      <PenLine class="social-link__icon" aria-hidden="true" />
+    )
+  }
+  {
+    link.icon === "about" && (
+      <UserRound class="social-link__icon" aria-hidden="true" />
+    )
+  }
+  {
+    link.icon === "experience" && (
+      <BriefcaseBusiness class="social-link__icon" aria-hidden="true" />
+    )
+  }
+  {
+    link.icon === "email" && (
+      <Mail class="social-link__icon" aria-hidden="true" />
+    )
+  }
+  <span>{link.label}</span>
+  {opensNewTab && <ArrowUpRight class="social-link__arrow" aria-hidden="true" />}
+</a>

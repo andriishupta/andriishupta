@@ -1,10 +1,15 @@
+const email = "hello@andriishupta.dev";
+
 export const urls = {
   linkedin: "https://www.linkedin.com/in/andriishupta/",
   github: "https://github.com/andriishupta/",
   x: "https://x.com/andriishupta",
   upwork: "https://www.upwork.com/freelancers/andriishupta",
   cv: "/Andrii_Shupta_Lead_Full_Stack_CV.pdf",
-  blog: "https://blog.andriishupta.dev",
+  about: "/#about",
+  experience: "/#experience",
+  blogPath: "/blog",
+  email: `mailto:${email}`,
 } as const;
 
 export const copy = {
@@ -13,6 +18,7 @@ export const copy = {
     lastName: "Shupta",
     fullName: "Andrii Shupta",
     username: "andriishupta",
+    email,
   },
   seo: {
     title: "Andrii Shupta - Full-Stack Engineer",
@@ -56,13 +62,53 @@ export const copy = {
     header: {
       nameLines: ["Andrii", "Shupta"],
       linksLabel: "Andrii Shupta elsewhere",
-      links: [
-        { label: "LinkedIn", href: urls.linkedin, brand: "linkedin" },
-        { label: "GitHub", href: urls.github, brand: "github" },
-        { label: "Twitter", href: urls.x, brand: "x" },
-        { label: "Upwork", href: urls.upwork, icon: "upwork" },
-        { label: "CV", href: urls.cv, icon: "cv" },
-        { label: "Blog", href: urls.blog, icon: "blog" },
+      outerLinks: [
+        {
+          id: "linkedin",
+          label: "LinkedIn",
+          href: urls.linkedin,
+          brand: "linkedin",
+        },
+        {
+          id: "github",
+          label: "GitHub",
+          href: urls.github,
+          brand: "github",
+        },
+        { id: "x", label: "Twitter", href: urls.x, brand: "x" },
+        {
+          id: "upwork",
+          label: "Upwork",
+          href: urls.upwork,
+          icon: "upwork",
+        },
+      ],
+      innerLinks: [
+        { id: "cv", label: "CV", href: urls.cv, icon: "cv" },
+        {
+          id: "about",
+          label: "About",
+          href: urls.about,
+          icon: "about",
+        },
+        {
+          id: "experience",
+          label: "Experience",
+          href: urls.experience,
+          icon: "experience",
+        },
+        {
+          id: "blog",
+          label: "Blog",
+          href: urls.blogPath,
+          icon: "blog",
+        },
+        {
+          id: "email",
+          label: "Email",
+          href: urls.email,
+          icon: "email",
+        },
       ],
     },
     intro: {
@@ -118,7 +164,11 @@ export const copy = {
           href: urls.linkedin,
         },
         { before: "code on", label: "GitHub", href: urls.github },
-        { before: "longer notes on", label: "the blog", href: urls.blog },
+        {
+          before: "longer notes on",
+          label: "the blog",
+          href: urls.blogPath,
+        },
         { before: "short updates on", label: "X", href: urls.x },
         { before: "a concise overview in", label: "my CV", href: urls.cv },
       ],

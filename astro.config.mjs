@@ -1,27 +1,25 @@
 // @ts-check
 
 import tailwindcss from "@tailwindcss/vite";
-import { defineConfig, sessionDrivers } from "astro/config";
+import { defineConfig } from "astro/config";
 
-import cloudflare from "@astrojs/cloudflare";
+import mdx from "@astrojs/mdx";
 
 // https://astro.build/config
 export default defineConfig({
   site: "https://andriishupta.dev",
 
-  devToolbar: {
-    enabled: false,
+  build: {
+    format: "file",
   },
 
-  session: {
-    driver: sessionDrivers.lruCache(),
+  integrations: [mdx()],
+
+  devToolbar: {
+    enabled: false,
   },
 
   vite: {
     plugins: [tailwindcss()],
   },
-
-  adapter: cloudflare({
-    imageService: "passthrough",
-  }),
 });

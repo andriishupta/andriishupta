@@ -1,6 +1,6 @@
 ---
 import ArrowLeft from "@lucide/astro/icons/arrow-left";
-import ArrowUpRight from "@lucide/astro/icons/arrow-up-right";
+import ArrowRight from "@lucide/astro/icons/arrow-right";
 import { copy, urls } from "../copy";
 import Layout from "../layouts/Layout.astro";
 
@@ -33,9 +33,9 @@ const description =
                     <ArrowLeft aria-hidden="true" />
                     <span>Back home</span>
                 </a>
-                <a href={urls.blog}>
+                <a href={urls.blogPath}>
                     <span>Open the blog</span>
-                    <ArrowUpRight aria-hidden="true" />
+                    <ArrowRight aria-hidden="true" />
                 </a>
             </nav>
         </section>
