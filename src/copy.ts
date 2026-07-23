@@ -86,18 +86,6 @@ export const copy = {
       innerLinks: [
         { id: "cv", label: "CV", href: urls.cv, icon: "cv" },
         {
-          id: "about",
-          label: "About",
-          href: urls.about,
-          icon: "about",
-        },
-        {
-          id: "experience",
-          label: "Experience",
-          href: urls.experience,
-          icon: "experience",
-        },
-        {
           id: "blog",
           label: "Blog",
           href: urls.blogPath,
@@ -105,7 +93,7 @@ export const copy = {
         },
         {
           id: "email",
-          label: "Email",
+          label: "Email me",
           href: urls.email,
           icon: "email",
         },

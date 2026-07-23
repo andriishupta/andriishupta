@@ -4,11 +4,8 @@ import { copy } from "../copy";
 import HeroSocialLink from "./HeroSocialLink.astro";
 
 const { header, intro } = copy.mainPage;
-const primaryLinks = [
-  ...header.outerLinks,
-  ...header.innerLinks.filter((link) => link.id === "cv"),
-];
-const siteLinks = header.innerLinks.filter((link) => link.id !== "cv");
+const primaryLinks = header.outerLinks;
+const siteLinks = header.innerLinks;
 ---
 
 <main class="hero scroll-section" data-hero>
@@ -27,9 +24,7 @@ const siteLinks = header.innerLinks.filter((link) => link.id !== "cv");
       </h1>
 
       <nav class="social-links" aria-label={header.linksLabel} data-hero-links>
-        {
-          primaryLinks.map((link) => <HeroSocialLink link={link} />)
-        }
+        {primaryLinks.map((link) => <HeroSocialLink link={link} />)}
         <div class="social-links__site" role="group" aria-label="On this site">
           {siteLinks.map((link) => <HeroSocialLink link={link} />)}
         </div>
