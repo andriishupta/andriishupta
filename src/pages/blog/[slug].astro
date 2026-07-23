@@ -1,0 +1,27 @@
+---
+import { getBlogPosts, type BlogPost } from "../../lib/blog";
+import BlogPostLayout from "../../layouts/BlogPostLayout.astro";
+
+interface Props {
+  post: BlogPost;
+  newerPost?: BlogPost;
+  olderPost?: BlogPost;
+}
+
+export async function getStaticPaths() {
+  const posts = await getBlogPosts();
+
+  return posts.map((post, index) => ({
+    params: { slug: post.data.slug },
+    props: {
+      post,
+      newerPost: posts[index - 1],
+      olderPost: posts[index + 1],
+    },
+  }));
+}
+
+const { post, newerPost, olderPost } = Astro.props;
+---
+
+<BlogPostLayout post={post} newerPost={newerPost} olderPost={olderPost} />

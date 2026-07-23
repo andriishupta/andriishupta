@@ -104,6 +104,10 @@ a {
   z-index: var(--z-controls);
 }
 
+.site-controls--embedded {
+  position: static;
+}
+
 .theme-switcher {
   display: flex;
   gap: 0.125rem;

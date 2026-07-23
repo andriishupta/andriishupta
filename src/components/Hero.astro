@@ -31,8 +31,8 @@ const { header, intro } = copy.mainPage;
             <a
               class="social-link"
               href={link.href}
-              target="_blank"
-              rel="noopener noreferrer"
+              target={link.href.startsWith("/") ? undefined : "_blank"}
+              rel={link.href.startsWith("/") ? undefined : "noopener noreferrer"}
             >
               {"brand" in link && (
                 <BrandIcon name={link.brand} class="social-link__icon" />

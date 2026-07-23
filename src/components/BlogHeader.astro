@@ -1,0 +1,69 @@
+---
+import ArrowUpRight from "@lucide/astro/icons/arrow-up-right";
+import Menu from "@lucide/astro/icons/menu";
+import Rss from "@lucide/astro/icons/rss";
+import { copy, urls } from "../copy";
+import BrandIcon from "./BrandIcon.astro";
+import ThemeSwitcher from "./ThemeSwitcher.astro";
+
+const links = [
+  { label: "LinkedIn", href: urls.linkedin, brand: "linkedin" },
+  { label: "GitHub", href: urls.github, brand: "github" },
+  { label: "X", href: urls.x, brand: "x" },
+] as const;
+---
+
+<header class="blog-header">
+  <a class="blog-brand" href="/" aria-label={`${copy.identity.fullName} — home`}>
+    <span>{copy.identity.fullName}</span>
+  </a>
+
+  <div class="blog-header__actions">
+    <nav class="blog-socials" aria-label="Elsewhere and feeds">
+      {
+        links.map((link) => (
+          <a
+            href={link.href}
+            target="_blank"
+            rel="me noopener noreferrer"
+            aria-label={link.label}
+            title={link.label}
+          >
+            <BrandIcon name={link.brand} />
+          </a>
+        ))
+      }
+      <a href="/blog/rss.xml" aria-label="RSS feed" title="RSS feed">
+        <Rss aria-hidden="true" />
+      </a>
+    </nav>
+
+    <details class="blog-menu">
+      <summary aria-label="Open blog menu" title="Menu">
+        <Menu aria-hidden="true" />
+      </summary>
+      <nav aria-label="Blog menu">
+        {
+          links.map((link) => (
+            <a
+              href={link.href}
+              target="_blank"
+              rel="me noopener noreferrer"
+            >
+              <BrandIcon name={link.brand} />
+              <span>{link.label}</span>
+              <ArrowUpRight class="blog-menu__arrow" aria-hidden="true" />
+            </a>
+          ))
+        }
+        <a href="/blog/rss.xml">
+          <Rss aria-hidden="true" />
+          <span>RSS feed</span>
+          <ArrowUpRight class="blog-menu__arrow" aria-hidden="true" />
+        </a>
+      </nav>
+    </details>
+
+    <ThemeSwitcher embedded />
+  </div>
+</header>

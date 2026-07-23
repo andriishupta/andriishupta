@@ -23,7 +23,10 @@ This repository contains the source for the personal website at `andriishupta.de
 - `src/pages/` - Astro routes. `src/pages/index.astro` is the home page.
 - `src/layouts/` - shared page layouts.
 - `src/components/` - reusable Astro components.
+- `src/content/blog/` - typed Markdown/MDX blog entries.
+- `src/lib/blog.ts` - shared blog ordering, URL, date, and reading-stat helpers.
 - `public/` - static files served from the site root, including favicons.
+- `workers/blog-redirect.ts` - redirect-only Worker for the retired blog subdomain.
 - `astro.config.mjs` - Astro configuration.
 
 ## Working Notes
@@ -32,6 +35,18 @@ This repository contains the source for the personal website at `andriishupta.de
 - Keep the site static unless a feature clearly needs client-side JavaScript.
 - Treat SEO as a first-class concern: every page should have a clear title,
   description, canonical path when relevant, and share metadata.
+- Blog canonicals always use `andriishupta.dev/blog/[slug]`. Cross-post URLs are
+  distribution metadata and do not affect ordering or `updatedAt`.
+- Empty migration stubs stay `noindex` and out of RSS/sitemaps until body content
+  is imported. Do not deploy the blog-subdomain redirect Worker before the
+  destination articles are complete.
+- Keep blog slugs stable. Article order is derived from `publishedAt`, while
+  `updatedAt` is reserved for material changes to first-party content.
+- Keep blog chrome visually aligned with the homepage: reuse the same Geologica
+  widths and weights, icon sizing, monochrome theme control, ruled links, and
+  restrained hover treatment instead of blog-only avatar or card motifs.
+- Blog OG images are generated as 1200×630 PNG files at build time unless an
+  entry supplies `ogImage`.
 - Keep homepage meta descriptions within roughly 110–160 characters; update both
   `public/og-image.svg` and its 1200×630 PNG export when refreshing the share preview.
 - Keep the visual direction creative but restrained: minimal, personal,
@@ -46,6 +61,8 @@ This repository contains the source for the personal website at `andriishupta.de
   and blog preview. Do not add a projects section unless asked.
 - Run `npm run build` before handing off changes that affect rendering,
   routing, configuration, or dependencies.
+- See `docs/blog-authoring.md` for the blog frontmatter schema, publishing flow,
+  image conventions, and redirect cutover checklist.
 - The repository may contain git changes from the Next.js-to-Astro migration;
   do not restore deleted Next.js, shadcn, Tailwind, or React files unless asked.
 - Keep custom section-by-section scrolling limited to fine-pointer desktop

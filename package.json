@@ -7,7 +7,10 @@
     "node": ">=22.12.0"
   },
   "scripts": {
+    "blog:og": "node scripts/generate-blog-og.mjs",
+    "predev": "npm run blog:og",
     "dev": "astro dev",
+    "prebuild": "npm run blog:og",
     "build": "astro build",
     "preview": "npm run build && wrangler dev",
     "astro": "astro",
@@ -15,15 +18,21 @@
     "format": "biome format --write .",
     "lint": "biome lint .",
     "generate-types": "wrangler types",
+    "deploy:blog-redirect": "wrangler deploy --config wrangler.blog-redirect.jsonc",
     "deploy": "npm run build && wrangler deploy"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^13.6.0",
+    "@astrojs/mdx": "^6.0.3",
+    "@astrojs/rss": "^4.0.19",
     "@fontsource-variable/geologica": "^5.2.8",
     "@lucide/astro": "^1.24.0",
     "@tailwindcss/vite": "^4.3.0",
     "astro": "^6.3.7",
+    "gray-matter": "^4.0.3",
     "gsap": "^3.15.0",
+    "marked": "^18.0.7",
+    "sharp": "^0.35.3",
     "tailwindcss": "^4.3.0"
   },
   "devDependencies": {

@@ -1,6 +1,7 @@
 import { copy, urls } from "../copy";
 
 const homepage = "https://andriishupta.dev";
+const blog = new URL(urls.blog, homepage).toString();
 
 const socials = ["LinkedIn", "GitHub", "Twitter", "Upwork"]
   .map((label) =>
@@ -29,7 +30,7 @@ ${copy.seo.description}
 
 - [Home](${homepage}): ${copy.mainPage.intro.heading}
 - [CV](${homepage}${urls.cv}): Concise professional experience and skills.
-- [Blog](${urls.blog}/): Technical writing by ${copy.identity.fullName}.
+- [Blog](${blog}): Technical writing by ${copy.identity.fullName}.
 
 ## Technology stack
 - Main: ${mainTechnologies}

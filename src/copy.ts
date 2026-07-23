@@ -4,7 +4,7 @@ export const urls = {
   x: "https://x.com/andriishupta",
   upwork: "https://www.upwork.com/freelancers/andriishupta",
   cv: "/Andrii_Shupta_Lead_Full_Stack_CV.pdf",
-  blog: "https://blog.andriishupta.dev",
+  blog: "/blog",
 } as const;
 
 export const copy = {

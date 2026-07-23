@@ -1,0 +1,17 @@
+---
+import ArrowLeft from "@lucide/astro/icons/arrow-left";
+import Rss from "@lucide/astro/icons/rss";
+import { copy } from "../copy";
+---
+
+<footer class="blog-footer">
+  <a href="/blog/rss.xml">
+    <Rss aria-hidden="true" />
+    <span>RSS feed</span>
+  </a>
+  <a href="/">
+    <ArrowLeft aria-hidden="true" />
+    <span>Back home</span>
+  </a>
+  <p>© {new Date().getUTCFullYear()} {copy.identity.fullName}</p>
+</footer>

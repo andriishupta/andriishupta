@@ -1,0 +1,298 @@
+---
+import ArrowLeft from "@lucide/astro/icons/arrow-left";
+import ArrowRight from "@lucide/astro/icons/arrow-right";
+import ExternalLink from "@lucide/astro/icons/external-link";
+import { render } from "astro:content";
+import ArticleToc from "../components/ArticleToc.astro";
+import BlogFooter from "../components/BlogFooter.astro";
+import BlogHeader from "../components/BlogHeader.astro";
+import { copy, urls } from "../copy";
+import {
+  formatBlogDate,
+  getPostPath,
+  getReadingStats,
+  hasMeaningfulUpdate,
+  toIsoDate,
+  type BlogPost,
+} from "../lib/blog";
+import "../styles/blog.css";
+import Layout from "./Layout.astro";
+
+interface Props {
+  post: BlogPost;
+  newerPost?: BlogPost;
+  olderPost?: BlogPost;
+}
+
+const { post, newerPost, olderPost } = Astro.props;
+const { Content, headings } = await render(post);
+const { data } = post;
+const stats = getReadingStats(post.body, data.originalReadingMinutes);
+const path = getPostPath(post);
+const canonicalUrl = new URL(path, "https://andriishupta.dev").toString();
+const ogImage = data.ogImage ?? `${path}/og.png`;
+const dateModified = data.updatedAt ?? data.publishedAt;
+const distributionLinks = [
+  { label: "Hashnode", href: data.distribution.hashnode },
+  { label: "DEV Community", href: data.distribution.devto },
+  { label: "Medium", href: data.distribution.medium },
+].filter((item): item is { label: string; href: string } => Boolean(item.href));
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "@id": `${canonicalUrl}#article`,
+  headline: data.title,
+  description: data.description,
+  datePublished: toIsoDate(data.publishedAt),
+  dateModified: toIsoDate(dateModified),
+  inLanguage: "en",
+  mainEntityOfPage: canonicalUrl,
+  image: new URL(ogImage, canonicalUrl).toString(),
+  author: {
+    "@type": "Person",
+    "@id": "https://andriishupta.dev/#person",
+    name: copy.identity.fullName,
+    url: "https://andriishupta.dev",
+    sameAs: [urls.linkedin, urls.github, urls.x],
+  },
+  isPartOf: {
+    "@type": "Blog",
+    "@id": "https://andriishupta.dev/blog/#blog",
+    name: `${copy.identity.fullName} — Writing`,
+  },
+  keywords: data.tags.join(", "),
+  ...(stats.wordCount > 0
+    ? {
+        wordCount: stats.wordCount,
+        timeRequired: `PT${stats.readingMinutes}M`,
+      }
+    : {}),
+};
+---
+
+<Layout
+  title={`${data.title} | ${copy.identity.fullName}`}
+  description={data.description}
+  pathname={path}
+  image={ogImage}
+  imageAlt={`${data.title} — ${copy.identity.fullName}`}
+  ogType="article"
+  structuredData={structuredData}
+  robots={stats.isStub ? "noindex, follow" : undefined}
+  showThemeSwitcher={false}
+  rss
+  publishedTime={data.publishedAt.toISOString()}
+  modifiedTime={dateModified.toISOString()}
+  tags={data.tags}
+>
+  <BlogHeader />
+
+  <main class="article-page">
+    <header class="article-hero">
+      <a class="article-hero__back" href="/blog">
+        <ArrowLeft aria-hidden="true" />
+        <span>All writing</span>
+      </a>
+      <h1>{data.title}</h1>
+      {data.subtitle && <p class="article-hero__subtitle">{data.subtitle}</p>}
+
+      <div class="article-meta">
+        <a class="article-author" href="/" rel="author">
+          <strong>{copy.identity.fullName}</strong>
+        </a>
+        <dl>
+          <div>
+            <dt>Published</dt>
+            <dd>
+              <time datetime={toIsoDate(data.publishedAt)}>
+                {formatBlogDate(data.publishedAt)}
+              </time>
+            </dd>
+          </div>
+          {
+            hasMeaningfulUpdate(post) && data.updatedAt && (
+              <div>
+                <dt>Updated</dt>
+                <dd>
+                  <time datetime={toIsoDate(data.updatedAt)}>
+                    {formatBlogDate(data.updatedAt)}
+                  </time>
+                </dd>
+              </div>
+            )
+          }
+          {
+            stats.readingMinutes > 0 && (
+              <div>
+                <dt>{stats.isStub ? "Original read" : "Reading time"}</dt>
+                <dd>{stats.readingMinutes} min</dd>
+              </div>
+            )
+          }
+          {
+            stats.wordCount > 0 && (
+              <div>
+                <dt>Words</dt>
+                <dd>{stats.wordCount.toLocaleString("en")}</dd>
+              </div>
+            )
+          }
+        </dl>
+      </div>
+
+      <ArticleToc headings={headings} mobile />
+    </header>
+
+    {
+      data.cover && (
+        <figure class="article-cover">
+          <img
+            src={data.cover}
+            alt={data.coverAlt ?? ""}
+            width="1200"
+            height="630"
+            loading="eager"
+            fetchpriority="high"
+          />
+        </figure>
+      )
+    }
+
+    <div
+      class:list={[
+        "article-grid",
+        { "article-grid--no-toc": headings.length === 0 },
+      ]}
+    >
+      <ArticleToc headings={headings} />
+      <article class="article-content" data-article-content>
+        {
+          stats.isStub ? (
+            <div class="article-import-note">
+              <h2>Article import in progress</h2>
+              <p>
+                The permanent URL and original metadata are in place. The article body
+                is still being moved from the previous publication.
+              </p>
+              {data.distribution.hashnode && (
+                <a
+                  href={data.distribution.hashnode}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Read the original on Hashnode
+                  <ExternalLink aria-hidden="true" />
+                </a>
+              )}
+            </div>
+          ) : (
+            <Content />
+          )
+        }
+      </article>
+    </div>
+
+    <footer class="article-end">
+      {
+        distributionLinks.length > 0 && (
+          <section class="article-distribution" aria-labelledby="published-elsewhere">
+            <h2 id="published-elsewhere">Also published on</h2>
+            <div class="article-distribution__links">
+              {distributionLinks.map((item) => (
+                <a
+                  href={item.href}
+                  target="_blank"
+                  rel="syndication noopener noreferrer"
+                >
+                  <span>{item.label}</span>
+                  <ExternalLink aria-hidden="true" />
+                </a>
+              ))}
+            </div>
+          </section>
+        )
+      }
+
+      <nav class="article-neighbors" aria-label="More articles">
+        {
+          newerPost ? (
+            <a href={getPostPath(newerPost)}>
+              <ArrowLeft aria-hidden="true" />
+              <span>
+                <small>Newer article</small>
+                <strong>{newerPost.data.title}</strong>
+              </span>
+            </a>
+          ) : (
+            <span />
+          )
+        }
+        {
+          olderPost && (
+            <a href={getPostPath(olderPost)}>
+              <span>
+                <small>Older article</small>
+                <strong>{olderPost.data.title}</strong>
+              </span>
+              <ArrowRight aria-hidden="true" />
+            </a>
+          )
+        }
+      </nav>
+
+    </footer>
+  </main>
+
+  <BlogFooter />
+</Layout>
+
+<script>
+  const article = document.querySelector<HTMLElement>("[data-article-content]");
+
+  article?.querySelectorAll("pre").forEach((pre) => {
+    const code = pre.querySelector("code");
+    if (!code || pre.querySelector("[data-copy-code]")) return;
+
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "code-copy";
+    button.dataset.copyCode = "";
+    button.textContent = "Copy";
+    button.setAttribute("aria-label", "Copy code block");
+    button.addEventListener("click", async () => {
+      await navigator.clipboard.writeText(code.textContent ?? "");
+      button.textContent = "Copied";
+      window.setTimeout(() => {
+        button.textContent = "Copy";
+      }, 1600);
+    });
+    pre.append(button);
+  });
+
+  const tocLinks = Array.from(
+    document.querySelectorAll<HTMLAnchorElement>("[data-toc-link]"),
+  );
+  const headingIds = [...new Set(tocLinks.map((link) => link.dataset.tocLink))];
+  const headings = headingIds
+    .map((id) => (id ? document.getElementById(id) : null))
+    .filter((heading): heading is HTMLElement => Boolean(heading));
+
+  if (headings.length > 0 && "IntersectionObserver" in window) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const active = entries.find((entry) => entry.isIntersecting);
+        if (!active) return;
+
+        tocLinks.forEach((link) => {
+          if (link.dataset.tocLink === active.target.id) {
+            link.setAttribute("aria-current", "location");
+          } else {
+            link.removeAttribute("aria-current");
+          }
+        });
+      },
+      { rootMargin: "-16% 0px -68%", threshold: 0 },
+    );
+    headings.forEach((heading) => observer.observe(heading));
+  }
+</script>
