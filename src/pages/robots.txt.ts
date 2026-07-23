@@ -6,7 +6,6 @@ export function GET() {
       "User-agent: *",
       "Allow: /",
       `Sitemap: ${new URL("/sitemap.xml", siteUrl).toString()}`,
-      `Sitemap: ${new URL("/blog/sitemap.xml", siteUrl).toString()}`,
     ].join("\n")}\n`,
     {
       headers: {

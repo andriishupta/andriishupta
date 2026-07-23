@@ -11,7 +11,6 @@
       "!!**/dist",
       "!astro.config.mjs",
       "!package-lock.json",
-      "!worker-configuration.d.ts",
       "!wrangler.jsonc"
     ]
   },

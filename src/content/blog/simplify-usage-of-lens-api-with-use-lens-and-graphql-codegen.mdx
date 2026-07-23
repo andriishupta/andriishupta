@@ -1,6 +1,7 @@
 ---
 title: "Simplify usage of Lens API with @use-lens and graphql-codegen"
 slug: "simplify-usage-of-lens-api-with-use-lens-and-graphql-codegen"
+ogImage: "/blog/simplify-usage-of-lens-api-with-use-lens-and-graphql-codegen/og.png"
 subtitle: "How to Generate Code from GraphQL for easier Lens API Use"
 description: "Generate type-safe Lens API operations and React hooks with @use-lens and GraphQL Code Generator."
 publishedAt: 2022-10-04
@@ -9,7 +10,118 @@ tags:
   - javascript
   - lensprotocol
   - graphql
-originalReadingMinutes: 4
 distribution:
   hashnode: "https://blog.andriishupta.dev/simplify-usage-of-lens-api-with-use-lens-and-graphql-codegen"
 ---
+
+## 🔗 Links
+- [andriishupta | Github](https://github.com/andriishupta)
+- [Use Lens | Github](https://github.com/use-lens/use-lens)
+- [Lens API](https://docs.lens.xyz)
+- [GraphQL Code Generator](https://the-guild.dev/graphql/codegen)
+
+## 🤓 Intro
+Recently, I have used Lens API to build some playground apps and noticed a repetitive task: I created Lens API Queries and Mutations for every project and used [GraphQL Code Generator](https://the-guild.dev/graphql/codegen) to use React hooks with Apollo Client.
+
+After 2nd time doing the same job, I decided to create a library for easier use of Lens API that would save me some time to do actual work.
+
+I have never created open-source packages and thought it would be a great experience to do it, even if only I would use it 😅.
+
+npm [@use-lens](https://www.npmjs.com/org/use-lens) so far contains 2 packages - *CLI* and *react-apollo*. Later in this article, I will explain how to use them and when, and the same information could be found in the [repo's README.md](https://github.com/use-lens/use-lens/#-usage).
+I will explain how I see the best use of `@use-lens/*` later in the article.
+
+Also, I liked Lens Protocol so much that I have created Github Organization [Use Lens](https://github.com/use-lens), where I plan to develop and publish some tools, examples and apps working on top of Lens.
+
+### Technology
+> Lens Protocol is a composable and decentralized social graph, ready for you to build on so you can focus on creating a great experience, not scaling your users.
+>
+> Own your content. Own your social graph. Own your data.
+
+If you have read so far - you know what Lens API is and how to use it. If you are here to check out `@use-lens` or just to check how to generate GraphQL code - educate yourself of Lens Protocol and API here:
+
+🌿 [https://docs.lens.xyz](https://docs.lens.xyz).
+
+[GraphQL Code Generator](https://the-guild.dev/graphql/codegen) - is a tool to build read-to-use code from your GraphQL schema and operations with a simple CLI with a lot of plugins for different frameworks: React, Next.js, Svelte, Vue with Apollo, URLQ and others - you name it.
+
+## 🧑‍💻 How to
+
+### Generate with [@use-lens/cli](https://github.com/use-lens/use-lens/tree/main/packages/cli)
+```bash
+npm install --save-dev @use-lens/cli
+use-lens generate %PACKAGE%
+```
+
+with `npx`
+```bash
+npx @use-lens/cli generate %PACKAGE%
+```
+
+This would copy essential files of Lens API to your repo and would run `graphql-codegen` to generate the code. By default, it would go to `src/lens-api/index.ts`.
+From here, you could adjust `tsconfig.json` to use it with `@use-lens` shortening, so it would feel like a package usage. More on how to do it [here](https://github.com/use-lens/use-lens/tree/main/packages/cli#optional-tsconfigs-paths).
+
+### With `@use-lens/*`
+The simple `npm install --save @use-lens/%PACKAGE%` and use it as a regular package.
+
+```ts
+import {
+  GlobalProtocolStatsDocument,
+  GlobalProtocolStats as GlobalProtocolStatsType,
+  useGlobalProtocolStatsQuery,
+  useGlobalProtocolStatsLazyQuery,
+} from '@use-lens/react-apollo'
+```
+
+### Manual GraphQL Code Generator
+The default approach is simple and could be followed by official docs [here](https://the-guild.dev/graphql/codegen/docs/getting-started)
+
+On high-level:
+- install `@graphql-codegen/cli`
+- pick a plugin for your stack: for example, [react-apollo](https://www.the-guild.dev/graphql/codegen/plugins/typescript/typescript-react-apollo) and install it
+- get your GraphQL Schema and Documents
+- create basic `codegen.yml` for `graphql-codegen`
+- run `graphql-codegen`
+
+In your `codegen.yml`, you should specify schema, documents, where to save, and with what:
+
+```yaml
+schema: schema.graphql # full schema; could be HTTP link
+documents: documents.graphql # queries and mutations that you want to have
+generates:
+  ./src/my-api/index.ts: # where to save
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-react-apollo # stack that you are going to use
+```
+
+## ⚠️ CAUTION
+🌿 [https://docs.lens.xyz/docs/introduction](https://docs.lens.xyz/docs/introduction):
+
+> This API is beta and not production complete yet, which means that we could change schemas and endpoints at any time without warning or notice to you. When this API is production ready, we will remove this beta warning and will endeavor to ensure that there are no changes going forward unless a major change to the protocol itself is required.
+
+Lens API is not production complete, and so is `@use-lens/*`. Please, keep this in mind when going to production.
+
+### Recommended use
+If you want to **play with Lens API** - don't hesitate and install some of the `@use-lens/*` packages - it will give you all you need to start.
+
+If you want to **have more control** - use `@use-lens/cli` to generate code locally. This would copy essential files that a package contains and would run `graphql-codegen`.
+
+You would be able to do more with `codegen.yml`.
+
+## 👨‍🏫 React with Apollo Client
+For `@use-lens/react-apollo`, I have prepared an example of how to use it.
+
+Check out the source code [here](https://github.com/use-lens/use-lens/tree/main/examples/react-apollo)
+
+![React example showing Lens global protocol statistics](/images/blog/simplify-usage-of-lens-api-with-use-lens-and-graphql-codegen/01-use-lens-react-apollo-example.png)
+
+![React example showing Lens recommended profiles](/images/blog/simplify-usage-of-lens-api-with-use-lens-and-graphql-codegen/02-use-lens-react-apollo-example-2.png)
+
+## 🤝 Lens API Documents
+The complete set of Lens API Documents has been taken from [api-examples](https://github.com/lens-protocol/api-examples), a repo of Lens Protocol that shows how to use Lens API.
+The same (or similar) queries are given as examples in Lens API docs.
+
+## 📚 Summary
+If you would like to use Lens API to see what it is - simplify your developer experience by using [@use-lens](https://github.com/use-lens/use-lens) or [GraphQL Code Generator](https://the-guild.dev/graphql/codegen).
+
+Thanks for reading! 🙇

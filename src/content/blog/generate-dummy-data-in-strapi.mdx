@@ -1,6 +1,7 @@
 ---
 title: "Generate Dummy Data in Strapi"
 slug: "generate-dummy-data-in-strapi"
+ogImage: "/blog/generate-dummy-data-in-strapi/og.png"
 subtitle: "How to seed data in Strapi using faker.js"
 description: "Seed Strapi collection types, single types, relations, and media with realistic development data from faker.js."
 publishedAt: 2022-08-16
@@ -8,7 +9,87 @@ updatedAt: 2022-10-04
 tags:
   - nodejs
   - strapi
-originalReadingMinutes: 3
 distribution:
   hashnode: "https://blog.andriishupta.dev/generate-dummy-data-in-strapi"
 ---
+
+## 🔗 Links
+- github: [andriishupta/strapi-generate-seed-data](https://github.com/andriishupta/strapi-generate-seed-data)
+- Strapi's video with a general idea of how to ["Generate dummy data"](https://strapi.io/video-library/generate-dummy-data-in-strapi)
+
+## 🤓 Motivation
+[Strapi](https://strapi.io/) is powerful open-source headless CMS that helps projects control code customization with extensibility and, at the same time, don't worry about implementing a full-blown Content Management System on their own.
+
+So, after you have set up your Strapi, you want to build Front-End on top of it. You hire front-end developers who are stuck: "Ye, I can query for data via REST and GraphQL, but what data should I see? Could I have an example?"
+
+😬
+
+To avoid this, we would generate example data upfront.
+
+## 🌱 How to seed data?
+
+### "Generate dummy data"
+There is the [video](https://strapi.io/video-library/generate-dummy-data-in-strapi) in Strapi's Video-library that gave me a direction on how to do it.
+
+The idea is simple:
+- use `bootstrap` [function](https://docs.strapi.io/developer-docs/latest/setup-deployment-guides/configurations/optional/functions.html#bootstrap)
+- use [Entity Service API](https://docs.strapi.io/developer-docs/latest/developer-resources/database-apis-reference/entity-service-api.html) for interactions
+- generate dummy data with [@faker-js/faker](https://fakerjs.dev/)
+
+### Tip
+Your case 💯 would be more complicated, so don't forget that you could take almost everything from Strapi's [source code](https://github.com/strapi/strapi).
+
+The flow:
+- find a place on Strapi Admin you want to copy
+- check URL and Network(in developer's inspection) to understand what is called
+- find code(start with *controller*) that corresponds to that calls
+- enjoy
+
+## 🧑‍💻 Code
+We have a simple Todo application(duh) with a Todo collection and a Todo List as a page(single type) that we want to send to the front-end. Also, our Todos has media functionality, so we upload some.
+
+In the bootstrap function, we check for the development environment and decide if we should run seeding or not. Seeding would automatically run on the very first application run(valid when a developer clones an existing repository) and could be re-run with `yarn seed` to force seed, which clears old and creates new data - `FORCE_APP_BOOTSTRAP_ONLY`.
+
+🔗[source code](https://github.com/andriishupta/strapi-generate-seed-data/blob/main/src/index.ts#L19)
+
+![Strapi bootstrap function that runs the data seed](/images/blog/generate-dummy-data-in-strapi/01-image.png)
+
+### Collection Type
+To create a todo using Entity Service API, we need to call the `create` method with data that matches our entity. In the current example and during seeding, I have used "bulk promises" to run requests in parallel cause they are not dependent on each other.
+
+🔗 [source code](https://github.com/andriishupta/strapi-generate-seed-data/blob/main/src/_seed/todo.ts#L24)
+
+![Creating multiple Strapi todo entries with Promise.all](/images/blog/generate-dummy-data-in-strapi/02-image.png)
+
+And using faker, we fill a todo like this:
+
+![Generating a todo with Faker](/images/blog/generate-dummy-data-in-strapi/03-image.png)
+
+### Single Type
+Fulfilling the "Todo List page" is the same as Collection, but keep in mind that it could be only one entry all the time. Also, it contains a Todo relation, so we get five todos to fill it.
+
+🔗 [source code](https://github.com/andriishupta/strapi-generate-seed-data/blob/main/src/_seed/todo-list-page.ts#L14)
+
+![Seeding the Todo List single type and relations](/images/blog/generate-dummy-data-in-strapi/04-image.png)
+
+### Media Upload
+To attach media on a todo, we first need to upload that media and then link its id to the entity. Code has been copied from [Strapi's source code](https://github.com/strapi/strapi/blob/master/packages/core/upload/server/controllers/admin-upload.js#L57), modified, and I just created a helper function.
+
+🔗 [source code](https://github.com/andriishupta/strapi-generate-seed-data/blob/main/src/_seed/helpers.ts#L52)
+
+![Helper that uploads media through Strapi](/images/blog/generate-dummy-data-in-strapi/05-image.png)
+
+Example in Todo:
+![Attaching uploaded media to a seeded todo](/images/blog/generate-dummy-data-in-strapi/06-image.png)
+
+## ✅ Results
+After opening the Admin panel, you will see generated data.
+
+![Generated todo entries in the Strapi admin panel](/images/blog/generate-dummy-data-in-strapi/07-image.png)
+
+![Generated Todo List page in the Strapi admin panel](/images/blog/generate-dummy-data-in-strapi/08-image.png)
+
+## ✨
+Initially, I implemented this for [Developer DAO](https://twitter.com/developer_dao)'s website [developerdao.com](https://developerdao.com/). Original code is located [here](https://github.com/Developer-DAO/cms)(archived and moved to monorepo).
+
+Thanks for reading!

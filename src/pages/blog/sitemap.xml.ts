@@ -31,7 +31,10 @@ export async function GET() {
       "</urlset>",
     ].join("\n")}\n`,
     {
-      headers: { "Content-Type": "application/xml; charset=utf-8" },
+      headers: {
+        "Content-Type": "application/xml; charset=utf-8",
+        "X-Robots-Tag": "noindex",
+      },
     },
   );
 }

@@ -1,0 +1,41 @@
+---
+import ArrowLeft from "@lucide/astro/icons/arrow-left";
+import ChevronRight from "@lucide/astro/icons/chevron-right";
+
+interface BreadcrumbItem {
+  label: string;
+  href?: string;
+}
+
+interface Props {
+  items: BreadcrumbItem[];
+}
+
+const { items } = Astro.props;
+---
+
+<nav class="blog-breadcrumbs" aria-label="Breadcrumb">
+  <ol>
+    <li class="blog-breadcrumbs__home">
+      <a href="/">
+        <ArrowLeft aria-hidden="true" />
+        <span>Back home</span>
+      </a>
+    </li>
+    {
+      items.map((item) => (
+        <li class="blog-breadcrumbs__item">
+          <ChevronRight
+            class="blog-breadcrumbs__separator"
+            aria-hidden="true"
+          />
+          {item.href ? (
+            <a href={item.href}>{item.label}</a>
+          ) : (
+            <span aria-current="page">{item.label}</span>
+          )}
+        </li>
+      ))
+    }
+  </ol>
+</nav>

@@ -26,8 +26,8 @@ This repository contains the source for the personal website at `andriishupta.de
 - `src/content/blog/` - typed Markdown/MDX blog entries.
 - `src/lib/blog.ts` - shared blog ordering, URL, date, and reading-stat helpers.
 - `public/` - static files served from the site root, including favicons.
-- `workers/blog-redirect.ts` - redirect-only Worker for the retired blog subdomain.
 - `astro.config.mjs` - Astro configuration.
+- `wrangler.jsonc` - static Cloudflare Pages configuration without a Worker entry.
 
 ## Working Notes
 
@@ -37,16 +37,44 @@ This repository contains the source for the personal website at `andriishupta.de
   description, canonical path when relevant, and share metadata.
 - Blog canonicals always use `andriishupta.dev/blog/[slug]`. Cross-post URLs are
   distribution metadata and do not affect ordering or `updatedAt`.
+- The first-party blog is public. Do not add a global visibility flag or
+  `noindex` header for `/blog`; complete articles must remain discoverable
+  through the homepage, RSS, root and blog sitemaps, and `llms.txt`.
+- Keep shared header navigation in `copy.mainPage.header.outerLinks` and
+  `innerLinks`. The homepage separates profile/resource links from the internal
+  About, Experience, Blog, and Email row. Blog links always use `/blog`, never
+  the legacy subdomain.
+- Keep the contact address in `copy.identity.email` and its `mailto:` URL in
+  `urls.email`; reuse that shared entry in homepage and blog navigation instead
+  of duplicating the address in components.
 - Empty migration stubs stay `noindex` and out of RSS/sitemaps until body content
-  is imported. Do not deploy the blog-subdomain redirect Worker before the
+  is imported. Do not enable the blog-subdomain Bulk Redirect before the
   destination articles are complete.
+- Recover the seven known Hashnode articles with `pnpm blog:import`. The importer
+  preserves frontmatter, localizes article media under
+  `public/images/blog/[slug]/`, and refuses to overwrite non-empty bodies unless
+  a specific restore is run with `--force`. Run `pnpm blog:verify` after an
+  import or material content edit. Run `pnpm blog:release-check` before a public
+  merge or deployment.
 - Keep blog slugs stable. Article order is derived from `publishedAt`, while
   `updatedAt` is reserved for material changes to first-party content.
 - Keep blog chrome visually aligned with the homepage: reuse the same Geologica
   widths and weights, icon sizing, monochrome theme control, ruled links, and
   restrained hover treatment instead of blog-only avatar or card motifs.
-- Blog OG images are generated as 1200×630 PNG files at build time unless an
-  entry supplies `ogImage`.
+- Reuse `BlogBreadcrumbs.astro` for the blog index and article hierarchy, and
+  keep its visible route labels aligned with `BreadcrumbList` structured data.
+- Render valid Hashnode, DEV Community, and Medium distribution links directly
+  below article metadata. Hide missing links and legacy blog-subdomain URLs.
+- Blog OG images are author-supplied 1200×630 assets referenced by `ogImage`;
+  the build must not overwrite them. `pnpm blog:verify` checks their dimensions.
+- Keep Cloudflare deployment static on Pages. Do not add an Astro server adapter,
+  Pages Functions, or a Wrangler `main` entry unless runtime behavior is requested.
+- Keep Astro's static build format set to `file` so Cloudflare Pages serves the
+  no-trailing-slash blog canonicals without a directory-index redirect.
+- Domain-level redirects such as `blog.andriishupta.dev` use Cloudflare Bulk
+  Redirects; `public/_redirects` remains for path redirects on the Pages domain.
+  Keep the legacy hostname's DNS record proxied while its permanent redirect is
+  required.
 - Keep homepage meta descriptions within roughly 110–160 characters; update both
   `public/og-image.svg` and its 1200×630 PNG export when refreshing the share preview.
 - Keep the visual direction creative but restrained: minimal, personal,

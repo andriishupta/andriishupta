@@ -1,7 +1,7 @@
 # Canonical home URL
 /index.html / 301
 
-# Articles previously published at the apex domain now have permanent local URLs.
+# Articles moved from legacy apex paths to the first-party blog
 /simplify-usage-of-lens-api-with-use-lens-and-graphql-codegen /blog/simplify-usage-of-lens-api-with-use-lens-and-graphql-codegen 301
 /simplify-usage-of-lens-api-with-use-lens-and-graphql-codegen/ /blog/simplify-usage-of-lens-api-with-use-lens-and-graphql-codegen 301
 /create-lens-subgraph-on-the-graph-protocol /blog/create-lens-subgraph-on-the-graph-protocol 301
@@ -17,4 +17,8 @@
 /starting-my-web3-journey /blog/starting-my-web3-journey 301
 /starting-my-web3-journey/ /blog/starting-my-web3-journey 301
 
+# Canonical blog paths
 /blog/index.html /blog 301
+/blog/ /blog 301
+/blog/:slug/index.html /blog/:slug 301
+/blog/:slug/ /blog/:slug 301

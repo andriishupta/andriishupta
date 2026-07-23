@@ -1,6 +1,7 @@
 ---
 title: "Create Lens Subgraph on The Graph Protocol"
 slug: "create-lens-subgraph-on-the-graph-protocol"
+ogImage: "/blog/create-lens-subgraph-on-the-graph-protocol/og.png"
 subtitle: "How to create an indexed subgraph for decentralized querying"
 description: "Create and test a Lens Protocol subgraph for decentralized querying with The Graph."
 publishedAt: 2022-08-26
@@ -8,7 +9,118 @@ tags:
   - thegraph
   - lensprotocol
   - blockchain
-originalReadingMinutes: 5
 distribution:
   hashnode: "https://blog.andriishupta.dev/create-lens-subgraph-on-the-graph-protocol"
 ---
+
+## 🔗 Links
+- [github: andriishupta/thegraph-hello-world](https://github.com/andriishupta/thegraph-hello-world)
+- [subgraph: andriishupta/hello-world](https://thegraph.com/hosted-service/subgraph/andriishupta/hello-world)
+- [TheGraph Documentation](https://thegraph.com/docs/en/developing/creating-a-subgraph/)
+- [Lens Documentation](https://docs.lens.xyz/docs)
+
+## ✨
+Initially, I got familiar with TheGraph by contributing to [DeveloperDAO](https://twitter.com/developer_dao) to a project that did the same - indexing Lens Protocol.
+P.S. This tutorial is **NOT** copy-paste of [existing code](https://github.com/Developer-DAO/Lens-Graph-Subgraph), and I created a repository from scratch to understand the basics of TheGraph and how to start. I needed to develop my subgraph to test how events would be indexed.
+
+## 🤓 Decentralized querying
+> [The Graph](https://thegraph.com/en/) is an indexing protocol for querying networks like Ethereum and IPFS. Anyone can build and publish open APIs, called subgraphs, making data easily accessible.
+
+Many different tools and APIs help us query blockchain data using centralized API like we used to with web2. My favourites are [alchemy](https://www.alchemy.com/) and [infura](https://infura.io/).
+
+But, if we want to go decentralized, we must use decentralized tools.
+
+> All data is stored and processed on open networks with verifiable integrity. TheGraph makes querying this data fast, reliable, and secure.
+
+### Lens
+> [Lens Protocol](https://lens.xyz/) is a composable and decentralized social graph, ready for you to build on so you can focus on creating a great experience, not scaling your users.
+
+> Own your content.
+> Own your social graph.
+> Own your data.
+
+With [Lens API](https://docs.lens.xyz/docs), we could do everything we want with protocol, but it still includes the web2 principle and has a centralized database for different things built on top of Smart Contract data.
+
+If we want to get actual blockchain data, we need to use a protocol like TheGraph.
+
+*Disclaimer: assumption about the centralized part of Lens API is based on the features that Smart Contract has not, for example: "likes" functionality.*
+*I like Lens API very much and would count on it 99.9% of the time as a personal preference, balancing centralized vs. decentralized tooling*.
+
+## 👀 How to create a subgraph
+*In this tutorial, I will give an example of creating a subgraph using [Hosted Service](https://thegraph.com/hosted-service)* - it will be closed in months. Still, there won't be a difference in coding approaches, just in how it is internally deployed. With the Hosted Service, it was easier to use for testing purposes.
+
+### [graph init](https://thegraph.com/docs/en/deploying/hosted-service/#create-a-subgraph)
+- install [graph-cli](https://github.com/graphprotocol/graph-cli)
+- run `graph init --product hosted-service`
+- follow CLI steps where you need to add protocol, name, and contract address
+
+You will get a generated project. The main entry point is **subgraph.yaml**.
+This is the finished version of my subgraph.
+
+🔗 [source code](https://github.com/andriishupta/thegraph-hello-world/blob/main/subgraph.yaml)
+
+![Lens subgraph manifest in subgraph.yaml](/images/blog/create-lens-subgraph-on-the-graph-protocol/01-lens-subgraph-yaml.png)
+
+*You can read more on what is [subgraph manifest](https://thegraph.com/docs/en/developing/creating-a-subgraph/#the-subgraph-manifest)*
+
+#### source block
+Indicates from what address to index. Many contracts use [Proxy Upgrade Pattern](https://docs.openzeppelin.com/upgrades-plugins/1.x/proxies), which helps to fix crucial bugs or update implementation. That is why I have added LensHub ABI([Application Binary Interface](https://www.alchemy.com/overviews/what-is-an-abi-of-a-smart-contract-examples-and-usage)) as source ABI and then changed the address to [proxy](https://docs.lens.xyz/docs/deployed-contract-addresses)
+`startBlock` - I chose some random block for testing purposes, so it won't start indexing from the start - it takes more time. Usually, this value is omitted or equals the Contract creation's block.
+
+![LensHub proxy address and startBlock configuration](/images/blog/create-lens-subgraph-on-the-graph-protocol/02-image.png)
+
+To get ABI, you can:
+- Copy from Etherscan/Polygonscan whole [Contract ABI](https://polygonscan.com/address/0xDb46d1Dc155634FbC732f92E853b10B288AD5a1d#code)
+- Go to [remix.ethereum.org](https://remix.ethereum.org/), copy the github project, and compile the contract
+
+I went with a 50/50 approach, such as Lens has [`Events.sol`](https://github.com/lens-protocol/lens-protocol/blob/main/contracts/libraries/Events.sol) library that is not compiled as part of the main contract.
+
+### `graph codegen`
+After proper setup, we can run code generation - we will get all types of code to work with.
+
+✨ [The Graph](https://thegraph.com/docs/en/developing/creating-a-subgraph/) has excellent documentation, so follow it and find all answers there. ✨
+
+### Mindset shift
+As a developer who worked with databases, I started to think linearly: entity created -> entity updated. But events could be indexed from `startBlock` and in non-linear order in time, so even if we index the event like `handleProfileImageURISet`, we need to check if the entity existed previously(more in the code example).
+
+To find more tips, TheGraph documentation has a section ["defining entities"](https://thegraph.com/docs/en/developing/creating-a-subgraph/#defining-entities) - it entirely describes what you should think about when creating your schema.
+
+> Before defining entities, it is important to take a step back and think about how your data is structured and linked.
+
+### Code
+As we know - schema and how our data would be created is essential. Let's look at how I have added entity  definition:
+
+🔗 [source code](https://github.com/andriishupta/thegraph-hello-world/blob/main/schema.graphql)
+
+![GraphQL schema for Profile and Post entities](/images/blog/create-lens-subgraph-on-the-graph-protocol/03-lens-subgraph-schema.png)
+
+`Profile` is the `@entity`, including default fields that I took from [`ProfileCreated`](https://docs.lens.xyz/docs/events#profilecreated) event and the `posts` field, which is an [entity relationship](https://thegraph.com/docs/en/developing/creating-a-subgraph/#entity-relationships)
+
+In this case, it is a "One-To-Many" relationship with the usage of the [Reverse Lookup](https://thegraph.com/docs/en/developing/creating-a-subgraph/#reverse-lookups) approach that TheGraph recommends us using.
+
+> For one-to-many relationships, the relationship should always be stored on the 'one' side, and the 'many' side should always be derived. ... will result in dramatically better performance for both indexing and querying the subgraph...
+
+`Post` is also an `@entity`. Both have an `ID`, which should be unique for the subgraph.
+
+In `lens-hub.ts` are located functions that correspond to events we want to index.
+
+#### `handle*Created`
+As we see, even for a new Post, we check if Profile already exists or not. I discovered the error I got during subgraph deployment and indexing that was saying something like "profile cannot be null" when I just wanted to load Profile to Post.
+
+TheGraph also supports the "merge" approach - this means that if we create a new instance of Profile and it already exists - it is okay cause the subgraph would try to merge fields. I wanted to be the more precise cause in the examples, and I saw that in every place where we wish to create something - we first check if it could be already created.
+
+Example: I have created a Post, and the subgraph knows that Post should have a Profile. Profile event was way before Post, so we don't have a Profile, and we need to create it; even if you could think - "how a Post could be created without a Profile" - it couldn't, but the event about the Post we could get first to index.
+
+🔗 [source code](https://github.com/andriishupta/thegraph-hello-world/blob/main/src/lens-hub.ts)
+
+![ProfileCreated event handler for the Lens subgraph](/images/blog/create-lens-subgraph-on-the-graph-protocol/04-lens-subgraph-profile-created.png)
+
+![PostCreated event handler for the Lens subgraph](/images/blog/create-lens-subgraph-on-the-graph-protocol/05-lens-subgraph-post-created.png)
+
+## ✅ Testing
+To check out how it works, you could visit my [subgraph: andriishupta/hello-world](https://thegraph.com/hosted-service/subgraph/andriishupta/hello-world). It has a pre-defined "Test" query that will give you info for both Profiles and Posts. You could modify it to get more or less information in the query window.
+
+![Graph Explorer query results for Lens profiles and posts](/images/blog/create-lens-subgraph-on-the-graph-protocol/06-lens-subgraph-example.png)
+
+## 🙇
+Thanks for reading!

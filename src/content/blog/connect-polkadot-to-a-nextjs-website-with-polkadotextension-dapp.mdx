@@ -1,6 +1,7 @@
 ---
 title: "Connect Polkadot to a Next.js website with @polkadot/extension-dapp"
 slug: "connect-polkadot-to-a-nextjs-website-with-polkadotextension-dapp"
+ogImage: "/blog/connect-polkadot-to-a-nextjs-website-with-polkadotextension-dapp/og.png"
 description: "Connect a Polkadot wallet extension to a Next.js website with @polkadot/extension-dapp and browser-only client rendering."
 publishedAt: 2022-12-17
 tags:
@@ -9,7 +10,116 @@ tags:
   - nextjs
   - javascript
 featured: true
-originalReadingMinutes: 4
 distribution:
   hashnode: "https://blog.andriishupta.dev/connect-polkadot-to-a-nextjs-website-with-polkadotextension-dapp"
 ---
+
+## 🔗 Links
+
+*   [andriishupta/polkadot-extension-dapp-example | GitHub](https://github.com/andriishupta)
+
+*   [polkadot-extension-dapp-example | Deployed on Vercel](https://polkadot-extension-dapp-example.vercel.app)
+
+*   [Extension Docs](https://polkadot.js.org/docs/extension/)
+
+*   [SubWallet](https://subwallet.app/)
+
+*   [PolkaVerse | GitHub](https://github.com/dappforce/polkaverse)
+
+*   [Subtips | Github](https://github.com/andriishupta/subtips-app)
+
+*   🌴 [My Links](https://linktr.ee/andriishupta)
+
+## 🤓 Intro
+
+As a developer, it's essential to understand the differences between various blockchain platforms to choose the right one for your needs. One key difference(as for me) is the availability of technical resources and tutorials for developers. Ethereum has many articles and tutorials demonstrating how to connect a wallet to a website, whereas there is less information available on Polkadot. This may make it easier for developers who are new to Ethereum to get started and learn how to build applications on the platform.
+
+It's important for developers also to be familiar with Polkadot and how to build on its platform, as it has unique features and potential applications.
+
+Developer Experience outside just documentation is quite important nowadays for the web3 community.
+
+In this article, I will show an example of how to connect a [SubWallet](https://subwallet.app)(that's what I have used) to a Next.js website.
+
+### Technology
+
+On Ethereum, we have web3.js and ethers.js for connecting to a website and many different libraries built on top of it. For example, many projects I have seen use [wagmi](https://wagmi.sh/) with React.js. It is just a blessing, such as it includes a full list of functionality that you need to have to interact with blockchain: "Connect Wallet" display ENS and balances information, sign messages, interact with contracts, and much more — all with caching, request deduplication, and persistence.
+
+Polkadot has production-ready libraries and tools to work with blockchain, and one of them is `@polkadot/extension-dapp`. That's what we would use to "Connect Wallet".
+
+## 🧑‍💻 Coding
+
+We will use the default Next.js app, so nothing is new here. Check out [Getting Started](https://nextjs.org/docs/getting-started) to remind yourself of Next.js.
+
+The most crucial point with `@polkadot/extension-dapp` is that it needs a browser to run, so with Next.js, we need to render the "Connect" button only during Client-Side rendering. For that, we would use [dynamic import](https://nextjs.org/docs/advanced-features/dynamic-import).
+
+[🔗 source code](https://github.com/andriishupta/polkadot-extension-dapp-example/blob/main/pages/index.tsx)
+
+![Next.js dynamic import disabling server-side rendering for the Connect component](/images/blog/connect-polkadot-to-a-nextjs-website-with-polkadotextension-dapp/01-dynamic-import.png)
+
+On the Home page, we load our `Connect` component dynamically. Connect components are where all magic happens.
+
+[🔗 source code](https://github.com/andriishupta/polkadot-extension-dapp-example/blob/main/components/Connect.tsx)
+
+Let's start with imports:
+
+![TypeScript imports from @polkadot/extension-dapp](/images/blog/connect-polkadot-to-a-nextjs-website-with-polkadotextension-dapp/02-polkadot-imports.png)
+
+`InjectedAccountWithMeta` is a type of account that we would get. I imported it for TypeScript.
+
+Our main focus here is `web3Enable` and `web3Accounts` .
+
+* * *
+
+*I have used promise chaining down below, but if you prefer* `try-catch` *+* `async / await` *\- go for it!*
+
+### `web3Enable`
+
+![Calling web3Enable and handling a missing wallet extension](/images/blog/connect-polkadot-to-a-nextjs-website-with-polkadotextension-dapp/03-web3enable.png)
+
+The initial function is to call even to check if our browser has any wallets to work with. In case we don't have anything to work with, the extension shows it in the console, and we also should throw an error to show the user that he should use the browser with a valid Wallet.
+
+### `web3Accounts`
+
+![Loading the first account with web3Accounts](/images/blog/connect-polkadot-to-a-nextjs-website-with-polkadotextension-dapp/04-web3accounts.png)
+
+Same with `web3Accounts` - it would load accounts connected or prompt you to connect to the website if you opened it for the first time - a very familiar experience for web3 users.
+
+You could try out the flow on [polkadot-extension-dapp-example | Deployed on Vercel](https://polkadot-extension-dapp-example.vercel.app), and it looks like this:
+
+*Disclaimer: I have tried only when I have 1 wallet, but for a simple example, it should be enough.*
+
+![Connect wallet button in the example app](/images/blog/connect-polkadot-to-a-nextjs-website-with-polkadotextension-dapp/05-connect.png)
+
+* * *
+
+![SubWallet connection approval dialog](/images/blog/connect-polkadot-to-a-nextjs-website-with-polkadotextension-dapp/06-connecting.png)
+
+* * *
+
+![Connected wallet greeting with account address](/images/blog/connect-polkadot-to-a-nextjs-website-with-polkadotextension-dapp/07-hello.png)
+
+* * *
+
+![Missing wallet extension error message](/images/blog/connect-polkadot-to-a-nextjs-website-with-polkadotextension-dapp/08-error.png)
+
+* * *
+
+![Browser console output from the Polkadot extension](/images/blog/connect-polkadot-to-a-nextjs-website-with-polkadotextension-dapp/09-logs.png)
+
+## 🧑‍🏫 Next steps and more examples
+
+With a connected wallet and available account, you can do everything you want: check out how to create and sign a transaction, show `<Identicon/>` and more:
+
+[https://polkadot.js.org/docs](https://polkadot.js.org/docs)
+
+A more mature example using `@polkadot/api` , `@polkadot/ui-keyring` and more is [PolkaVerse](https://github.com/dappforce/polkaverse). It is a decentralized social network built on [Subsocial](https://subsocial.network/) - "The Blockchain for Social Finance".
+
+Also, I have another project where I tried to use Subsocial API - it is raw-raw-raw cause it was fine for me to connect to Subsocial API and Polkadot to experience how things work. Feel free to check it out: [https://github.com/andriishupta/subtips-app](https://github.com/andriishupta/subtips-app)
+
+* * *
+
+* * *
+
+* * *
+
+Thanks for reading! 🙇

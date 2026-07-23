@@ -1,28 +1,27 @@
 import { getBlogPosts, getPostPath, toIsoDate } from "../lib/blog";
 
-const pages = [
-  "/",
-  "/blog",
-  "/Andrii_Shupta_Lead_Full_Stack_CV.pdf",
-  "/llms.txt",
+const staticPages = [
+  { path: "/", lastmod: undefined },
+  { path: "/Andrii_Shupta_Lead_Full_Stack_CV.pdf", lastmod: undefined },
+  { path: "/llms.txt", lastmod: undefined },
+  { path: "/blog", lastmod: undefined },
 ];
 const siteUrl = "https://andriishupta.dev";
 
-export const prerender = true;
-
 export async function GET() {
   const posts = await getBlogPosts({ includeStubs: false });
-  const entries = [
-    ...pages.map((path) => ({ path, lastmod: undefined })),
+  const pages = [
+    ...staticPages,
     ...posts.map((post) => ({
       path: getPostPath(post),
       lastmod: toIsoDate(post.data.updatedAt ?? post.data.publishedAt),
     })),
   ];
-  const urls = entries
+  const urls = pages
     .map(({ path, lastmod }) => {
       const loc = new URL(path, siteUrl).toString();
       const values = ["    <url>", `        <loc>${loc}</loc>`];
+
       if (lastmod) values.push(`        <lastmod>${lastmod}</lastmod>`);
       values.push("    </url>");
 
