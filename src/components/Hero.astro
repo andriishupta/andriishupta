@@ -10,7 +10,7 @@ const siteLinks = header.innerLinks;
 
 <main class="hero scroll-section" data-hero>
   <div class="hero__content">
-    <div class="hero__identity">
+    <div class="hero__identity" data-hero-identity>
       <h1 class="hero__name" id="hero-title">
         {
           header.nameLines.map((line) => (
@@ -66,9 +66,15 @@ const siteLinks = header.innerLinks;
     });
     timeline
       .fromTo(
+        hero.querySelector("[data-hero-identity]"),
+        { opacity: 0, y: 22 },
+        { opacity: 1, y: 0, duration: 0.68 },
+      )
+      .fromTo(
         hero.querySelectorAll("[data-hero-line]"),
         { yPercent: 112 },
         { yPercent: 0, duration: 0.82, stagger: 0.08 },
+        "<",
       )
       .fromTo(
         hero.querySelector("[data-hero-copy]"),

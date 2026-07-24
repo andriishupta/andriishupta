@@ -100,6 +100,6 @@ This repository contains the source for the personal website at `andriishupta.de
   viewports at least 1024px wide. Tablets, phones, and narrower windows must use
   regular native scrolling without CSS scroll snapping.
 - For first-load hero animation states, set a pre-paint HTML data attribute in
-  `Layout.astro` and style the initial visual state in CSS; do not use
-  layout-changing hiding such as `display: none` or zero height.
+  `Layout.astro` and style every animated hero panel's initial visual state in
+  CSS; do not use layout-changing hiding such as `display: none` or zero height.
 - update AGENTS.md when code/approaches changed
