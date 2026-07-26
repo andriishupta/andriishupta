@@ -9,6 +9,9 @@ export const urls = {
   about: "/#about",
   experience: "/#experience",
   blogPath: "/blog",
+  devto: "https://dev.to/andriishupta",
+  medium: "https://medium.com/@andriishupta",
+  hashnode: "https://andriishupta.hashnode.dev/",
   email: `mailto:${email}`,
 } as const;
 
@@ -84,18 +87,35 @@ export const copy = {
         },
       ],
       innerLinks: [
-        { id: "cv", label: "CV", href: urls.cv, icon: "cv" },
         {
           id: "blog",
           label: "Blog",
           href: urls.blogPath,
           icon: "blog",
         },
+        { id: "cv", label: "CV", href: urls.cv, icon: "cv" },
         {
           id: "email",
           label: "Email me",
           href: urls.email,
           icon: "email",
+        },
+      ],
+    },
+    blog: {
+      platformLinks: [
+        {
+          id: "devto",
+          label: "DEV.to",
+          href: urls.devto,
+          brand: "devto",
+        },
+        { id: "medium", label: "Medium", href: urls.medium, brand: "medium" },
+        {
+          id: "hashnode",
+          label: "Hashnode",
+          href: urls.hashnode,
+          brand: "hashnode",
         },
       ],
     },

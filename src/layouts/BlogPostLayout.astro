@@ -4,6 +4,7 @@ import ArrowRight from "@lucide/astro/icons/arrow-right";
 import ExternalLink from "@lucide/astro/icons/external-link";
 import { render } from "astro:content";
 import ArticleToc from "../components/ArticleToc.astro";
+import BrandIcon from "../components/BrandIcon.astro";
 import BlogBreadcrumbs from "../components/BlogBreadcrumbs.astro";
 import BlogFooter from "../components/BlogFooter.astro";
 import BlogHeader from "../components/BlogHeader.astro";
@@ -40,12 +41,17 @@ const directHashnodeUrl =
     ? data.distribution.hashnode
     : undefined;
 const distributionLinks = [
-  { label: "Hashnode", href: data.distribution.hashnode },
-  { label: "DEV Community", href: data.distribution.devto },
-  { label: "Medium", href: data.distribution.medium },
+  { label: "DEV Community", href: data.distribution.devto, brand: "devto" },
+  { label: "Medium", href: data.distribution.medium, brand: "medium" },
+  { label: "Hashnode", href: data.distribution.hashnode, brand: "hashnode" },
 ].filter(
-  (item): item is { label: string; href: string } =>
-    Boolean(item.href) && !isLegacyBlogUrl(item.href),
+  (
+    item,
+  ): item is {
+    label: string;
+    href: string;
+    brand: "devto" | "medium" | "hashnode";
+  } => Boolean(item.href) && !isLegacyBlogUrl(item.href),
 );
 const articleStructuredData = {
   "@type": "BlogPosting",
@@ -182,30 +188,31 @@ const structuredData = {
           </dl>
         </div>
 
+        {
+          distributionLinks.length > 0 && (
+            <section class="article-distribution" aria-labelledby="published-elsewhere">
+              <h2 id="published-elsewhere">Also published on</h2>
+              <div class="article-distribution__links">
+                {distributionLinks.map((item) => (
+                  <a
+                    href={item.href}
+                    target="_blank"
+                    rel="syndication noopener noreferrer"
+                  >
+                    <BrandIcon name={item.brand} />
+                    <span>{item.label}</span>
+                    <ExternalLink aria-hidden="true" />
+                  </a>
+                ))}
+              </div>
+            </section>
+          )
+        }
+
         <ul class="article-meta__tags" aria-label="Article topics">
           {data.tags.map((tag) => <li>#{tag}</li>)}
         </ul>
       </div>
-
-      {
-        distributionLinks.length > 0 && (
-          <section class="article-distribution" aria-labelledby="published-elsewhere">
-            <h2 id="published-elsewhere">Also published on</h2>
-            <div class="article-distribution__links">
-              {distributionLinks.map((item) => (
-                <a
-                  href={item.href}
-                  target="_blank"
-                  rel="syndication noopener noreferrer"
-                >
-                  <span>{item.label}</span>
-                  <ExternalLink aria-hidden="true" />
-                </a>
-              ))}
-            </div>
-          </section>
-        )
-      }
 
       <ArticleToc headings={headings} mobile />
     </header>

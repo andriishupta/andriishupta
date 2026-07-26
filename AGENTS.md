@@ -66,8 +66,10 @@ This repository contains the source for the personal website at `andriishupta.de
   on larger desktop viewports.
 - Reuse `BlogBreadcrumbs.astro` for the blog index and article hierarchy, and
   keep its visible route labels aligned with `BreadcrumbList` structured data.
-- Render valid Hashnode, DEV Community, and Medium distribution links directly
-  below article metadata. Hide missing links and legacy blog-subdomain URLs.
+- Render valid DEV Community, Medium, and Hashnode distribution links inside
+  the article metadata card below publication details, in that order. Hide
+  missing links and legacy blog-subdomain URLs; keep the three author platform
+  profiles available from the blog header.
 - Blog OG images are author-supplied 1200×630 assets referenced by `ogImage`;
   the build must not overwrite them. `pnpm blog:verify` checks their dimensions.
 - Keep Cloudflare deployment static on Pages. Do not add an Astro server adapter,
@@ -82,6 +84,15 @@ This repository contains the source for the personal website at `andriishupta.de
   `public/og-image.svg` and its 1200×630 PNG export when refreshing the share preview.
 - Keep the visual direction creative but restrained: minimal, personal,
   terminal/founder/developer energy, with strong typography and spacing.
+- Keep both themes on the achromatic neutral scale in `global.css`: avoid pure
+  white/black surfaces, use semantic theme tokens with contrast-forward muted
+  text and light surfaces, and reduce bright blog media luminance in dark mode
+  without modifying the author-supplied assets.
+- Keep long-form article prose at the font's normal weight; reserve heavier
+  Geologica weights for headings, metadata, and navigation hierarchy.
+- Keep visible text links conventionally underlined and strengthen the underline
+  on hover/focus. Reserve `text-decoration: none` for structural card links,
+  branded home links, and icon-only controls with accessible labels.
 - Use animation sparingly. Prefer subtle fades, hover response, and small
   ambient motion over heavy parallax, particle systems, or large counters.
 - Prefer Tailwind utilities for styling and Motion for client-side animation

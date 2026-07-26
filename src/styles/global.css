@@ -6,14 +6,15 @@
 }
 
 :root {
-  --neutral-950: oklch(0.18 0.004 260);
-  --neutral-900: oklch(0.22 0.005 260);
-  --neutral-850: oklch(0.24 0.005 260);
-  --neutral-200: oklch(0.962 0.002 260);
-  --neutral-150: oklch(0.976 0.001 260);
-  --neutral-100: oklch(0.988 0.001 260);
-  --muted-on-page: color-mix(in srgb, var(--ink) 62%, transparent);
-  --muted-on-contrast: color-mix(in srgb, var(--contrast-ink) 70%, transparent);
+  --neutral-950: oklch(0.21 0 0);
+  --neutral-900: oklch(0.24 0 0);
+  --neutral-850: oklch(0.28 0 0);
+  --neutral-300: oklch(0.84 0 0);
+  --neutral-200: oklch(0.93 0 0);
+  --neutral-150: oklch(0.94 0 0);
+  --neutral-100: oklch(0.975 0 0);
+  --muted-on-page: color-mix(in srgb, var(--ink) 72%, transparent);
+  --muted-on-contrast: color-mix(in srgb, var(--contrast-ink) 80%, transparent);
   --line-on-page: color-mix(in srgb, var(--ink) 18%, transparent);
   --line-on-contrast: color-mix(in srgb, var(--contrast-ink) 24%, transparent);
   --text-display: clamp(4.2rem, 7.2vw, 5.25rem);
@@ -35,6 +36,7 @@
   --contrast: var(--neutral-850);
   --contrast-ink: var(--neutral-150);
   --surface: var(--neutral-200);
+  --media-surface: var(--neutral-200);
   color-scheme: light;
   background: var(--page);
   color: var(--ink);
@@ -43,9 +45,10 @@
 :root[data-theme="dark"] {
   --page: var(--neutral-950);
   --ink: var(--neutral-150);
-  --contrast: var(--neutral-200);
+  --contrast: var(--neutral-300);
   --contrast-ink: var(--neutral-850);
   --surface: var(--neutral-850);
+  --media-surface: var(--neutral-300);
   color-scheme: dark;
 }
 
@@ -53,9 +56,10 @@
   :root:not([data-theme="light"]) {
     --page: var(--neutral-950);
     --ink: var(--neutral-150);
-    --contrast: var(--neutral-200);
+    --contrast: var(--neutral-300);
     --contrast-ink: var(--neutral-850);
     --surface: var(--neutral-850);
+    --media-surface: var(--neutral-300);
     color-scheme: dark;
   }
 }
@@ -84,7 +88,17 @@ body {
 
 a {
   color: inherit;
+  text-decoration-color: color-mix(in srgb, currentColor 46%, transparent);
+  text-decoration-line: underline;
+  text-decoration-skip-ink: auto;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
   -webkit-tap-highlight-color: transparent;
+  transition: text-decoration-color 180ms var(--ease-out);
+}
+
+a:where(:hover, :focus-visible) {
+  text-decoration-color: currentColor;
 }
 
 :focus-visible {
@@ -258,12 +272,18 @@ html[data-hero-intro="true"] .hero__identity .social-links {
   font-weight: 570;
   line-height: 1;
   text-decoration: none;
-  transition: opacity 200ms ease;
 }
 
-.social-link:hover,
-.social-link:focus-visible {
-  opacity: 0.62;
+.social-link > span {
+  text-decoration-color: color-mix(in srgb, currentColor 46%, transparent);
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  transition: text-decoration-color 180ms var(--ease-out);
+}
+
+.social-link:where(:hover, :focus-visible) > span {
+  text-decoration-color: currentColor;
 }
 
 .social-link__icon {
@@ -296,7 +316,7 @@ html[data-hero-intro="true"] .hero__identity .social-links {
   max-width: 50ch;
   margin: clamp(1.5rem, 3.5vh, 2.5rem) 0 0;
   font-size: var(--text-body);
-  font-weight: 430;
+  font-weight: normal;
   line-height: 1.65;
   text-wrap: pretty;
 }
@@ -422,9 +442,7 @@ html[data-hero-intro="true"] .hero__identity .social-links {
 
 .about__resources a {
   color: var(--ink);
-  font-weight: 650;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 0.2em;
+  font-weight: inherit;
 }
 
 .technology-block h3 {

@@ -57,6 +57,11 @@ Article content starts here.
 changing a distribution URL does not count as an article update and must not
 change `updatedAt`.
 
+Keep Hashnode, DEV Community, and Medium URLs in `distribution` frontmatter,
+not in the article body. When present, they render in the article metadata card
+below publication details in the order DEV Community, Medium, Hashnode; missing
+and legacy blog-subdomain URLs stay hidden.
+
 Reading time and word count are computed from the first-party body at build
 time. `originalReadingMinutes` is only a temporary fallback for an empty
 migration stub and should be removed after the content is imported.
