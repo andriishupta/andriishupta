@@ -62,7 +62,10 @@ const options = [
     const resolved = resolvedTheme(mode);
     root.dataset.theme = mode;
     root.style.colorScheme = resolved;
-    themeColor?.setAttribute("content", resolved === "dark" ? "#151619" : "#fafafa");
+    const resolvedColor = themeColor?.getAttribute(
+      resolved === "dark" ? "data-theme-color-dark" : "data-theme-color-light",
+    );
+    if (resolvedColor) themeColor?.setAttribute("content", resolvedColor);
 
     buttons.forEach((button) => {
       button.setAttribute(

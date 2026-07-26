@@ -1,0 +1,55 @@
+---
+import ArrowUpRight from "@lucide/astro/icons/arrow-up-right";
+
+type IndicatorPlacement = "none" | "inline" | "corner";
+
+interface Props {
+  href: string;
+  class?: string;
+  external?: boolean;
+  indicator?: IndicatorPlacement;
+  rel?: string;
+  ariaLabel?: string;
+  title?: string;
+}
+
+const {
+  href,
+  class: className,
+  external = href.startsWith("http"),
+  indicator = external ? "inline" : "none",
+  rel,
+  ariaLabel,
+  title,
+} = Astro.props;
+const relTokens = new Set((rel ?? "").split(/\s+/).filter(Boolean));
+
+if (external) {
+  relTokens.add("noopener");
+  relTokens.add("noreferrer");
+}
+
+const resolvedRel = [...relTokens].join(" ") || undefined;
+---
+
+<a
+  class:list={[
+    className,
+    {
+      "site-link--external": external,
+      "site-link--indicator-corner": external && indicator === "corner",
+    },
+  ]}
+  href={href}
+  target={external ? "_blank" : undefined}
+  rel={resolvedRel}
+  aria-label={ariaLabel}
+  title={title}
+>
+  <slot />
+  {
+    external && indicator !== "none" && (
+      <ArrowUpRight class="site-link__external-icon" aria-hidden="true" />
+    )
+  }
+</a>

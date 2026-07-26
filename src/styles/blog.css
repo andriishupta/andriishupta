@@ -39,6 +39,8 @@
   padding-left: clamp(0.75rem, 1.5vw, 1.25rem);
 }
 .platform-links a {
+  --external-indicator-top: 0;
+  --external-indicator-right: 0.1rem;
   position: relative;
   gap: 0.38rem;
   padding: 0.25rem 0.85rem 0.25rem 0;
@@ -52,16 +54,10 @@
 .platform-links a:focus-visible {
   opacity: 0.62;
 }
-.platform-links .platform-links__out {
-  position: absolute;
-  top: 0;
-  right: 0.1rem;
-  width: 0.5rem;
-  height: 0.5rem;
-  stroke-width: 2;
-}
 .blog-socials a,
 .blog-menu summary {
+  --external-indicator-top: 0.3rem;
+  --external-indicator-right: 0.25rem;
   position: relative;
   width: 2.75rem;
   height: 2.75rem;
@@ -100,14 +96,6 @@
   :root:not([data-theme="light"]) .brand-icon--hashnode {
     filter: invert(1);
   }
-}
-.blog-socials .blog-socials__out {
-  position: absolute;
-  top: 0.3rem;
-  right: 0.25rem;
-  width: 0.5rem;
-  height: 0.5rem;
-  stroke-width: 2;
 }
 .blog-menu {
   position: relative;
@@ -150,9 +138,8 @@
 .blog-menu nav a:focus-visible {
   opacity: 0.62;
 }
-.blog-menu nav .blog-menu__arrow {
-  width: 0.65rem;
-  height: 0.65rem;
+.blog-menu nav .site-link__external-icon {
+  margin: 0;
 }
 @media (max-width: 64rem) {
   .blog-socials {
@@ -853,6 +840,9 @@
   align-items: center;
   font-size: 0.84rem;
   font-weight: 620;
+}
+.article-import-note a .site-link__external-icon {
+  margin: 0;
 }
 .article-import-note svg {
   width: 0.85rem;

@@ -4,7 +4,7 @@ import Experience from "../components/Experience.astro";
 import Hero from "../components/Hero.astro";
 import SectionScroll from "../components/SectionScroll.astro";
 import SiteFooter from "../components/SiteFooter.astro";
-import { copy, urls } from "../copy";
+import { copy, identityProfileLinks } from "../copy";
 import Layout from "../layouts/Layout.astro";
 
 const siteUrl = "https://andriishupta.dev";
@@ -39,7 +39,7 @@ const structuredData = {
       jobTitle: "Full-Stack Engineer",
       description: seo.description,
       email: copy.identity.email,
-      sameAs: [urls.linkedin, urls.upwork, urls.github, urls.x],
+      sameAs: identityProfileLinks.map(({ href }) => href),
       knowsAbout: seo.knowsAbout,
     },
   ],
@@ -49,6 +49,7 @@ const structuredData = {
 <Layout
     title={seo.title}
     description={seo.description}
+    pathname="/"
     image="/og-image.png"
     imageAlt={seo.imageAlt}
     ogType="profile"

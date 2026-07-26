@@ -1,14 +1,14 @@
 ---
 import ArrowLeft from "@lucide/astro/icons/arrow-left";
 import ArrowRight from "@lucide/astro/icons/arrow-right";
-import ExternalLink from "@lucide/astro/icons/external-link";
 import { render } from "astro:content";
 import ArticleToc from "../components/ArticleToc.astro";
 import BlogBreadcrumbs from "../components/BlogBreadcrumbs.astro";
 import BlogFooter from "../components/BlogFooter.astro";
 import BlogHeader from "../components/BlogHeader.astro";
 import PlatformLinks from "../components/PlatformLinks.astro";
-import { copy, urls } from "../copy";
+import SiteLink from "../components/SiteLink.astro";
+import { copy, identityProfileLinks } from "../copy";
 import {
   formatBlogDate,
   getPostPath,
@@ -67,7 +67,7 @@ const articleStructuredData = {
     "@id": "https://andriishupta.dev/#person",
     name: copy.identity.fullName,
     url: "https://andriishupta.dev",
-    sameAs: [urls.linkedin, urls.github, urls.x],
+    sameAs: identityProfileLinks.map(({ href }) => href),
   },
   isPartOf: {
     "@type": "Blog",
@@ -194,7 +194,7 @@ const structuredData = {
               <PlatformLinks
                 links={distributionLinks}
                 ariaLabel="Also published on"
-                rel="syndication noopener noreferrer"
+                rel="syndication"
               />
             </section>
           )
@@ -240,14 +240,11 @@ const structuredData = {
                 is still being moved from the previous publication.
               </p>
               {directHashnodeUrl && (
-                <a
+                <SiteLink
                   href={directHashnodeUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
                 >
                   Read the original on Hashnode
-                  <ExternalLink aria-hidden="true" />
-                </a>
+                </SiteLink>
               )}
             </div>
           ) : (

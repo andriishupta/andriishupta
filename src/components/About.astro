@@ -7,6 +7,7 @@ import Database from "@lucide/astro/icons/database";
 import FileCode from "@lucide/astro/icons/file-code";
 import Server from "@lucide/astro/icons/server";
 import { copy } from "../copy";
+import SiteLink from "./SiteLink.astro";
 
 const { about } = copy.mainPage;
 const technologyIcons = {
@@ -68,9 +69,9 @@ const technologyIcons = {
               {index > 0 &&
                 (index === about.links.length - 1 ? ", and " : ", ")}
               {link.before}{" "}
-              <a href={link.href} target="_blank" rel="noopener noreferrer">
+              <SiteLink href={link.href}>
                 {link.label}
-              </a>
+              </SiteLink>
             </>
           ))
         }.

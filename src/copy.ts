@@ -358,3 +358,8 @@ export const copy = {
     },
   },
 } as const;
+
+export const identityProfileLinks = [
+  ...copy.mainPage.header.outerLinks,
+  ...copy.mainPage.blog.platformLinks,
+].filter(({ href }) => href.startsWith("http"));

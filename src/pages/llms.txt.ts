@@ -12,6 +12,10 @@ const socials = ["LinkedIn", "GitHub", "Twitter", "Upwork"]
   .map((item) => `- [${item.label}](${item.href})`)
   .join("\n");
 
+const writingProfiles = copy.mainPage.blog.platformLinks
+  .map((item) => `- [${item.label}](${item.href})`)
+  .join("\n");
+
 const mainTechnologies = copy.mainPage.about.coreStack.technologies
   .map((tech) => tech.name)
   .join(", ");
@@ -50,6 +54,9 @@ ${additionalFacts}
 
 ## Socials
 ${socials}
+
+## Writing profiles
+${writingProfiles}
 
 ## Contact
 - [Email](${urls.email}): ${copy.identity.email}

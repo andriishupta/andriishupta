@@ -1,6 +1,7 @@
 ---
 import ThemeSwitcher from "../components/ThemeSwitcher.astro";
-import { copy, urls } from "../copy";
+import { copy, identityProfileLinks } from "../copy";
+import { themeColors } from "../lib/theme";
 import "../styles/global.css";
 
 interface Props {
@@ -47,7 +48,13 @@ const keywords = copy.seo.keywords.join(", ");
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#fafafa" data-theme-color />
+        <meta
+            name="theme-color"
+            content={themeColors.light}
+            data-theme-color
+            data-theme-color-light={themeColors.light}
+            data-theme-color-dark={themeColors.dark}
+        />
         <script is:inline>
             (() => {
                 const storageKey = "andrii-theme";
@@ -72,12 +79,13 @@ const keywords = copy.seo.keywords.join(", ");
                 if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
                     document.documentElement.dataset.heroIntro = "true";
                 }
-                document
-                    .querySelector("[data-theme-color]")
-                    ?.setAttribute(
-                        "content",
-                        resolved === "dark" ? "#151619" : "#fafafa",
-                    );
+                const themeColor = document.querySelector("[data-theme-color]");
+                const resolvedColor = themeColor?.getAttribute(
+                    resolved === "dark"
+                        ? "data-theme-color-dark"
+                        : "data-theme-color-light",
+                );
+                if (resolvedColor) themeColor?.setAttribute("content", resolvedColor);
             })();
         </script>
         <meta name="author" content={copy.identity.fullName} />
@@ -101,9 +109,7 @@ const keywords = copy.seo.keywords.join(", ");
             )
         }
         {canonical && <link rel="canonical" href={siteUrl} />}
-        <link rel="me" href={urls.linkedin} />
-        <link rel="me" href={urls.github} />
-        <link rel="me" href={urls.x} />
+        {identityProfileLinks.map(({ href }) => <link rel="me" href={href} />)}
         <meta name="description" content={description} />
         <meta name="keywords" content={keywords} />
         <meta name="generator" content={Astro.generator} />

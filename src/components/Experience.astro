@@ -1,8 +1,8 @@
 ---
-import ArrowUpRight from "@lucide/astro/icons/arrow-up-right";
 import CodeXml from "@lucide/astro/icons/code-xml";
 import Star from "@lucide/astro/icons/star";
 import { copy } from "../copy";
+import SiteLink from "./SiteLink.astro";
 
 const { experience } = copy.mainPage;
 ---
@@ -15,16 +15,13 @@ const { experience } = copy.mainPage;
   <div class="experience__inner">
     <div class="experience__intro">
       <h2 id="experience-title">{experience.heading}</h2>
-      <a
+      <SiteLink
         class="experience__more"
         href={experience.moreHref}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label={experience.moreAriaLabel}
+        ariaLabel={experience.moreAriaLabel}
       >
         <span>{experience.moreLabel}</span>
-        <ArrowUpRight aria-hidden="true" />
-      </a>
+      </SiteLink>
     </div>
 
     <ol class="experience__companies" aria-label={experience.companiesLabel}>
@@ -49,10 +46,9 @@ const { experience } = copy.mainPage;
                   <section class="experience__project">
                     <h4>
                       {project.href ? (
-                        <a href={project.href} target="_blank" rel="noopener noreferrer">
+                        <SiteLink href={project.href}>
                           <span>{project.name}</span>
-                          <ArrowUpRight aria-hidden="true" />
-                        </a>
+                        </SiteLink>
                       ) : (
                         <span>{project.name}</span>
                       )}

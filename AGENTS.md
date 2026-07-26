@@ -41,9 +41,12 @@ This repository contains the source for the personal website at `andriishupta.de
   `noindex` header for `/blog`; complete articles must remain discoverable
   through the homepage, RSS, root and blog sitemaps, and `llms.txt`.
 - Keep shared header navigation in `copy.mainPage.header.outerLinks` and
-  `innerLinks`. The homepage separates profile/resource links from the internal
-  About, Experience, Blog, and Email row. Blog links always use `/blog`, never
-  the legacy subdomain.
+  `innerLinks`. The homepage separates external profiles/resources from the
+  internal Blog, CV, and Email group. Blog links always use `/blog`, never the
+  legacy subdomain.
+- Reuse `SiteLink.astro` for authored UI links that open external URLs; it owns
+  safe new-tab behavior and the shared inline/corner external indicator. Reuse
+  `LinkIcon.astro` for navigation link icons instead of duplicating icon maps.
 - Keep the contact address in `copy.identity.email` and its `mailto:` URL in
   `urls.email`; reuse that shared entry in homepage and blog navigation instead
   of duplicating the address in components.

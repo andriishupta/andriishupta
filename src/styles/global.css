@@ -10,9 +10,9 @@
   --neutral-900: oklch(0.24 0 0);
   --neutral-850: oklch(0.28 0 0);
   --neutral-300: oklch(0.84 0 0);
-  --neutral-200: oklch(0.93 0 0);
   --neutral-150: oklch(0.94 0 0);
-  --neutral-100: oklch(0.985 0 0);
+  --neutral-100: oklch(0.994 0 0);
+  --neutral-050: oklch(0.998 0 0);
   --muted-on-page: color-mix(in srgb, var(--ink) 72%, transparent);
   --muted-on-contrast: color-mix(in srgb, var(--contrast-ink) 80%, transparent);
   --line-on-page: color-mix(in srgb, var(--ink) 18%, transparent);
@@ -34,12 +34,12 @@
 
 :root,
 :root[data-theme="light"] {
-  --page: var(--neutral-100);
+  --page: var(--neutral-050);
   --ink: var(--neutral-900);
   --contrast: var(--neutral-850);
   --contrast-ink: var(--neutral-150);
-  --surface: var(--neutral-200);
-  --media-surface: var(--neutral-200);
+  --surface: var(--neutral-100);
+  --media-surface: var(--neutral-100);
   color-scheme: light;
   background: var(--page);
   color: var(--ink);
@@ -102,6 +102,30 @@ a {
 
 a:where(:hover, :focus-visible) {
   text-decoration-color: currentColor;
+}
+
+.site-link__external-icon {
+  display: inline-block;
+  flex: 0 0 auto;
+  margin-inline-start: 0.25rem;
+  stroke-width: 2;
+  vertical-align: 0.08em;
+}
+
+a.site-link--external .site-link__external-icon {
+  width: 0.5rem;
+  height: 0.5rem;
+}
+
+.site-link--indicator-corner {
+  position: relative;
+}
+
+.site-link--indicator-corner .site-link__external-icon {
+  position: absolute;
+  top: var(--external-indicator-top, 0.25rem);
+  right: var(--external-indicator-right, 0.2rem);
+  margin: 0;
 }
 
 :focus-visible {
@@ -225,11 +249,6 @@ html[data-hero-intro="true"] .hero__profile {
   transform: translateY(22px);
 }
 
-html[data-hero-intro="true"] .hero__identity .social-links {
-  opacity: 0;
-  transform: translateY(16px);
-}
-
 .hero__name {
   max-width: 8ch;
   margin: 0;
@@ -305,14 +324,13 @@ html[data-hero-intro="true"] .hero__identity .social-links {
   height: 1.15rem;
 }
 
-.social-link__arrow {
-  width: 0.65rem;
-  height: 0.65rem;
+.social-link .site-link__external-icon {
+  margin-inline-start: 0;
   transition: transform 240ms var(--ease-out);
 }
 
-.social-link:hover .social-link__arrow,
-.social-link:focus-visible .social-link__arrow {
+.social-link:hover .site-link__external-icon,
+.social-link:focus-visible .site-link__external-icon {
   transform: translate(2px, -2px);
 }
 
@@ -422,7 +440,7 @@ html[data-hero-intro="true"] .hero__identity .social-links {
   max-width: 61ch;
   margin: 0;
   font-size: var(--text-body);
-  font-weight: 400;
+  font-weight: normal;
   line-height: 1.65;
   text-wrap: pretty;
 }
@@ -551,6 +569,11 @@ html[data-hero-intro="true"] .hero__identity .social-links {
   width: 0.9rem;
   height: 0.9rem;
   transition: transform 240ms var(--ease-out);
+}
+
+.experience__more .site-link__external-icon,
+.experience__project h4 a .site-link__external-icon {
+  margin-inline-start: 0;
 }
 
 .experience__more:hover svg,
@@ -815,33 +838,6 @@ html[data-hero-intro="true"] .hero__identity .social-links {
 }
 
 @media (max-width: 47.99rem) {
-  .hero__content {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr;
-  }
-
-  .hero {
-    background: var(--page);
-  }
-
-  .hero__identity,
-  .hero__profile {
-    padding-inline: var(--gutter);
-  }
-
-  .hero__identity {
-    padding-top: 5.25rem;
-    padding-bottom: 2.4rem;
-  }
-
-  .hero__profile {
-    justify-content: flex-start;
-    padding-top: 2.5rem;
-    padding-bottom: 5rem;
-    border: 0;
-    background: var(--contrast);
-  }
-
   .hero__name {
     font-size: clamp(3.2rem, 15vw, 4.35rem);
   }
@@ -851,18 +847,17 @@ html[data-hero-intro="true"] .hero__identity .social-links {
   }
 
   .social-link {
-    min-height: 2.5rem;
-    font-size: 0.72rem;
+    min-height: 2.75rem;
+    font-size: 0.875rem;
+  }
+
+  .social-link--compact {
+    width: 2.75rem;
   }
 
   .social-link__icon {
     width: 1rem;
     height: 1rem;
-  }
-
-  .social-link__arrow {
-    width: 0.55rem;
-    height: 0.55rem;
   }
 
   .hero__role {
@@ -1004,13 +999,18 @@ html[data-hero-intro="true"] .hero__identity .social-links {
   }
 }
 
+html[data-hero-intro="true"] .hero__identity .social-links {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
 
   .social-link,
-  .social-link__arrow,
+  .site-link__external-icon,
   .theme-switcher__button,
   .scroll-cue svg,
   .section-scroll-cue svg,

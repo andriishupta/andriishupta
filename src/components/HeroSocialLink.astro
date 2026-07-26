@@ -1,76 +1,33 @@
 ---
-import ArrowUpRight from "@lucide/astro/icons/arrow-up-right";
-import BriefcaseBusiness from "@lucide/astro/icons/briefcase-business";
-import FileUser from "@lucide/astro/icons/file-user";
-import Mail from "@lucide/astro/icons/mail";
-import PenLine from "@lucide/astro/icons/pen-line";
-import UserRound from "@lucide/astro/icons/user-round";
-import BrandIcon from "./BrandIcon.astro";
+import type { LinkBrand, LinkIconName } from "../lib/links";
+import LinkIcon from "./LinkIcon.astro";
+import SiteLink from "./SiteLink.astro";
 
 interface Props {
   link: {
     label: string;
     href: string;
-    brand?: "linkedin" | "github" | "x";
-    icon?: "upwork" | "cv" | "about" | "experience" | "blog" | "email";
+    brand?: LinkBrand;
+    icon?: LinkIconName;
   };
   compact?: boolean;
   showLabel?: boolean;
-  showExternalIcon?: boolean;
 }
 
-const {
-  link,
-  compact = false,
-  showLabel = true,
-  showExternalIcon = true,
-} = Astro.props;
-const opensNewTab = link.href.startsWith("http");
+const { link, compact = false, showLabel = true } = Astro.props;
+const external = link.href.startsWith("http");
+const className = ["social-link", compact && "social-link--compact"]
+  .filter(Boolean)
+  .join(" ");
 ---
 
-<a
-  class:list={["social-link", { "social-link--compact": compact }]}
+<SiteLink
+  class={className}
   href={link.href}
-  target={opensNewTab ? "_blank" : undefined}
-  rel={opensNewTab ? "noopener noreferrer" : undefined}
-  aria-label={compact ? link.label : undefined}
+  external={external}
+  ariaLabel={compact ? link.label : undefined}
   title={compact ? link.label : undefined}
 >
-  {link.brand && <BrandIcon name={link.brand} class="social-link__icon" />}
-  {
-    link.icon === "upwork" && (
-      <BriefcaseBusiness class="social-link__icon" aria-hidden="true" />
-    )
-  }
-  {
-    link.icon === "cv" && (
-      <FileUser class="social-link__icon" aria-hidden="true" />
-    )
-  }
-  {
-    link.icon === "blog" && (
-      <PenLine class="social-link__icon" aria-hidden="true" />
-    )
-  }
-  {
-    link.icon === "about" && (
-      <UserRound class="social-link__icon" aria-hidden="true" />
-    )
-  }
-  {
-    link.icon === "experience" && (
-      <BriefcaseBusiness class="social-link__icon" aria-hidden="true" />
-    )
-  }
-  {
-    link.icon === "email" && (
-      <Mail class="social-link__icon" aria-hidden="true" />
-    )
-  }
+  <LinkIcon brand={link.brand} icon={link.icon} class="social-link__icon" />
   {showLabel && <span>{link.label}</span>}
-  {
-    opensNewTab && showExternalIcon && (
-      <ArrowUpRight class="social-link__arrow" aria-hidden="true" />
-    )
-  }
-</a>
+</SiteLink>

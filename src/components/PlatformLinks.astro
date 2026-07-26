@@ -1,6 +1,6 @@
 ---
-import ArrowUpRight from "@lucide/astro/icons/arrow-up-right";
 import BrandIcon from "./BrandIcon.astro";
+import SiteLink from "./SiteLink.astro";
 
 export type PlatformLink = {
   label: string;
@@ -19,7 +19,7 @@ const {
   links,
   class: className,
   ariaLabel = "Writing platforms",
-  rel = "noopener noreferrer",
+  rel,
 } = Astro.props;
 ---
 
@@ -27,17 +27,16 @@ const {
   links.length > 0 && (
     <nav class:list={["platform-links", className]} aria-label={ariaLabel}>
       {links.map((link) => (
-        <a
+        <SiteLink
           href={link.href}
-          target="_blank"
           rel={rel}
-          aria-label={link.label}
+          indicator="corner"
+          ariaLabel={link.label}
           title={link.label}
         >
           <BrandIcon name={link.brand} />
           {link.brand !== "hashnode" && <span>{link.label}</span>}
-          <ArrowUpRight class="platform-links__out" aria-hidden="true" />
-        </a>
+        </SiteLink>
       ))}
     </nav>
   )
