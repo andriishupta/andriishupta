@@ -108,6 +108,9 @@ This repository contains the source for the personal website at `andriishupta.de
   white/black surfaces, use semantic theme tokens with contrast-forward muted
   text and light surfaces, and reduce bright blog media luminance in dark mode
   without modifying the author-supplied assets.
+- Keep `ThemeSwitcher.astro` compact: show only the selected mode icon, then
+  disclose the named System, Light, and Dark choices in its native dropdown.
+  Preserve its localStorage, system-theme, and metadata synchronization.
 - Keep long-form article prose at the font's normal weight; reserve heavier
   Geologica weights for headings, metadata, and navigation hierarchy.
 - Keep visible text links conventionally underlined and strengthen the underline

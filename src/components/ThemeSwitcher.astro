@@ -10,9 +10,14 @@ interface Props {
 const { embedded = false } = Astro.props;
 
 const options = [
-  { mode: "device", label: "Use device theme", Icon: Monitor },
-  { mode: "light", label: "Use light theme", Icon: Sun },
-  { mode: "dark", label: "Use dark theme", Icon: Moon },
+  {
+    mode: "device",
+    label: "System",
+    ariaLabel: "Use device theme",
+    Icon: Monitor,
+  },
+  { mode: "light", label: "Light", ariaLabel: "Use light theme", Icon: Sun },
+  { mode: "dark", label: "Dark", ariaLabel: "Use dark theme", Icon: Moon },
 ] as const;
 ---
 
@@ -20,22 +25,42 @@ const options = [
   class:list={["site-controls", { "site-controls--embedded": embedded }]}
   aria-label="Appearance settings"
 >
-  <div class="theme-switcher" role="group" aria-label="Color theme">
-    {
-      options.map(({ mode, label, Icon }) => (
+  <details class="theme-switcher" data-theme-switcher>
+    <summary
+      class="theme-switcher__trigger"
+      aria-label="Theme: System. Choose theme"
+      title="Theme: System"
+    >
+      {
+        options.map(({ mode, Icon }) => (
+          <Icon
+            class="theme-switcher__current-icon"
+            data-theme-icon={mode}
+            aria-hidden="true"
+          />
+        ))
+      }
+      <span class="sr-only" data-theme-current-label>System</span>
+    </summary>
+
+    <div class="theme-switcher__menu" role="group" aria-label="Choose color theme">
+      {
+        options.map(({ mode, label, ariaLabel, Icon }) => (
         <button
-          class="theme-switcher__button"
+          class="theme-switcher__option"
           type="button"
           data-theme-option={mode}
-          aria-label={label}
+          data-theme-label={label}
+          aria-label={ariaLabel}
           aria-pressed={mode === "device" ? "true" : "false"}
-          title={label}
         >
           <Icon aria-hidden="true" />
+          <span>{label}</span>
         </button>
       ))
     }
-  </div>
+    </div>
+  </details>
 </div>
 
 <script>
@@ -45,6 +70,9 @@ const options = [
   const root = document.documentElement;
   const systemDark = window.matchMedia("(prefers-color-scheme: dark)");
   const themeColor = document.querySelector<HTMLMetaElement>("[data-theme-color]");
+  const switcher = document.querySelector<HTMLDetailsElement>("[data-theme-switcher]");
+  const trigger = switcher?.querySelector<HTMLElement>("summary");
+  const currentLabel = switcher?.querySelector<HTMLElement>("[data-theme-current-label]");
   const buttons = Array.from(
     document.querySelectorAll<HTMLButtonElement>("[data-theme-option]"),
   );
@@ -74,6 +102,14 @@ const options = [
       );
     });
 
+    const selectedButton = buttons.find(
+      (button) => button.dataset.themeOption === mode,
+    );
+    const label = selectedButton?.dataset.themeLabel ?? "System";
+    if (currentLabel) currentLabel.textContent = label;
+    trigger?.setAttribute("aria-label", `Theme: ${label}. Choose theme`);
+    trigger?.setAttribute("title", `Theme: ${label}`);
+
     if (persist) {
       try {
         window.localStorage.setItem(storageKey, mode);
@@ -96,12 +132,18 @@ const options = [
       const mode = button.dataset.themeOption;
       if (!isThemeMode(mode)) return;
 
-      button.dataset.animating = "true";
+      if (trigger) trigger.dataset.animating = "true";
       window.setTimeout(() => {
-        delete button.dataset.animating;
+        if (trigger) delete trigger.dataset.animating;
       }, 360);
       syncTheme(mode, true, true);
+      switcher?.removeAttribute("open");
     });
+  });
+
+  document.addEventListener("pointerdown", (event) => {
+    if (!switcher?.open || !(event.target instanceof Node)) return;
+    if (!switcher.contains(event.target)) switcher.removeAttribute("open");
   });
 
   systemDark.addEventListener("change", () => {

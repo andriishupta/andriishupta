@@ -936,7 +936,7 @@
   .blog-header__actions {
     gap: 0.4rem;
   }
-  .blog-header .theme-switcher__button {
+  .blog-header .theme-switcher__trigger {
     width: 2.15rem;
     height: 2.15rem;
   }
