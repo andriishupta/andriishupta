@@ -4,9 +4,11 @@ import { copy, urls } from "../copy";
 ---
 
 <footer class="site-footer">
-  <a href={urls.email}>
-    <Mail aria-hidden="true" />
-    <span>{copy.identity.email}</span>
-  </a>
-  <p>© {new Date().getUTCFullYear()} {copy.identity.fullName}</p>
+  <div class="site-footer__inner site-container">
+    <a href={urls.email}>
+      <Mail aria-hidden="true" />
+      <span>{copy.identity.email}</span>
+    </a>
+    <p>© {new Date().getUTCFullYear()} {copy.identity.fullName}</p>
+  </div>
 </footer>

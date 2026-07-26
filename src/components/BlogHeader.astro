@@ -2,6 +2,7 @@
 import Menu from "@lucide/astro/icons/menu";
 import Rss from "@lucide/astro/icons/rss";
 import { copy } from "../copy";
+import { isExternalHref } from "../lib/links";
 import LinkIcon from "./LinkIcon.astro";
 import PlatformLinks from "./PlatformLinks.astro";
 import SiteLink from "./SiteLink.astro";
@@ -11,11 +12,10 @@ const { outerLinks, innerLinks } = copy.mainPage.header;
 const platformLinks = copy.mainPage.blog.platformLinks;
 const links = [...outerLinks, ...platformLinks, ...innerLinks];
 const socialLinks = [...outerLinks, ...innerLinks];
-const opensNewTab = (href: string) => href.startsWith("http");
 ---
 
 <header class="blog-header">
-  <div class="blog-header__inner">
+  <div class="blog-header__inner site-container">
     <a
       class="blog-brand"
       href="/"
@@ -35,9 +35,8 @@ const opensNewTab = (href: string) => href.startsWith("http");
           socialLinks.map((link) => (
             <SiteLink
               href={link.href}
-              external={opensNewTab(link.href)}
               indicator="corner"
-              rel={opensNewTab(link.href) ? "me" : undefined}
+              rel={isExternalHref(link.href) ? "me" : undefined}
               ariaLabel={link.label}
               title={link.label}
             >
@@ -62,8 +61,7 @@ const opensNewTab = (href: string) => href.startsWith("http");
             links.map((link) => (
               <SiteLink
                 href={link.href}
-                external={opensNewTab(link.href)}
-                rel={opensNewTab(link.href) ? "me" : undefined}
+                rel={isExternalHref(link.href) ? "me" : undefined}
               >
                 <LinkIcon
                   brand={"brand" in link ? link.brand : undefined}

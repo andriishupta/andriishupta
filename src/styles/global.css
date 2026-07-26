@@ -6,26 +6,44 @@
 }
 
 :root {
+  /* Achromatic primitive palette */
   --neutral-950: oklch(0.21 0 0);
   --neutral-900: oklch(0.24 0 0);
   --neutral-850: oklch(0.28 0 0);
   --neutral-300: oklch(0.84 0 0);
   --neutral-150: oklch(0.94 0 0);
+  --neutral-125: oklch(0.985 0 0);
   --neutral-100: oklch(0.994 0 0);
   --neutral-050: oklch(0.998 0 0);
+
+  /* Theme-aware text and rules */
   --muted-on-page: color-mix(in srgb, var(--ink) 72%, transparent);
   --muted-on-contrast: color-mix(in srgb, var(--contrast-ink) 80%, transparent);
   --line-on-page: color-mix(in srgb, var(--ink) 18%, transparent);
   --line-on-contrast: color-mix(in srgb, var(--contrast-ink) 24%, transparent);
-  --text-display: clamp(4.2rem, 7.2vw, 5.25rem);
-  --text-title: clamp(3.25rem, 5.6vw, 4.5rem);
-  --text-heading: clamp(1.625rem, 2.2vw, 2.25rem);
+
+  /* Type scale */
+  --text-h1: clamp(1.75rem, 2.1vw, 2.25rem);
+  --text-h2: clamp(1.5rem, 1.8vw, 1.75rem);
+  --text-h3: clamp(1.25rem, 1.4vw, 1.4rem);
+  --text-h4: 1rem;
   --text-body: 1.0625rem;
   --text-label: 1rem;
+
+  /* Layout measures */
   --gutter: clamp(1.25rem, 5vw, 5.5rem);
+  --subpage-gutter: clamp(1rem, 3vw, 2rem);
+  --subpage-padding-block: 3rem;
   --content-max: 90rem;
+  --content-wide: 72rem;
+  --content-reading: 48rem;
   --content-edge: max(var(--gutter), calc((100vw - var(--content-max)) / 2));
   --hero-frame-max: 101rem;
+
+  /* Shared controls and surfaces */
+  --control-size: 2.75rem;
+  --radius-surface: 0.75rem;
+  --radius-pill: 999px;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --z-controls: 30;
   font-family: var(--font-sans);
@@ -38,7 +56,8 @@
   --ink: var(--neutral-900);
   --contrast: var(--neutral-850);
   --contrast-ink: var(--neutral-150);
-  --surface: var(--neutral-100);
+  --surface: var(--neutral-125);
+  --surface-raised: color-mix(in srgb, var(--ink) 3%, var(--surface));
   --media-surface: var(--neutral-100);
   color-scheme: light;
   background: var(--page);
@@ -51,6 +70,7 @@
   --contrast: var(--neutral-300);
   --contrast-ink: var(--neutral-850);
   --surface: var(--neutral-850);
+  --surface-raised: color-mix(in srgb, var(--ink) 5%, var(--surface));
   --media-surface: var(--neutral-300);
   color-scheme: dark;
 }
@@ -62,6 +82,7 @@
     --contrast: var(--neutral-300);
     --contrast-ink: var(--neutral-850);
     --surface: var(--neutral-850);
+    --surface-raised: color-mix(in srgb, var(--ink) 5%, var(--surface));
     --media-surface: var(--neutral-300);
     color-scheme: dark;
   }
@@ -87,6 +108,41 @@ body {
   font-kerning: normal;
   font-optical-sizing: auto;
   text-rendering: optimizeLegibility;
+}
+
+h1 {
+  font-size: var(--text-h1);
+}
+
+h2 {
+  font-size: var(--text-h2);
+}
+
+h3 {
+  font-size: var(--text-h3);
+}
+
+h4 {
+  font-size: var(--text-h4);
+}
+
+.site-container {
+  width: min(calc(100% - 2 * var(--gutter)), var(--content-max));
+  margin-inline: auto;
+}
+
+.content-container {
+  width: min(100%, var(--content-wide));
+  margin-inline: auto;
+}
+
+.heading-display {
+  margin: 0;
+  font-variation-settings: "wdth" 118;
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 0.94;
+  text-wrap: balance;
 }
 
 a {
@@ -154,15 +210,15 @@ a.site-link--external .site-link__external-icon {
   gap: 0.125rem;
   padding: 0.25rem;
   border: 1px solid color-mix(in srgb, var(--contrast-ink) 20%, transparent);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
   background: color-mix(in srgb, var(--contrast) 94%, transparent);
   color: var(--contrast-ink);
 }
 
 .theme-switcher__button {
   display: grid;
-  width: 2.75rem;
-  height: 2.75rem;
+  width: var(--control-size);
+  height: var(--control-size);
   padding: 0;
   place-items: center;
   border: 0;
@@ -251,13 +307,9 @@ html[data-hero-intro="true"] .hero__profile {
 
 .hero__name {
   max-width: 8ch;
-  margin: 0;
-  font-size: var(--text-display);
-  font-variation-settings: "wdth" 118;
+  font-size: var(--text-h1);
   font-weight: 820;
-  letter-spacing: -0.035em;
   line-height: 0.9;
-  text-wrap: balance;
 }
 
 .hero__name-line-wrap,
@@ -337,7 +389,7 @@ html[data-hero-intro="true"] .hero__profile {
 .hero__role {
   max-width: 24ch;
   margin: 0;
-  font-size: var(--text-heading);
+  font-size: var(--text-h3);
   font-weight: 720;
   letter-spacing: -0.025em;
   line-height: 1.12;
@@ -395,17 +447,12 @@ html[data-hero-intro="true"] .hero__profile {
   display: grid;
   grid-template-columns: minmax(22rem, 0.9fr) minmax(0, 1.1fr);
   gap: clamp(3rem, 7vw, 8rem);
-  width: min(100%, 90rem);
+  width: min(100%, var(--content-max));
   margin: 0 auto;
 }
 
 .about__heading h2 {
-  margin: 0;
-  font-size: var(--text-title);
-  font-weight: 800;
-  letter-spacing: -0.035em;
-  line-height: 0.94;
-  text-wrap: balance;
+  font-size: var(--text-h2);
 }
 
 .about__services {
@@ -479,7 +526,7 @@ html[data-hero-intro="true"] .hero__profile {
 
 .technology-block h3 {
   margin: 0 0 0.9rem;
-  font-size: var(--text-label);
+  font-size: var(--text-h3);
   font-weight: 700;
   letter-spacing: -0.015em;
   line-height: 1.3;
@@ -531,7 +578,7 @@ html[data-hero-intro="true"] .hero__profile {
 }
 
 .experience__inner {
-  width: min(100%, 90rem);
+  width: min(100%, var(--content-max));
   margin: 0 auto;
 }
 
@@ -544,12 +591,7 @@ html[data-hero-intro="true"] .hero__profile {
 }
 
 .experience__intro h2 {
-  margin: 0;
-  font-size: var(--text-title);
-  font-weight: 800;
-  letter-spacing: -0.035em;
-  line-height: 0.94;
-  text-wrap: balance;
+  font-size: var(--text-h2);
 }
 
 .experience__more {
@@ -598,7 +640,7 @@ html[data-hero-intro="true"] .hero__profile {
 
 .experience__company-header h3 {
   margin: 0;
-  font-size: clamp(1.35rem, 1.75vw, 1.7rem);
+  font-size: var(--text-h3);
   font-weight: 740;
   letter-spacing: -0.025em;
   line-height: 1.15;
@@ -643,7 +685,7 @@ html[data-hero-intro="true"] .hero__profile {
 
 .experience__project h4 {
   margin: 0;
-  font-size: 0.95rem;
+  font-size: var(--text-h4);
   font-weight: 680;
   letter-spacing: -0.01em;
   line-height: 1.45;
@@ -766,15 +808,17 @@ html[data-hero-intro="true"] .hero__profile {
 }
 
 .site-footer {
+  background: var(--page);
+  color: var(--ink);
+  font-size: 0.82rem;
+}
+
+.site-footer__inner {
   display: flex;
   min-height: 5.25rem;
   gap: 1rem;
   align-items: center;
   justify-content: space-between;
-  padding-inline: var(--content-edge);
-  background: var(--page);
-  color: var(--ink);
-  font-size: 0.82rem;
 }
 
 .site-footer a {
@@ -838,21 +882,17 @@ html[data-hero-intro="true"] .hero__profile {
 }
 
 @media (max-width: 47.99rem) {
-  .hero__name {
-    font-size: clamp(3.2rem, 15vw, 4.35rem);
-  }
-
   .social-links {
     margin-top: 2rem;
   }
 
   .social-link {
-    min-height: 2.75rem;
+    min-height: var(--control-size);
     font-size: 0.875rem;
   }
 
   .social-link--compact {
-    width: 2.75rem;
+    width: var(--control-size);
   }
 
   .social-link__icon {
@@ -887,10 +927,6 @@ html[data-hero-intro="true"] .hero__profile {
 
   .about__inner {
     gap: 2rem;
-  }
-
-  .about__heading h2 {
-    font-size: clamp(2.85rem, 13vw, 3.75rem);
   }
 
   .about__services {
@@ -941,10 +977,6 @@ html[data-hero-intro="true"] .hero__profile {
     padding-bottom: 4rem;
   }
 
-  .experience__intro h2 {
-    font-size: clamp(2.85rem, 13vw, 3.75rem);
-  }
-
   .experience__intro {
     display: block;
     margin-bottom: 2rem;
@@ -963,15 +995,6 @@ html[data-hero-intro="true"] .hero__profile {
 
   .experience__company {
     padding-top: 1.15rem;
-  }
-
-  .experience__company-header h3 {
-    font-size: 1.45rem;
-  }
-
-  .experience__role-title,
-  .experience__project h4 {
-    font-size: 1rem;
   }
 
   .experience__role-dates,

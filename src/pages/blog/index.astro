@@ -2,7 +2,6 @@
 import ArrowRight from "@lucide/astro/icons/arrow-right";
 import LayoutGrid from "@lucide/astro/icons/layout-grid";
 import ListIcon from "@lucide/astro/icons/list";
-import BlogBreadcrumbs from "../../components/BlogBreadcrumbs.astro";
 import BlogFooter from "../../components/BlogFooter.astro";
 import BlogHeader from "../../components/BlogHeader.astro";
 import { copy } from "../../copy";
@@ -30,7 +29,7 @@ const topicFilters = Array.from(tagCounts.entries()).sort(
   ([tagA, countA], [tagB, countB]) =>
     countB - countA || tagA.localeCompare(tagB),
 );
-const title = `Blog | ${copy.identity.fullName}`;
+const title = `Software Engineering Blog | ${copy.identity.fullName}`;
 const description =
   "Technical notes by Andrii Shupta on software architecture, web development, integrations, security, and production engineering.";
 const structuredData = {
@@ -59,24 +58,6 @@ const structuredData = {
       isPartOf: { "@id": "https://andriishupta.dev/#website" },
       mainEntity: { "@id": "https://andriishupta.dev/blog/#blog" },
     },
-    {
-      "@type": "BreadcrumbList",
-      "@id": "https://andriishupta.dev/blog/#breadcrumb",
-      itemListElement: [
-        {
-          "@type": "ListItem",
-          position: 1,
-          name: "Home",
-          item: "https://andriishupta.dev/",
-        },
-        {
-          "@type": "ListItem",
-          position: 2,
-          name: "Blog",
-          item: "https://andriishupta.dev/blog",
-        },
-      ],
-    },
   ],
 };
 ---
@@ -94,13 +75,18 @@ const structuredData = {
   <BlogHeader />
 
   <main class="blog-index">
-    <header class="blog-index__intro">
-      <BlogBreadcrumbs items={[{ label: "Blog" }]} />
-      <h1>Blog</h1>
+    <header class="blog-index__intro content-container">
+      <h1 class="heading-display">
+        Software Engineering Blog by {copy.identity.fullName}
+      </h1>
       <p>Notes on software, systems, and the work behind them.</p>
     </header>
 
-    <section class="blog-controls" aria-label="Browse articles" data-blog-controls>
+    <section
+      class="blog-controls content-container"
+      aria-label="Browse articles"
+      data-blog-controls
+    >
       <div class="blog-controls__topics">
         <p>Topics</p>
         <div class="blog-topic-filters" role="group" aria-label="Filter by topic">
@@ -151,12 +137,16 @@ const structuredData = {
       </div>
     </section>
 
-    <p class="blog-results" aria-live="polite" data-blog-results>
+    <p
+      class="blog-results content-container"
+      aria-live="polite"
+      data-blog-results
+    >
       {posts.length} articles
     </p>
 
     <section
-      class="blog-archive"
+      class="blog-archive content-container"
       id="blog-archive"
       aria-label="Articles"
       data-blog-archive

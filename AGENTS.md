@@ -46,7 +46,8 @@ This repository contains the source for the personal website at `andriishupta.de
   legacy subdomain.
 - Reuse `SiteLink.astro` for authored UI links that open external URLs; it owns
   safe new-tab behavior and the shared inline/corner external indicator. Reuse
-  `LinkIcon.astro` for navigation link icons instead of duplicating icon maps.
+  `LinkIcon.astro` for navigation link icons instead of duplicating icon maps,
+  and use `isExternalHref` instead of repeating protocol checks.
 - Keep the contact address in `copy.identity.email` and its `mailto:` URL in
   `urls.email`; reuse that shared entry in homepage and blog navigation instead
   of duplicating the address in components.
@@ -72,8 +73,9 @@ This repository contains the source for the personal website at `andriishupta.de
 - At widths up to 64rem, the blog list and grid controls intentionally render
   the same single-column cards with their OG images; their layouts diverge only
   on larger desktop viewports.
-- Reuse `BlogBreadcrumbs.astro` for the blog index and article hierarchy, and
-  keep its visible route labels aligned with `BreadcrumbList` structured data.
+- Keep blog navigation deliberately minimal: do not render breadcrumb UI or
+  `BreadcrumbList` structured data. Article pages use one `Back to blog` link
+  above the title; the blog index has no equivalent trail.
 - Render valid DEV Community, Medium, and Hashnode distribution links inside
   the article metadata card below publication details, in that order. Hide
   missing links and legacy blog-subdomain URLs; keep the three author platform
@@ -96,6 +98,10 @@ This repository contains the source for the personal website at `andriishupta.de
 - Keep shared page chrome and main-page content within the 90rem content measure;
   the homepage hero may retain full-bleed split surfaces, but its inner content
   must align to that measure. Keep article prose narrower for reading.
+- Reuse the layout and typography primitives in `global.css`: `site-container`
+  for 90rem page chrome, `content-container` for 72rem page content, and
+  `heading-display` for the shared condensed heading treatment. Keep
+  route-specific composition in its route stylesheet.
 - Keep the visual direction creative but restrained: minimal, personal,
   terminal/founder/developer energy, with strong typography and spacing.
 - Keep both themes on the achromatic neutral scale in `global.css`: avoid pure
@@ -115,6 +121,8 @@ This repository contains the source for the personal website at `andriishupta.de
   without adding unnecessary complexity.
 - Favor one-page content sections for the main site: hero, now, uses, links,
   and blog preview. Do not add a projects section unless asked.
+- Keep all homepage content sections inside one page-level `main`; `Hero.astro`
+  is a labelled `section`, not a second document landmark.
 - Run `npm run build` before handing off changes that affect rendering,
   routing, configuration, or dependencies.
 - See `docs/blog-authoring.md` for the blog frontmatter schema, publishing flow,

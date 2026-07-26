@@ -15,7 +15,7 @@ interface Props {
 }
 
 const { link, compact = false, showLabel = true } = Astro.props;
-const external = link.href.startsWith("http");
+const iconOnly = !showLabel;
 const className = ["social-link", compact && "social-link--compact"]
   .filter(Boolean)
   .join(" ");
@@ -24,9 +24,8 @@ const className = ["social-link", compact && "social-link--compact"]
 <SiteLink
   class={className}
   href={link.href}
-  external={external}
-  ariaLabel={compact ? link.label : undefined}
-  title={compact ? link.label : undefined}
+  ariaLabel={iconOnly ? link.label : undefined}
+  title={iconOnly ? link.label : undefined}
 >
   <LinkIcon brand={link.brand} icon={link.icon} class="social-link__icon" />
   {showLabel && <span>{link.label}</span>}

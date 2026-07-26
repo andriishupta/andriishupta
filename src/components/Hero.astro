@@ -8,10 +8,10 @@ const primaryLinks = header.outerLinks;
 const siteLinks = header.innerLinks;
 ---
 
-<main class="hero scroll-section" data-hero>
+<section class="hero scroll-section" data-hero aria-labelledby="hero-title">
   <div class="hero__content">
     <div class="hero__identity" data-hero-identity>
-      <h1 class="hero__name" id="hero-title">
+      <h1 class="hero__name heading-display" id="hero-title">
         {
           header.nameLines.map((line) => (
             <span class="hero__name-line-wrap">
@@ -61,7 +61,7 @@ const siteLinks = header.innerLinks;
     <span>{intro.scrollLabel}</span>
     <ArrowDown />
   </a>
-</main>
+</section>
 
 <script>
   import { gsap } from "gsap";

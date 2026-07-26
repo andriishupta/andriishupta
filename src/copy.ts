@@ -1,3 +1,5 @@
+import { isExternalHref } from "./lib/links";
+
 const email = "hello@andriishupta.dev";
 
 export const urls = {
@@ -72,13 +74,13 @@ export const copy = {
           href: urls.linkedin,
           brand: "linkedin",
         },
+        { id: "x", label: "Twitter", href: urls.x, brand: "x" },
         {
           id: "github",
           label: "GitHub",
           href: urls.github,
           brand: "github",
         },
-        { id: "x", label: "Twitter", href: urls.x, brand: "x" },
         {
           id: "upwork",
           label: "Upwork",
@@ -362,4 +364,4 @@ export const copy = {
 export const identityProfileLinks = [
   ...copy.mainPage.header.outerLinks,
   ...copy.mainPage.blog.platformLinks,
-].filter(({ href }) => href.startsWith("http"));
+].filter(({ href }) => isExternalHref(href));

@@ -3,7 +3,6 @@ import ArrowLeft from "@lucide/astro/icons/arrow-left";
 import ArrowRight from "@lucide/astro/icons/arrow-right";
 import { render } from "astro:content";
 import ArticleToc from "../components/ArticleToc.astro";
-import BlogBreadcrumbs from "../components/BlogBreadcrumbs.astro";
 import BlogFooter from "../components/BlogFooter.astro";
 import BlogHeader from "../components/BlogHeader.astro";
 import PlatformLinks from "../components/PlatformLinks.astro";
@@ -84,33 +83,7 @@ const articleStructuredData = {
 };
 const structuredData = {
   "@context": "https://schema.org",
-  "@graph": [
-    articleStructuredData,
-    {
-      "@type": "BreadcrumbList",
-      "@id": `${canonicalUrl}#breadcrumb`,
-      itemListElement: [
-        {
-          "@type": "ListItem",
-          position: 1,
-          name: "Home",
-          item: "https://andriishupta.dev/",
-        },
-        {
-          "@type": "ListItem",
-          position: 2,
-          name: "Blog",
-          item: "https://andriishupta.dev/blog",
-        },
-        {
-          "@type": "ListItem",
-          position: 3,
-          name: data.title,
-          item: canonicalUrl,
-        },
-      ],
-    },
-  ],
+  "@graph": [articleStructuredData],
 };
 ---
 
@@ -131,22 +104,19 @@ const structuredData = {
 >
   <BlogHeader />
 
-  <main class="article-page">
-    <header class="article-hero">
-      <BlogBreadcrumbs
-        items={[
-          { label: "Blog", href: "/blog" },
-          { label: data.title },
-        ]}
-      />
-      <h1>{data.title}</h1>
+  <main>
+    <header class="article-hero content-container">
+      <a class="article-back" href="/blog">
+        <ArrowLeft aria-hidden="true" />
+        <span>Back to blog</span>
+      </a>
+      <h1 class="heading-display">{data.title}</h1>
       {data.subtitle && <p class="article-hero__subtitle">{data.subtitle}</p>}
+    </header>
 
+    <div class="article-page">
       <div class="article-meta">
         <div class="article-meta__main">
-          <a class="article-author" href="/" rel="author">
-            <strong>{copy.identity.fullName}</strong>
-          </a>
           <dl>
             <div>
               <dt>Published</dt>
@@ -187,26 +157,26 @@ const structuredData = {
           </dl>
         </div>
 
-        {
-          distributionLinks.length > 0 && (
-            <section class="article-distribution" aria-labelledby="published-elsewhere">
-              <h2 id="published-elsewhere">Also published on</h2>
-              <PlatformLinks
-                links={distributionLinks}
-                ariaLabel="Also published on"
-                rel="syndication"
-              />
-            </section>
-          )
-        }
+        <div class="article-meta__aside">
+          {
+            distributionLinks.length > 0 && (
+              <div class="article-distribution">
+                <PlatformLinks
+                  links={distributionLinks}
+                  ariaLabel="Also published on"
+                  rel="syndication"
+                />
+              </div>
+            )
+          }
 
-        <ul class="article-meta__tags" aria-label="Article topics">
-          {data.tags.map((tag) => <li>#{tag}</li>)}
-        </ul>
+          <ul class="article-meta__tags" aria-label="Article topics">
+            {data.tags.map((tag) => <li>#{tag}</li>)}
+          </ul>
+        </div>
       </div>
 
       <ArticleToc headings={headings} mobile />
-    </header>
 
     {
       data.cover && (
@@ -287,6 +257,7 @@ const structuredData = {
         <span>Back to all articles</span>
       </a>
     </footer>
+    </div>
   </main>
 
   <BlogFooter />

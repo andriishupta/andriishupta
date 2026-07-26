@@ -1,5 +1,6 @@
 ---
 import ArrowUpRight from "@lucide/astro/icons/arrow-up-right";
+import { isExternalHref } from "../lib/links";
 
 type IndicatorPlacement = "none" | "inline" | "corner";
 
@@ -16,7 +17,7 @@ interface Props {
 const {
   href,
   class: className,
-  external = href.startsWith("http"),
+  external = isExternalHref(href),
   indicator = external ? "inline" : "none",
   rel,
   ariaLabel,
