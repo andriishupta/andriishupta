@@ -61,6 +61,11 @@ This repository contains the source for the personal website at `andriishupta.de
 - Keep blog chrome visually aligned with the homepage: reuse the same Geologica
   widths and weights, icon sizing, monochrome theme control, ruled links, and
   restrained hover treatment instead of blog-only avatar or card motifs.
+- Keep hero profile links in two fluid, wrapping groups: external profiles and
+  internal links share a row when possible, otherwise the entire internal group
+  wraps. External profiles are icon-only with an external indicator, while Blog
+  and CV retain visible labels; icon-only links need an accessible name and
+  tooltip.
 - At widths up to 64rem, the blog list and grid controls intentionally render
   the same single-column cards with their OG images; their layouts diverge only
   on larger desktop viewports.
@@ -70,6 +75,9 @@ This repository contains the source for the personal website at `andriishupta.de
   the article metadata card below publication details, in that order. Hide
   missing links and legacy blog-subdomain URLs; keep the three author platform
   profiles available from the blog header.
+- Reuse `PlatformLinks.astro` for the blog header and article distribution
+  metadata so their platform order, wordmark treatment, and external indicator
+  remain consistent.
 - Blog OG images are author-supplied 1200×630 assets referenced by `ogImage`;
   the build must not overwrite them. `pnpm blog:verify` checks their dimensions.
 - Keep Cloudflare deployment static on Pages. Do not add an Astro server adapter,
@@ -82,6 +90,9 @@ This repository contains the source for the personal website at `andriishupta.de
   required.
 - Keep homepage meta descriptions within roughly 110–160 characters; update both
   `public/og-image.svg` and its 1200×630 PNG export when refreshing the share preview.
+- Keep shared page chrome and main-page content within the 90rem content measure;
+  the homepage hero may retain full-bleed split surfaces, but its inner content
+  must align to that measure. Keep article prose narrower for reading.
 - Keep the visual direction creative but restrained: minimal, personal,
   terminal/founder/developer energy, with strong typography and spacing.
 - Keep both themes on the achromatic neutral scale in `global.css`: avoid pure

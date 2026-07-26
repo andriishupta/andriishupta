@@ -8,6 +8,7 @@ import PenLine from "@lucide/astro/icons/pen-line";
 import Rss from "@lucide/astro/icons/rss";
 import { copy } from "../copy";
 import BrandIcon from "./BrandIcon.astro";
+import PlatformLinks from "./PlatformLinks.astro";
 import ThemeSwitcher from "./ThemeSwitcher.astro";
 
 const { outerLinks, innerLinks } = copy.mainPage.header;
@@ -18,31 +19,21 @@ const opensNewTab = (href: string) => href.startsWith("http");
 ---
 
 <header class="blog-header">
-  <a
-    class="blog-brand"
-    href="/"
-    aria-label={`${copy.identity.fullName} — home`}
-  >
-    <span>{copy.identity.fullName}</span>
-  </a>
-  <nav class="blog-platforms" aria-label="Writing platforms">
-    {
-      platformLinks.map((link) => (
-        <a
-          href={link.href}
-          target="_blank"
-          rel="me noopener noreferrer"
-          aria-label={link.label}
-          title={link.label}
-        >
-          <BrandIcon name={link.brand} />
-          {link.brand !== "hashnode" && <span>{link.label}</span>}
-        </a>
-      ))
-    }
-  </nav>
+  <div class="blog-header__inner">
+    <a
+      class="blog-brand"
+      href="/"
+      aria-label={`${copy.identity.fullName} — home`}
+    >
+      <span>{copy.identity.fullName}</span>
+    </a>
+    <PlatformLinks
+      class="blog-platforms"
+      links={platformLinks}
+      rel="me noopener noreferrer"
+    />
 
-  <div class="blog-header__actions">
+    <div class="blog-header__actions">
     <nav class="blog-socials" aria-label="Elsewhere and feeds">
       {
         socialLinks.map((link) => (
@@ -120,5 +111,6 @@ const opensNewTab = (href: string) => href.startsWith("http");
     </details>
 
     <ThemeSwitcher embedded />
+    </div>
   </div>
 </header>

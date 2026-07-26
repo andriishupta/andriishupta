@@ -1,0 +1,12 @@
+---
+import Mail from "@lucide/astro/icons/mail";
+import { copy, urls } from "../copy";
+---
+
+<footer class="site-footer">
+  <a href={urls.email}>
+    <Mail aria-hidden="true" />
+    <span>{copy.identity.email}</span>
+  </a>
+  <p>© {new Date().getUTCFullYear()} {copy.identity.fullName}</p>
+</footer>

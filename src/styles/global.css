@@ -12,7 +12,7 @@
   --neutral-300: oklch(0.84 0 0);
   --neutral-200: oklch(0.93 0 0);
   --neutral-150: oklch(0.94 0 0);
-  --neutral-100: oklch(0.975 0 0);
+  --neutral-100: oklch(0.985 0 0);
   --muted-on-page: color-mix(in srgb, var(--ink) 72%, transparent);
   --muted-on-contrast: color-mix(in srgb, var(--contrast-ink) 80%, transparent);
   --line-on-page: color-mix(in srgb, var(--ink) 18%, transparent);
@@ -23,6 +23,9 @@
   --text-body: 1.0625rem;
   --text-label: 1rem;
   --gutter: clamp(1.25rem, 5vw, 5.5rem);
+  --content-max: 90rem;
+  --content-edge: max(var(--gutter), calc((100vw - var(--content-max)) / 2));
+  --hero-frame-max: 101rem;
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --z-controls: 30;
   font-family: var(--font-sans);
@@ -114,7 +117,7 @@ a:where(:hover, :focus-visible) {
 .site-controls {
   position: fixed;
   top: max(0.75rem, env(safe-area-inset-top));
-  right: max(0.75rem, env(safe-area-inset-right));
+  right: max(0.75rem, env(safe-area-inset-right), var(--content-edge));
   z-index: var(--z-controls);
 }
 
@@ -179,14 +182,20 @@ a:where(:hover, :focus-visible) {
   position: relative;
   min-height: 100svh;
   overflow: clip;
-  background: var(--page);
+  background: linear-gradient(
+    to right,
+    var(--page) 0 50%,
+    var(--contrast) 50% 100%
+  );
   color: var(--ink);
 }
 
 .hero__content {
   display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  width: min(100%, var(--hero-frame-max));
   min-height: 100svh;
+  margin: 0 auto;
 }
 
 .hero__identity,
@@ -199,13 +208,13 @@ a:where(:hover, :focus-visible) {
 }
 
 .hero__identity {
-  background: var(--page);
+  background: transparent;
   color: var(--ink);
 }
 
 .hero__profile {
   border-left: 1px solid var(--line-on-contrast);
-  background: var(--contrast);
+  background: transparent;
   color: var(--contrast-ink);
 }
 
@@ -243,35 +252,40 @@ html[data-hero-intro="true"] .hero__identity .social-links {
 }
 
 .social-links {
-  --social-link-column-gap: clamp(0.75rem, 1.25vw, 1.3rem);
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0 var(--social-link-column-gap);
-  width: min(100%, 40rem);
+  display: flex;
+  gap: 0.45rem clamp(0.45rem, 1vw, 0.9rem);
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  width: min(100%, 37rem);
   margin-top: clamp(2.75rem, 7vh, 5rem);
 }
 
+.social-links__outer,
 .social-links__site {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  grid-column: 1 / -1;
-  gap: 0 var(--social-link-column-gap);
-  width: 100%;
-  margin-top: 0.75rem;
+  display: flex;
+  flex: 0 0 auto;
+  gap: 0.35rem;
+  align-items: center;
 }
 
 .social-link {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  gap: 0.5rem;
+  display: inline-flex;
+  gap: 0.45rem;
   align-items: center;
-  min-height: 3.25rem;
-  border-bottom: 1px solid var(--line-on-page);
+  justify-content: center;
+  min-height: 2.5rem;
+  padding-inline: 0.25rem;
   color: var(--ink);
   font-size: clamp(0.75rem, 0.9vw, 0.88rem);
   font-weight: 570;
   line-height: 1;
   text-decoration: none;
+}
+
+.social-link--compact {
+  width: 2.65rem;
+  padding: 0;
 }
 
 .social-link > span {
@@ -324,7 +338,7 @@ html[data-hero-intro="true"] .hero__identity .social-links {
 .scroll-cue,
 .section-scroll-cue {
   position: absolute;
-  right: var(--gutter);
+  right: var(--content-edge);
   bottom: clamp(1.5rem, 4vh, 2.75rem);
   z-index: 2;
   display: inline-flex;
@@ -728,22 +742,62 @@ html[data-hero-intro="true"] .hero__identity .social-links {
   margin-top: 0.7rem;
 }
 
+.site-footer {
+  display: flex;
+  min-height: 5.25rem;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  padding-inline: var(--content-edge);
+  background: var(--page);
+  color: var(--ink);
+  font-size: 0.82rem;
+}
+
+.site-footer a {
+  display: inline-flex;
+  gap: 0.45rem;
+  align-items: center;
+  font-weight: 570;
+  text-underline-offset: 0.25rem;
+}
+
+.site-footer a svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.site-footer p {
+  margin: 0;
+  color: var(--muted-on-page);
+}
+
 @media (max-width: 62rem) {
   .hero__content {
-    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+  }
+
+  .hero {
+    background: var(--page);
   }
 
   .hero__identity,
   .hero__profile {
-    padding-inline: clamp(2rem, 5vw, 3.5rem);
+    padding-inline: var(--gutter);
   }
 
-  .social-links {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .hero__identity {
+    padding-top: 5.25rem;
+    padding-bottom: 2.4rem;
   }
 
-  .social-links__site {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .hero__profile {
+    justify-content: flex-start;
+    padding-top: 2.5rem;
+    padding-bottom: 5rem;
+    border: 0;
+    background: var(--contrast);
   }
 
   .about__inner {
@@ -766,6 +820,10 @@ html[data-hero-intro="true"] .hero__identity .social-links {
     grid-template-rows: auto 1fr;
   }
 
+  .hero {
+    background: var(--page);
+  }
+
   .hero__identity,
   .hero__profile {
     padding-inline: var(--gutter);
@@ -780,8 +838,8 @@ html[data-hero-intro="true"] .hero__identity .social-links {
     justify-content: flex-start;
     padding-top: 2.5rem;
     padding-bottom: 5rem;
-    border-top: 1px solid var(--line-on-contrast);
-    border-left: 0;
+    border: 0;
+    background: var(--contrast);
   }
 
   .hero__name {
@@ -789,14 +847,11 @@ html[data-hero-intro="true"] .hero__identity .social-links {
   }
 
   .social-links {
-    --social-link-column-gap: 0.65rem;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
     margin-top: 2rem;
   }
 
   .social-link {
-    gap: 0.4rem;
-    min-height: 2.85rem;
+    min-height: 2.5rem;
     font-size: 0.72rem;
   }
 
@@ -938,10 +993,6 @@ html[data-hero-intro="true"] .hero__identity .social-links {
 }
 
 @media (max-width: 23rem) {
-  .social-links {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
   .technology-list {
     grid-template-columns: 1fr;
   }

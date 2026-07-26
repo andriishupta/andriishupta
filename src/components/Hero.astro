@@ -24,9 +24,27 @@ const siteLinks = header.innerLinks;
       </h1>
 
       <nav class="social-links" aria-label={header.linksLabel} data-hero-links>
-        {primaryLinks.map((link) => <HeroSocialLink link={link} />)}
+        <div class="social-links__outer" role="group" aria-label="Elsewhere">
+          {
+            primaryLinks.map((link) => (
+              <HeroSocialLink
+                link={link}
+                compact={link.icon !== "upwork"}
+                showLabel={link.icon === "upwork"}
+              />
+            ))
+          }
+        </div>
         <div class="social-links__site" role="group" aria-label="On this site">
-          {siteLinks.map((link) => <HeroSocialLink link={link} />)}
+          {
+            siteLinks.map((link) => (
+              <HeroSocialLink
+                link={link}
+                compact={link.icon === "email"}
+                showLabel={link.icon !== "email"}
+              />
+            ))
+          }
         </div>
       </nav>
     </div>

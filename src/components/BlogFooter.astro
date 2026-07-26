@@ -6,19 +6,21 @@ import { copy, urls } from "../copy";
 ---
 
 <footer class="blog-footer">
-  <div class="blog-footer__links">
-    <a href={urls.email}>
-      <Mail aria-hidden="true" />
-      <span>{copy.identity.email}</span>
+  <div class="blog-footer__inner">
+    <div class="blog-footer__links">
+      <a href={urls.email}>
+        <Mail aria-hidden="true" />
+        <span>{copy.identity.email}</span>
+      </a>
+      <a href="/blog/rss.xml">
+        <Rss aria-hidden="true" />
+        <span>RSS feed</span>
+      </a>
+    </div>
+    <a class="blog-footer__home" href="/">
+      <ArrowLeft aria-hidden="true" />
+      <span>Back home</span>
     </a>
-    <a href="/blog/rss.xml">
-      <Rss aria-hidden="true" />
-      <span>RSS feed</span>
-    </a>
+    <p>© {new Date().getUTCFullYear()} {copy.identity.fullName}</p>
   </div>
-  <a class="blog-footer__home" href="/">
-    <ArrowLeft aria-hidden="true" />
-    <span>Back home</span>
-  </a>
-  <p>© {new Date().getUTCFullYear()} {copy.identity.fullName}</p>
 </footer>

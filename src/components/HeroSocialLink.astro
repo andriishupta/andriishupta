@@ -14,17 +14,27 @@ interface Props {
     brand?: "linkedin" | "github" | "x";
     icon?: "upwork" | "cv" | "about" | "experience" | "blog" | "email";
   };
+  compact?: boolean;
+  showLabel?: boolean;
+  showExternalIcon?: boolean;
 }
 
-const { link } = Astro.props;
+const {
+  link,
+  compact = false,
+  showLabel = true,
+  showExternalIcon = true,
+} = Astro.props;
 const opensNewTab = link.href.startsWith("http");
 ---
 
 <a
-  class="social-link"
+  class:list={["social-link", { "social-link--compact": compact }]}
   href={link.href}
   target={opensNewTab ? "_blank" : undefined}
   rel={opensNewTab ? "noopener noreferrer" : undefined}
+  aria-label={compact ? link.label : undefined}
+  title={compact ? link.label : undefined}
 >
   {link.brand && <BrandIcon name={link.brand} class="social-link__icon" />}
   {
@@ -57,6 +67,10 @@ const opensNewTab = link.href.startsWith("http");
       <Mail class="social-link__icon" aria-hidden="true" />
     )
   }
-  <span>{link.label}</span>
-  {opensNewTab && <ArrowUpRight class="social-link__arrow" aria-hidden="true" />}
+  {showLabel && <span>{link.label}</span>}
+  {
+    opensNewTab && showExternalIcon && (
+      <ArrowUpRight class="social-link__arrow" aria-hidden="true" />
+    )
+  }
 </a>
