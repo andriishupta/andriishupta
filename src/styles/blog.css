@@ -519,7 +519,6 @@
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 1.5rem;
   align-items: start;
-  margin-top: clamp(2rem, 4vw, 3rem);
   padding: 1.25rem;
   border-radius: var(--radius-surface);
   background: var(--surface-raised);
