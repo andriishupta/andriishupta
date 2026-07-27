@@ -39,6 +39,9 @@ updatedAt: 2026-07-22
 tags:
   - astro
   - seo
+topics:
+  - UI Development
+  - Software Design
 cover: "/images/blog/migrating-blog.png"
 coverAlt: "A useful description of the cover image"
 ogImage: "/blog/migrating-blog-to-subpath/og.png"
@@ -56,6 +59,14 @@ Article content starts here.
 `updatedAt` means the first-party article body changed materially. Adding or
 changing a distribution URL does not count as an article update and must not
 change `updatedAt`.
+
+`tags` are article-specific labels, shown with the article and used for feed and
+metadata keywords. `topics` are the broader blog-index filters: `AI`, `Web3`,
+`Software Design`, `UI Development`, `API Development`, and `Mobile
+Development`. Assign zero or more topics to each article; use multiple topics
+when the article spans those areas. Topic values are validated against this
+allowlist at build time. Add a new topic only when it is intentionally needed,
+by updating the shared list in `src/lib/blog-topics.ts` first.
 
 Keep Hashnode, DEV Community, and Medium URLs in `distribution` frontmatter,
 not in the article body. When present, they render in the article metadata card

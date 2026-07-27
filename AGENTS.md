@@ -62,6 +62,10 @@ This repository contains the source for the personal website at `andriishupta.de
   merge or deployment.
 - Keep blog slugs stable. Article order is derived from `publishedAt`, while
   `updatedAt` is reserved for material changes to first-party content.
+- Keep article-specific `tags` separate from the blog index's controlled
+  `topics` filters. Topics use the shared AI, Web3, Software Design, UI
+  Development, API Development, and Mobile Development list; articles may
+  belong to multiple topics.
 - Keep blog chrome visually aligned with the homepage: reuse the same Geologica
   widths and weights, icon sizing, monochrome theme control, ruled links, and
   restrained hover treatment instead of blog-only avatar or card motifs.

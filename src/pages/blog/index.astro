@@ -6,6 +6,7 @@ import BlogFooter from "../../components/BlogFooter.astro";
 import BlogHeader from "../../components/BlogHeader.astro";
 import { copy } from "../../copy";
 import {
+  blogTopics,
   formatBlogDate,
   getBlogPosts,
   getPostPath,
@@ -17,18 +18,17 @@ import Layout from "../../layouts/Layout.astro";
 import "../../styles/blog.css";
 
 const posts = await getBlogPosts();
-const tagCounts = new Map<string, number>();
+const topicCounts = new Map<string, number>();
 
 for (const post of posts) {
-  for (const tag of post.data.tags) {
-    tagCounts.set(tag, (tagCounts.get(tag) ?? 0) + 1);
+  for (const topic of post.data.topics) {
+    topicCounts.set(topic, (topicCounts.get(topic) ?? 0) + 1);
   }
 }
 
-const topicFilters = Array.from(tagCounts.entries()).sort(
-  ([tagA, countA], [tagB, countB]) =>
-    countB - countA || tagA.localeCompare(tagB),
-);
+const topicFilters = blogTopics
+  .map((topic) => [topic, topicCounts.get(topic) ?? 0] as const)
+  .filter(([, count]) => count > 0);
 const title = `Software Engineering Blog | ${copy.identity.fullName}`;
 const description =
   "Technical notes by Andrii Shupta on software architecture, web development, integrations, security, and production engineering.";
@@ -100,14 +100,14 @@ const structuredData = {
             <small>{posts.length}</small>
           </button>
           {
-            topicFilters.map(([tag, count]) => (
+            topicFilters.map(([topic, count]) => (
               <button
                 type="button"
-                data-blog-filter={tag}
+                data-blog-filter={topic}
                 aria-pressed="false"
                 aria-controls="blog-archive"
               >
-                <span>#{tag}</span>
+                <span>{topic}</span>
                 <small>{count}</small>
               </button>
             ))
@@ -164,7 +164,7 @@ const structuredData = {
             <article
               class="blog-entry"
               data-blog-entry
-              data-tags={post.data.tags.join(",")}
+              data-topics={post.data.topics.join(",")}
             >
               <a class="blog-entry__link" href={getPostPath(post)}>
                 <div class="blog-entry__content">
@@ -194,7 +194,7 @@ const structuredData = {
                   )}
 
                   <div class="blog-entry__footer">
-                    <ul class="blog-entry__tags" aria-label="Topics">
+                    <ul class="blog-entry__tags" aria-label="Tags">
                       {post.data.tags.map((tag) => (
                         <li>#{tag}</li>
                       ))}
@@ -266,12 +266,12 @@ const structuredData = {
     }
   };
 
-  const setFilter = (tag: string) => {
+  const setFilter = (topic: string) => {
     let visibleCount = 0;
 
     entries.forEach((entry) => {
-      const entryTags = (entry.dataset.tags ?? "").split(",");
-      const matches = tag === "all" || entryTags.includes(tag);
+      const entryTopics = (entry.dataset.topics ?? "").split(",");
+      const matches = topic === "all" || entryTopics.includes(topic);
       entry.hidden = !matches;
       if (matches) visibleCount += 1;
     });
@@ -279,7 +279,7 @@ const structuredData = {
     filterButtons.forEach((button) => {
       button.setAttribute(
         "aria-pressed",
-        String(button.dataset.blogFilter === tag),
+        String(button.dataset.blogFilter === topic),
       );
     });
 

@@ -1,5 +1,7 @@
 import { type CollectionEntry, getCollection } from "astro:content";
 
+export { blogTopics } from "./blog-topics";
+
 export type BlogPost = CollectionEntry<"blog">;
 
 interface BlogPostOptions {

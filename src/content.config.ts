@@ -1,5 +1,7 @@
-import { defineCollection, z } from "astro:content";
+import { defineCollection } from "astro:content";
 import { glob } from "astro/loaders";
+import { z } from "astro/zod";
+import { blogTopics } from "./lib/blog-topics";
 
 const distributionSchema = z
   .object({
@@ -19,6 +21,7 @@ const blog = defineCollection({
     publishedAt: z.coerce.date(),
     updatedAt: z.coerce.date().optional(),
     tags: z.array(z.string()).default([]),
+    topics: z.array(z.enum(blogTopics)).default([]),
     cover: z.string().startsWith("/").optional(),
     coverAlt: z.string().optional(),
     ogImage: z.string().startsWith("/").optional(),
