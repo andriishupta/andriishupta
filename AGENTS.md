@@ -139,6 +139,9 @@ This repository contains the source for the personal website at `andriishupta.de
 - Keep custom section-by-section scrolling limited to fine-pointer desktop
   viewports at least 1024px wide. Tablets, phones, and narrower windows must use
   regular native scrolling without CSS scroll snapping.
+- Keep the mobile blog menu inside the viewport with a positive right inset on
+  narrow phone widths; do not use a negative offset that pushes its fixed-width
+  panel beyond the screen.
 - For first-load hero animation states, set a pre-paint HTML data attribute in
   `Layout.astro` and style every animated hero panel's initial visual state in
   CSS; do not use layout-changing hiding such as `display: none` or zero height.

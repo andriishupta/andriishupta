@@ -1030,7 +1030,7 @@
 }
 @media (max-width: 30rem) {
   .blog-menu nav {
-    right: -7rem;
+    right: 0.75rem;
   }
   .article-meta dl {
     display: grid;
