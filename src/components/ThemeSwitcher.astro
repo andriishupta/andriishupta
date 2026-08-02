@@ -141,7 +141,7 @@ const options = [
     });
   });
 
-  document.addEventListener("pointerdown", (event) => {
+  document.addEventListener("click", (event) => {
     if (!switcher?.open || !(event.target instanceof Node)) return;
     if (!switcher.contains(event.target)) switcher.removeAttribute("open");
   });

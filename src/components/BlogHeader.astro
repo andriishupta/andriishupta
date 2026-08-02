@@ -52,7 +52,7 @@ const socialLinks = [...outerLinks, ...innerLinks];
         </a>
       </nav>
 
-      <details class="blog-menu">
+      <details class="blog-menu" data-blog-menu>
         <summary aria-label="Open blog menu" title="Menu">
           <Menu aria-hidden="true" />
         </summary>
@@ -82,3 +82,12 @@ const socialLinks = [...outerLinks, ...innerLinks];
     </div>
   </div>
 </header>
+
+<script>
+  const blogMenu = document.querySelector<HTMLDetailsElement>("[data-blog-menu]");
+
+  document.addEventListener("click", (event) => {
+    if (!blogMenu?.open || !(event.target instanceof Node)) return;
+    if (!blogMenu.contains(event.target)) blogMenu.removeAttribute("open");
+  });
+</script>
