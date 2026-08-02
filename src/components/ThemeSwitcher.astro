@@ -127,6 +127,11 @@ const options = [
     }
   };
 
+  trigger?.addEventListener("click", (event) => {
+    event.preventDefault();
+    if (switcher) switcher.open = !switcher.open;
+  });
+
   buttons.forEach((button) => {
     button.addEventListener("click", () => {
       const mode = button.dataset.themeOption;
