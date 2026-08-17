@@ -1,4 +1,4 @@
 export const themeColors = {
-  light: "#fefefe",
-  dark: "#161616",
+  light: "#ffffff",
+  dark: "#000000",
 } as const;

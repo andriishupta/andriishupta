@@ -1,0 +1,26 @@
+---
+import { copy } from "../copy";
+
+const { approach } = copy.mainPage;
+---
+
+<section class="consulting-approach" id="approach" aria-labelledby="approach-title">
+  <div class="consulting-approach__inner site-container">
+    <header class="section-heading section-heading--compact">
+      <h2 class="heading-display" id="approach-title">{approach.heading}</h2>
+      <p>{approach.description}</p>
+    </header>
+
+    <ol class="approach-list">
+      {approach.steps.map((step) => (
+        <li>
+          <span class="approach-list__index">{step.index}</span>
+          <div>
+            <h3>{step.title}</h3>
+            <p>{step.description}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>

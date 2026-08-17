@@ -1,90 +1,27 @@
 ---
-import ArrowDown from "@lucide/astro/icons/arrow-down";
-import Atom from "@lucide/astro/icons/atom";
-import Cloud from "@lucide/astro/icons/cloud";
-import Rocket from "@lucide/astro/icons/rocket";
-import Database from "@lucide/astro/icons/database";
-import FileCode from "@lucide/astro/icons/file-code";
-import Server from "@lucide/astro/icons/server";
+import ArrowRight from "@lucide/astro/icons/arrow-right";
 import { copy } from "../copy";
-import SiteLink from "./SiteLink.astro";
 
 const { about } = copy.mainPage;
-const technologyIcons = {
-  code: FileCode,
-  react: Atom,
-  server: Server,
-  database: Database,
-  cloud: Cloud,
-  rocket: Rocket,
-};
 ---
 
-<section class="about scroll-section" id="about" aria-labelledby="about-title">
-  <div class="about__inner">
-    <div class="about__heading">
-      <h2 class="heading-display" id="about-title">{about.heading}</h2>
-      <ul class="about__services" aria-label={about.areasLabel}>
-        {about.areas.map((area) => <li>{area}</li>)}
-      </ul>
+<section class="consulting-services" id="services" aria-labelledby="services-title">
+  <div class="consulting-services__inner site-container">
+    <header class="section-heading">
+      <h2 class="heading-display" id="services-title">{about.heading}</h2>
+      <p>{about.description}</p>
+    </header>
 
-      <div class="technology-block">
-        <h3>{about.coreStack.heading}</h3>
-        <ul class="technology-list" aria-label={about.coreStack.listLabel}>
-          {
-            about.coreStack.technologies.map(({ name, icon }) => {
-              const Icon = technologyIcons[icon];
-              return (
-                <li>
-                  <Icon aria-hidden="true" />
-                  <span>{name}</span>
-                </li>
-              );
-            })
-          }
-        </ul>
-      </div>
-    </div>
-
-    <div class="about__content">
-      <div class="about__copy">
-        <p>{about.description}</p>
-      </div>
-
-      <div class="about__notes">
-        {
-          about.additional.map((item) => (
-            <p>
-              <strong>{item.label}</strong> {item.text}
-            </p>
-          ))
-        }
-      </div>
-
-      <p class="about__resources">
-        {about.linksIntro}{" "}
-        {
-          about.links.map((link, index) => (
-            <>
-              {index > 0 &&
-                (index === about.links.length - 1 ? ", and " : ", ")}
-              {link.before}{" "}
-              <SiteLink href={link.href}>
-                {link.label}
-              </SiteLink>
-            </>
-          ))
-        }.
-      </p>
+    <div class="service-list">
+      {about.services.map((service) => (
+        <article class="service-row">
+          <div class="service-row__title">
+            <h3>{service.title}</h3>
+            <ArrowRight aria-hidden="true" />
+          </div>
+          <p>{service.description}</p>
+        </article>
+      ))}
     </div>
   </div>
-
-  <a
-    class="section-scroll-cue"
-    href="#experience"
-    aria-label={about.scrollAriaLabel}
-  >
-    <span>{about.scrollLabel}</span>
-    <ArrowDown aria-hidden="true" />
-  </a>
 </section>

@@ -1,26 +1,5 @@
 ---
-import ArrowLeft from "@lucide/astro/icons/arrow-left";
-import Mail from "@lucide/astro/icons/mail";
-import Rss from "@lucide/astro/icons/rss";
-import { copy, urls } from "../copy";
+import SiteFooter from "./SiteFooter.astro";
 ---
 
-<footer class="blog-footer">
-  <div class="blog-footer__inner site-container">
-    <div class="blog-footer__links">
-      <a href={urls.email}>
-        <Mail aria-hidden="true" />
-        <span>{copy.identity.email}</span>
-      </a>
-      <a href="/blog/rss.xml">
-        <Rss aria-hidden="true" />
-        <span>RSS feed</span>
-      </a>
-    </div>
-    <a class="blog-footer__home" href="/">
-      <ArrowLeft aria-hidden="true" />
-      <span>Back home</span>
-    </a>
-    <p>© {new Date().getUTCFullYear()} {copy.identity.fullName}</p>
-  </div>
-</footer>
+<SiteFooter context="blog" />

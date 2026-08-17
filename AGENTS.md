@@ -40,10 +40,9 @@ This repository contains the source for the personal website at `andriishupta.de
 - The first-party blog is public. Do not add a global visibility flag or
   `noindex` header for `/blog`; complete articles must remain discoverable
   through the homepage, RSS, root and blog sitemaps, and `llms.txt`.
-- Keep shared header navigation in `copy.mainPage.header.outerLinks` and
-  `innerLinks`. The homepage separates external profiles/resources from the
-  internal Blog, CV, and Email group. Blog links always use `/blog`, never the
-  legacy subdomain.
+- Keep the homepage header limited to in-page navigation, Blog, and Email.
+  External profiles and CV belong in the shared footer. Blog links always use
+  `/blog`, never the legacy subdomain.
 - Reuse `SiteLink.astro` for authored UI links that open external URLs; it owns
   safe new-tab behavior and the shared inline/corner external indicator. Reuse
   `LinkIcon.astro` for navigation link icons instead of duplicating icon maps,
@@ -63,17 +62,21 @@ This repository contains the source for the personal website at `andriishupta.de
 - Keep blog slugs stable. Article order is derived from `publishedAt`, while
   `updatedAt` is reserved for material changes to first-party content.
 - Keep article-specific `tags` separate from the blog index's controlled
-  `topics` filters. Topics use the shared AI, Web3, Software Design, UI
-  Development, API Development, and Mobile Development list; articles may
-  belong to multiple topics.
+  `topics` filters. Topics use the shared AI, Web3, Software Design,
+  Consulting, UI Development, API Development, and Mobile Development list;
+  their lowercase hyphenated slugs are stable query values such as
+  `?topic=software-design`. Articles may belong to multiple topics, including
+  topics with no published entries yet.
 - Keep blog chrome visually aligned with the homepage: reuse the same Geologica
   widths and weights, icon sizing, monochrome theme control, ruled links, and
-  restrained hover treatment instead of blog-only avatar or card motifs.
-- Keep hero profile links in two fluid, wrapping groups: external profiles and
-  internal links share a row when possible, otherwise the entire internal group
-  wraps. External profiles are icon-only with an external indicator, while Blog
-  and CV retain visible labels; icon-only links need an accessible name and
-  tooltip.
+  restrained hover treatment instead of blog-only avatar or card motifs. Article
+  metadata, table of contents, and navigation surfaces should use the same
+  square black/white ruled treatment and remain readable in both themes.
+- Keep the consulting hero as one centered composition. Do not split its
+  background into light and dark columns or repeat the person's name as a
+  decorative brand label.
+- Keep the homepage theme switcher embedded in its header so it participates in
+  the mobile layout instead of floating over scrolled content.
 - At widths up to 64rem, the blog list and grid controls intentionally render
   the same single-column cards with their OG images; their layouts diverge only
   on larger desktop viewports.
@@ -108,9 +111,10 @@ This repository contains the source for the personal website at `andriishupta.de
   route-specific composition in its route stylesheet.
 - Keep the visual direction creative but restrained: minimal, personal,
   terminal/founder/developer energy, with strong typography and spacing.
-- Keep both themes on the achromatic neutral scale in `global.css`: avoid pure
-  white/black surfaces, use semantic theme tokens with contrast-forward muted
-  text and light surfaces, and reduce bright blog media luminance in dark mode
+- Keep both themes deliberately black and white in `global.css`: light mode
+  uses white page surfaces with black text, dark mode uses black surfaces with
+  white text. Use gray only for readable secondary text/rules, never as a main
+  section background, and reduce bright blog media luminance in dark mode
   without modifying the author-supplied assets.
 - Keep `ThemeSwitcher.astro` compact: show only the selected mode icon, then
   disclose the named System, Light, and Dark choices in its native dropdown.
@@ -126,8 +130,9 @@ This repository contains the source for the personal website at `andriishupta.de
   when animation needs JavaScript.
 - Use Astro view transitions for internal navigation when they improve flow
   without adding unnecessary complexity.
-- Favor one-page content sections for the main site: hero, now, uses, links,
-  and blog preview. Do not add a projects section unless asked.
+- Favor one-page content sections for the main site: consulting hero, services,
+  approach, proof, use cases, and experience. Keep full experience at the bottom;
+  do not add a separate projects section unless asked.
 - Keep all homepage content sections inside one page-level `main`; `Hero.astro`
   is a labelled `section`, not a second document landmark.
 - Run `npm run build` before handing off changes that affect rendering,
@@ -136,16 +141,15 @@ This repository contains the source for the personal website at `andriishupta.de
   image conventions, and redirect cutover checklist.
 - The repository may contain git changes from the Next.js-to-Astro migration;
   do not restore deleted Next.js, shadcn, Tailwind, or React files unless asked.
-- Keep custom section-by-section scrolling limited to fine-pointer desktop
-  viewports at least 1024px wide. Tablets, phones, and narrower windows must use
-  regular native scrolling without CSS scroll snapping.
+- The homepage uses regular native scrolling; do not reintroduce custom
+  section-by-section scrolling or CSS scroll snapping.
 - Keep the mobile blog menu inside the viewport with a positive right inset on
   narrow phone widths; do not use a negative offset that pushes its fixed-width
   panel beyond the screen, and close it on pointer interaction outside the
   menu.
 - Theme and blog details menus close on document clicks outside their own
-  controls; theme summary toggling is explicit so repeated icon clicks are
-  deterministic across browsers.
+  controls; Escape closes open disclosure menus, and theme summary toggling is
+  explicit so repeated icon clicks are deterministic across browsers.
 - For first-load hero animation states, set a pre-paint HTML data attribute in
   `Layout.astro` and style every animated hero panel's initial visual state in
   CSS; do not use layout-changing hiding such as `display: none` or zero height.

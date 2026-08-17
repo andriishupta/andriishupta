@@ -7,14 +7,14 @@
 
 :root {
   /* Achromatic primitive palette */
-  --neutral-950: oklch(0.21 0 0);
-  --neutral-900: oklch(0.24 0 0);
-  --neutral-850: oklch(0.28 0 0);
-  --neutral-300: oklch(0.84 0 0);
-  --neutral-150: oklch(0.94 0 0);
-  --neutral-125: oklch(0.985 0 0);
-  --neutral-100: oklch(0.994 0 0);
-  --neutral-050: oklch(0.998 0 0);
+  --neutral-950: oklch(0 0 0);
+  --neutral-900: oklch(0 0 0);
+  --neutral-850: oklch(0 0 0);
+  --neutral-300: oklch(1 0 0);
+  --neutral-150: oklch(1 0 0);
+  --neutral-125: oklch(1 0 0);
+  --neutral-100: oklch(1 0 0);
+  --neutral-050: oklch(1 0 0);
 
   /* Theme-aware text and rules */
   --muted-on-page: color-mix(in srgb, var(--ink) 72%, transparent);
@@ -53,12 +53,12 @@
 :root,
 :root[data-theme="light"] {
   --page: var(--neutral-050);
-  --ink: var(--neutral-900);
-  --contrast: var(--neutral-850);
+  --ink: var(--neutral-950);
+  --contrast: var(--neutral-950);
   --contrast-ink: var(--neutral-150);
-  --surface: var(--neutral-125);
-  --surface-raised: color-mix(in srgb, var(--ink) 3%, var(--surface));
-  --media-surface: var(--neutral-100);
+  --surface: var(--neutral-050);
+  --surface-raised: var(--ink);
+  --media-surface: var(--neutral-050);
   color-scheme: light;
   background: var(--page);
   color: var(--ink);
@@ -67,11 +67,11 @@
 :root[data-theme="dark"] {
   --page: var(--neutral-950);
   --ink: var(--neutral-150);
-  --contrast: var(--neutral-300);
-  --contrast-ink: var(--neutral-850);
-  --surface: var(--neutral-850);
-  --surface-raised: color-mix(in srgb, var(--ink) 5%, var(--surface));
-  --media-surface: var(--neutral-300);
+  --contrast: var(--neutral-950);
+  --contrast-ink: var(--neutral-150);
+  --surface: var(--neutral-950);
+  --surface-raised: var(--ink);
+  --media-surface: var(--neutral-950);
   color-scheme: dark;
 }
 
@@ -79,11 +79,11 @@
   :root:not([data-theme="light"]) {
     --page: var(--neutral-950);
     --ink: var(--neutral-150);
-    --contrast: var(--neutral-300);
-    --contrast-ink: var(--neutral-850);
-    --surface: var(--neutral-850);
-    --surface-raised: color-mix(in srgb, var(--ink) 5%, var(--surface));
-    --media-surface: var(--neutral-300);
+    --contrast: var(--neutral-950);
+    --contrast-ink: var(--neutral-150);
+    --surface: var(--neutral-950);
+    --surface-raised: var(--ink);
+    --media-surface: var(--neutral-950);
     color-scheme: dark;
   }
 }
@@ -218,8 +218,8 @@ a.site-link--external .site-link__external-icon {
   place-items: center;
   border: 0;
   border-radius: 50%;
-  background: var(--surface-raised);
-  color: var(--ink);
+  background: var(--ink);
+  color: var(--page);
   cursor: pointer;
   transition:
     color 220ms var(--ease-out),
@@ -232,8 +232,8 @@ a.site-link--external .site-link__external-icon {
 
 .theme-switcher__trigger:hover,
 .theme-switcher[open] .theme-switcher__trigger {
-  background: color-mix(in srgb, var(--ink) 6%, var(--surface-raised));
-  color: var(--ink);
+  background: var(--ink);
+  color: var(--page);
 }
 
 .theme-switcher__trigger:focus-visible,
@@ -281,8 +281,8 @@ a.site-link--external .site-link__external-icon {
   padding: 0.35rem;
   border: 0;
   border-radius: var(--radius-surface);
-  background: var(--surface-raised);
-  color: var(--ink);
+  background: var(--ink);
+  color: var(--page);
 }
 
 .theme-switcher:not([open]) .theme-switcher__menu {
@@ -298,7 +298,7 @@ a.site-link--external .site-link__external-icon {
   border: 0;
   border-radius: 0.5rem;
   background: transparent;
-  color: var(--muted-on-page);
+  color: color-mix(in srgb, var(--page) 76%, transparent);
   font: inherit;
   font-size: 0.82rem;
   font-weight: 620;
@@ -317,15 +317,15 @@ a.site-link--external .site-link__external-icon {
 
 .theme-switcher__option:hover,
 .theme-switcher__option:focus-visible {
-  background: color-mix(in srgb, var(--ink) 6%, var(--surface-raised));
-  color: var(--ink);
+  background: color-mix(in srgb, var(--page) 12%, var(--ink));
+  color: var(--page);
 }
 
 :root[data-theme="device"] .theme-switcher__option[data-theme-option="device"],
 :root[data-theme="light"] .theme-switcher__option[data-theme-option="light"],
 :root[data-theme="dark"] .theme-switcher__option[data-theme-option="dark"] {
-  background: var(--ink);
-  color: var(--page);
+  background: var(--page);
+  color: var(--ink);
 }
 
 .hero {
@@ -643,8 +643,8 @@ html[data-hero-intro="true"] .hero__profile {
   min-height: 100svh;
   align-items: center;
   padding: clamp(4.5rem, 9vh, 7rem) var(--gutter);
-  background: var(--contrast);
-  color: var(--contrast-ink);
+  background: var(--page);
+  color: var(--ink);
 }
 
 .experience__inner {
@@ -669,7 +669,7 @@ html[data-hero-intro="true"] .hero__profile {
   gap: 0.65rem;
   align-items: center;
   margin-bottom: 0.35rem;
-  color: var(--contrast-ink);
+  color: var(--ink);
   font-size: var(--text-label);
   font-weight: 650;
   line-height: 1.3;
@@ -705,7 +705,7 @@ html[data-hero-intro="true"] .hero__profile {
 .experience__company {
   min-width: 0;
   padding-top: 1.35rem;
-  border-top: 1px solid var(--line-on-contrast);
+  border-top: 1px solid var(--line-on-page);
 }
 
 .experience__company-header h3 {
@@ -736,7 +736,7 @@ html[data-hero-intro="true"] .hero__profile {
 }
 
 .experience__role-dates {
-  color: var(--muted-on-contrast);
+  color: var(--muted-on-page);
   font-size: 0.8rem;
   font-weight: 450;
   line-height: 1.45;
@@ -750,7 +750,7 @@ html[data-hero-intro="true"] .hero__profile {
 
 .experience__project + .experience__project {
   padding-top: 1.25rem;
-  border-top: 1px solid var(--line-on-contrast);
+  border-top: 1px solid var(--line-on-page);
 }
 
 .experience__project h4 {
@@ -778,7 +778,7 @@ html[data-hero-intro="true"] .hero__profile {
 }
 
 .experience__project-description {
-  color: color-mix(in srgb, var(--contrast-ink) 82%, transparent);
+  color: color-mix(in srgb, var(--ink) 82%, transparent);
   font-weight: 520;
 }
 
@@ -805,7 +805,7 @@ html[data-hero-intro="true"] .hero__profile {
 }
 
 .experience__achievements {
-  color: var(--contrast-ink);
+  color: var(--ink);
   font-weight: 580;
 }
 
@@ -829,7 +829,7 @@ html[data-hero-intro="true"] .hero__profile {
   gap: 0.35rem;
   align-items: start;
   margin-top: 0.9rem;
-  color: var(--muted-on-contrast);
+  color: var(--muted-on-page);
   font-size: 0.76rem;
   line-height: 1.5;
 }
@@ -842,7 +842,7 @@ html[data-hero-intro="true"] .hero__profile {
 }
 
 .experience__tech-label {
-  color: var(--contrast-ink);
+  color: var(--ink);
   font-weight: 650;
 }
 
@@ -863,7 +863,7 @@ html[data-hero-intro="true"] .hero__profile {
 .experience__additional {
   margin: 1.25rem 0 0;
   padding-top: 1.1rem;
-  border-top: 1px solid var(--line-on-contrast);
+  border-top: 1px solid var(--line-on-page);
   font-size: 0.84rem;
   line-height: 1.5;
 }
@@ -878,17 +878,15 @@ html[data-hero-intro="true"] .hero__profile {
 }
 
 .site-footer {
+  border-top: 1px solid var(--line-on-page);
   background: var(--page);
   color: var(--ink);
   font-size: 0.82rem;
 }
 
 .site-footer__inner {
-  display: flex;
-  min-height: 5.25rem;
-  gap: 1rem;
-  align-items: center;
-  justify-content: space-between;
+  padding-top: clamp(3rem, 5vw, 4.5rem);
+  padding-bottom: 1.25rem;
 }
 
 .site-footer a {
@@ -896,17 +894,165 @@ html[data-hero-intro="true"] .hero__profile {
   gap: 0.45rem;
   align-items: center;
   font-weight: 570;
+  color: var(--ink);
   text-underline-offset: 0.25rem;
 }
 
-.site-footer a svg {
+.site-footer__main {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(2rem, 8vw, 8rem);
+  padding-bottom: clamp(3rem, 6vw, 5rem);
+}
+
+.site-footer__column {
+  display: grid;
+  align-content: start;
+  justify-items: start;
+  gap: 0.7rem;
+}
+
+.site-footer__column h2 {
+  margin: 0 0 0.45rem;
+  color: var(--muted-on-page);
+  font-size: 0.74rem;
+  font-weight: 620;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.site-footer__column a {
+  font-size: 0.84rem;
+  text-decoration: none;
+  transition: color 180ms var(--ease-out);
+}
+
+.site-footer__column a:hover,
+.site-footer__column a:focus-visible {
+  color: var(--ink);
+}
+
+.site-footer__column a svg {
+  width: 0.82rem;
+  height: 0.82rem;
+}
+
+.site-footer__email {
+  gap: 0.55rem;
+  flex-wrap: wrap;
+}
+
+.site-footer__email svg {
+  width: 0.95rem;
+  height: 0.95rem;
+}
+
+.site-footer__socials {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.65rem;
+}
+
+.site-footer a.site-footer__social-link {
+  display: grid;
+  width: 2.75rem;
+  height: 2.75rem;
+  place-items: center;
+  border: 1px solid var(--line-on-page);
+  color: var(--ink);
+  transition:
+    border-color 180ms var(--ease-out),
+    background-color 180ms var(--ease-out),
+    color 180ms var(--ease-out);
+}
+
+.site-footer a.site-footer__social-link:hover,
+.site-footer a.site-footer__social-link:focus-visible {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--page);
+}
+
+.site-footer__social-link svg,
+.site-footer__social-link img {
   width: 1rem;
   height: 1rem;
+  object-fit: contain;
+}
+
+.site-footer__social-link img {
+  filter: none;
+}
+
+:root[data-theme="dark"] .site-footer__social-link img {
+  filter: invert(1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .site-footer__social-link img {
+    filter: invert(1);
+  }
+
+  :root:not([data-theme="light"]) .site-footer__social-link:hover img,
+  :root:not([data-theme="light"]) .site-footer__social-link:focus-visible img {
+    filter: none;
+  }
+}
+
+.site-footer__social-link:hover img,
+.site-footer__social-link:focus-visible img {
+  filter: invert(1);
+}
+
+:root[data-theme="dark"] .site-footer__social-link:hover img,
+:root[data-theme="dark"] .site-footer__social-link:focus-visible img {
+  filter: none;
+}
+
+.site-footer__bottom {
+  display: flex;
+  min-height: 3.5rem;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--line-on-page);
+  color: var(--muted-on-page);
+  font-size: 0.74rem;
+}
+
+.site-footer__bottom a {
+  gap: 0.35rem;
+  color: var(--ink);
+  font-size: inherit;
+}
+
+.site-footer__bottom a svg {
+  width: 0.75rem;
+  height: 0.75rem;
 }
 
 .site-footer p {
   margin: 0;
-  color: var(--muted-on-page);
+}
+
+@media (max-width: 48rem) {
+  .site-footer__main {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2.5rem 2rem;
+  }
+
+  .site-footer__column--connect {
+    grid-column: 1 / -1;
+  }
+
+  .site-footer__bottom {
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.35rem;
+    padding-block: 1rem;
+  }
 }
 
 @media (max-width: 62rem) {

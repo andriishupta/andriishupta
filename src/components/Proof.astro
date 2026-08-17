@@ -1,0 +1,44 @@
+---
+import ArrowUpRight from "@lucide/astro/icons/arrow-up-right";
+import { copy } from "../copy";
+import LinkIcon from "./LinkIcon.astro";
+import SiteLink from "./SiteLink.astro";
+
+const { proof } = copy.mainPage;
+---
+
+<section class="consulting-proof" aria-labelledby="proof-title">
+  <div class="consulting-proof__inner site-container">
+    <header class="section-heading">
+      <h2 class="heading-display" id="proof-title">{proof.heading}</h2>
+      <p>{proof.description}</p>
+    </header>
+
+    <div class="proof-list">
+      {proof.facts.map((fact) => (
+        <article>
+          <strong>{fact.value}</strong>
+          <p>{fact.label}</p>
+        </article>
+      ))}
+    </div>
+
+    <nav class="proof-sources" aria-label="Where to find social proof">
+      {proof.sources.map((source) => (
+        <SiteLink
+          class="proof-source"
+          href={source.href}
+          indicator="none"
+          ariaLabel={`Open ${source.label}`}
+        >
+          <span class="proof-source__label">
+            <LinkIcon brand={source.brand} icon={source.icon} />
+            {source.label}
+          </span>
+          <span class="proof-source__title">{source.title}</span>
+          <ArrowUpRight aria-hidden="true" />
+        </SiteLink>
+      ))}
+    </nav>
+  </div>
+</section>

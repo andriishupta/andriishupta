@@ -8,7 +8,7 @@ export const urls = {
   x: "https://x.com/andriishupta",
   upwork: "https://www.upwork.com/freelancers/andriishupta",
   cv: "/Andrii_Shupta_Lead_Full_Stack_CV.pdf",
-  about: "/#about",
+  about: "/#services",
   experience: "/#experience",
   blogPath: "/blog",
   devto: "https://dev.to/andriishupta",
@@ -26,14 +26,16 @@ export const copy = {
     email,
   },
   seo: {
-    title: "Andrii Shupta - Full-Stack Engineer",
+    title: "Andrii Shupta - Software Consultant",
     description:
-      "Full-stack engineer with 10+ years building secure, maintainable software, modernizing products, and bringing AI-assisted code to production.",
+      "Andrii Shupta helps product teams make better technical decisions and ship reliable software through architecture and delivery consulting.",
     imageAlt:
-      "Andrii Shupta - Full-stack engineer building production-ready software with AI",
+      "Andrii Shupta - Software consultant helping teams build reliable products",
     twitterHandle: "@andriishupta",
     keywords: [
       "Andrii Shupta",
+      "software consultant",
+      "software consulting",
       "full-stack engineer",
       "AI software engineer",
       "AI code review",
@@ -50,6 +52,7 @@ export const copy = {
       "API integration",
     ],
     knowsAbout: [
+      "Software consulting",
       "Full-stack software development",
       "AI-assisted development",
       "AI code review",
@@ -122,18 +125,42 @@ export const copy = {
       ],
     },
     intro: {
-      heading: "Full-stack engineer - 10+ years of experience",
+      heading: "Software consulting for complex products.",
       description:
-        "I work across architecture, security, performance, integrations, and production delivery",
-      scrollLabel: "About",
-      scrollAriaLabel: "Scroll to about",
+        "I help teams turn ambiguous product and technical problems into systems that are easier to ship, change, and trust.",
+      aside:
+        "Good software work is not only about writing code. It is about making the right decisions early enough for the business to benefit.",
+      focus: [
+        "Architecture & system design",
+        "Software development",
+        "Technical direction",
+      ],
+      scrollLabel: "Explore",
+      scrollAriaLabel: "Explore consulting services",
     },
     about: {
-      heading: "About",
-      scrollLabel: "Experience",
-      scrollAriaLabel: "Scroll to experience",
+      heading: "What I can help with",
       areasLabel: "Areas of work",
       areas: ["SaaS, MVPs & internal tools", "Architecture, APIs & delivery"],
+      description:
+        "Bring me in when a product is moving quickly, the system is getting harder to change, or the team needs a clear technical path from idea to production.",
+      services: [
+        {
+          title: "Architecture & system design",
+          description:
+            "Clarify boundaries, choose the right level of complexity, and design systems that can grow without becoming expensive to operate.",
+        },
+        {
+          title: "Software development",
+          description:
+            "Build the critical parts of a product with a focus on maintainability, security, performance, and a clean path to the next release.",
+        },
+        {
+          title: "Technical direction",
+          description:
+            "Turn competing opinions into decisions, unblock teams, review code and architecture, and leave behind a stronger engineering practice.",
+        },
+      ],
       coreStack: {
         heading: "Core stack",
         listLabel: "Core technologies",
@@ -146,8 +173,6 @@ export const copy = {
           { name: "Codex / Claude", icon: "rocket" },
         ],
       },
-      description:
-        "I build production-ready software and modernize complex systems - SaaS, internal tools, APIs, and AI-enabled applications. Across 10+ years, I’ve worked with startups shipping MVPs and enterprise teams evolving large-scale products, from architecture and APIs through performance, code review, and production delivery.",
       additional: [
         {
           label: "Worked with:",
@@ -183,8 +208,113 @@ export const copy = {
         { before: "a concise overview in", label: "my CV", href: urls.cv },
       ],
     },
+    approach: {
+      heading: "A practical way of working",
+      description:
+        "The engagement changes with the problem, but the principle stays the same: make the next decision visible, useful, and easy to act on.",
+      steps: [
+        {
+          index: "01",
+          title: "Understand the real problem",
+          description:
+            "Map the product context, constraints, system boundaries, and the decisions that are currently slowing the team down.",
+        },
+        {
+          index: "02",
+          title: "Design a path forward",
+          description:
+            "Compare options, define a pragmatic architecture, and make trade-offs explicit before they become expensive.",
+        },
+        {
+          index: "03",
+          title: "Ship and strengthen",
+          description:
+            "Work with the team through implementation, reviews, and production delivery so the result survives beyond the engagement.",
+        },
+      ],
+    },
+    proof: {
+      heading: "Proof of work",
+      description:
+        "Experience is easier to trust when it is visible: shipped systems, measurable outcomes, recommendations, and client feedback.",
+      facts: [
+        {
+          value: "10+ years",
+          label: "building and evolving production software",
+        },
+        {
+          value: "Millions",
+          label: "of database entities migrated for thousands of customers",
+        },
+        {
+          value: "20+ interviews",
+          label: "conducted across hiring and engineering teams",
+        },
+        {
+          value: "Startups to enterprise",
+          label: "from MVP decisions to platform modernization",
+        },
+      ],
+      sources: [
+        {
+          label: "LinkedIn",
+          brand: "linkedin" as const,
+          icon: undefined,
+          href: urls.linkedin,
+          title: "Professional background and recommendations",
+          description:
+            "See the teams, roles, and experience behind the work — with recommendations where available.",
+        },
+        {
+          label: "Upwork",
+          brand: undefined,
+          icon: "upwork" as const,
+          href: urls.upwork,
+          title: "Freelance projects and client feedback",
+          description:
+            "A direct view of selected freelance work, client relationships, and delivery history.",
+        },
+        {
+          label: "X",
+          brand: "x" as const,
+          icon: undefined,
+          href: urls.x,
+          title: "Short notes from the work in progress",
+          description:
+            "Small observations on software, tools, and the decisions behind building products.",
+        },
+      ],
+    },
+    useCases: {
+      heading: "Work that shows the range",
+      description:
+        "Selected situations from my engineering experience, reframed around the problem, the decision, and the outcome. Detailed case studies can live in the notes.",
+      items: [
+        {
+          client: "The FA",
+          context: "Data platform / GCP",
+          title: "Making a complex data platform easier to evolve",
+          description:
+            "Worked in a cross-functional product team on a modern cloud data platform, combining product development with technology discovery and migration work.",
+        },
+        {
+          client: "LeapEvent Tech",
+          context: "Tickets platform / modernization",
+          title: "Moving a legacy platform toward event-driven systems",
+          description:
+            "Supported a PHP legacy system while helping shape its rewrite into a Node.js platform with event-driven development and Kafka.",
+        },
+        {
+          client: "Snappy",
+          context: "Payments / data migration",
+          title: "Scaling billing workflows without losing trust",
+          description:
+            "Worked on billing and payment-account flows, including a migration of millions of database entities for thousands of customers.",
+        },
+      ],
+    },
     experience: {
-      heading: "Experience",
+      heading: "Background behind the work",
       companiesLabel: "Selected professional experience",
       moreLabel: "More on LinkedIn",
       moreAriaLabel: "View more experience on LinkedIn",

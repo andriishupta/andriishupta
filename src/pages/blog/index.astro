@@ -6,9 +6,10 @@ import BlogFooter from "../../components/BlogFooter.astro";
 import BlogHeader from "../../components/BlogHeader.astro";
 import { copy } from "../../copy";
 import {
-  blogTopics,
+  blogTopicDefinitions,
   formatBlogDate,
   getBlogPosts,
+  getBlogTopicSlug,
   getPostPath,
   getReadingStats,
   hasMeaningfulUpdate,
@@ -26,9 +27,9 @@ for (const post of posts) {
   }
 }
 
-const topicFilters = blogTopics
-  .map((topic) => [topic, topicCounts.get(topic) ?? 0] as const)
-  .filter(([, count]) => count > 0);
+const topicFilters = blogTopicDefinitions.map(
+  ({ label, slug }) => [label, slug, topicCounts.get(label) ?? 0] as const,
+);
 const title = `Software Engineering Blog | ${copy.identity.fullName}`;
 const description =
   "Technical notes by Andrii Shupta on software architecture, web development, integrations, security, and production engineering.";
@@ -100,10 +101,11 @@ const structuredData = {
             <small>{posts.length}</small>
           </button>
           {
-            topicFilters.map(([topic, count]) => (
+            topicFilters.map(([topic, slug, count]) => (
               <button
                 type="button"
-                data-blog-filter={topic}
+                data-blog-filter={slug}
+                data-count={count}
                 aria-pressed="false"
                 aria-controls="blog-archive"
               >
@@ -145,6 +147,10 @@ const structuredData = {
       {posts.length} articles
     </p>
 
+    <p class="blog-empty content-container" data-blog-empty hidden>
+      No published notes in this topic yet.
+    </p>
+
     <section
       class="blog-archive content-container"
       id="blog-archive"
@@ -164,7 +170,7 @@ const structuredData = {
             <article
               class="blog-entry"
               data-blog-entry
-              data-topics={post.data.topics.join(",")}
+              data-topics={post.data.topics.map(getBlogTopicSlug).join(",")}
             >
               <a class="blog-entry__link" href={getPostPath(post)}>
                 <div class="blog-entry__content">
@@ -241,6 +247,7 @@ const structuredData = {
     document.querySelectorAll<HTMLButtonElement>("[data-blog-view]"),
   );
   const results = document.querySelector<HTMLElement>("[data-blog-results]");
+  const emptyState = document.querySelector<HTMLElement>("[data-blog-empty]");
   const viewStorageKey = "andrii-blog-view";
 
   const isBlogView = (value: string | null): value is BlogView =>
@@ -287,6 +294,15 @@ const structuredData = {
       results.textContent =
         visibleCount === 1 ? "1 article" : `${visibleCount} articles`;
     }
+    if (emptyState) emptyState.hidden = visibleCount !== 0;
+
+    const url = new URL(window.location.href);
+    if (topic === "all") {
+      url.searchParams.delete("topic");
+    } else {
+      url.searchParams.set("topic", topic);
+    }
+    window.history.replaceState({}, "", `${url.pathname}${url.search}${url.hash}`);
   };
 
   viewButtons.forEach((button) => {
@@ -308,4 +324,10 @@ const structuredData = {
   } catch {
     // List view remains the safe default.
   }
+
+  const requestedTopic = new URLSearchParams(window.location.search).get("topic");
+  const availableTopic = filterButtons.some(
+    (button) => button.dataset.blogFilter === requestedTopic,
+  );
+  setFilter(availableTopic && requestedTopic ? requestedTopic : "all");
 </script>

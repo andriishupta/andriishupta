@@ -1,6 +1,10 @@
 import { type CollectionEntry, getCollection } from "astro:content";
 
-export { blogTopics } from "./blog-topics";
+export {
+  blogTopicDefinitions,
+  blogTopics,
+  getBlogTopicSlug,
+} from "./blog-topics";
 
 export type BlogPost = CollectionEntry<"blog">;
 

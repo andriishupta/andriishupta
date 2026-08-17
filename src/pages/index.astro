@@ -1,11 +1,14 @@
 ---
 import About from "../components/About.astro";
+import Approach from "../components/Approach.astro";
 import Experience from "../components/Experience.astro";
 import Hero from "../components/Hero.astro";
-import SectionScroll from "../components/SectionScroll.astro";
+import Proof from "../components/Proof.astro";
 import SiteFooter from "../components/SiteFooter.astro";
+import UseCases from "../components/UseCases.astro";
 import { copy, identityProfileLinks } from "../copy";
 import Layout from "../layouts/Layout.astro";
+import "../styles/home.css";
 
 const siteUrl = "https://andriishupta.dev";
 const { seo } = copy;
@@ -36,7 +39,7 @@ const structuredData = {
       name: copy.identity.fullName,
       url: siteUrl,
       image: `${siteUrl}/og-image.png`,
-      jobTitle: "Full-Stack Engineer",
+      jobTitle: "Software Consultant",
       description: seo.description,
       email: copy.identity.email,
       sameAs: identityProfileLinks.map(({ href }) => href),
@@ -54,12 +57,15 @@ const structuredData = {
     imageAlt={seo.imageAlt}
     ogType="profile"
     structuredData={structuredData}
+    showThemeSwitcher={false}
 >
     <main>
         <Hero />
         <About />
+        <Approach />
+        <Proof />
+        <UseCases />
         <Experience />
-        <SectionScroll />
     </main>
-    <SiteFooter />
+    <SiteFooter context="home" />
 </Layout>

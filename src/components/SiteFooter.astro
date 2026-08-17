@@ -1,14 +1,78 @@
 ---
+import ArrowUpRight from "@lucide/astro/icons/arrow-up-right";
 import Mail from "@lucide/astro/icons/mail";
+import Rss from "@lucide/astro/icons/rss";
 import { copy, urls } from "../copy";
+import LinkIcon from "./LinkIcon.astro";
+import SiteLink from "./SiteLink.astro";
+
+interface Props {
+  context?: "home" | "blog";
+}
+
+const { context = "home" } = Astro.props;
+const year = new Date().getUTCFullYear();
+const socialLinks = [
+  { label: "LinkedIn", href: urls.linkedin, brand: "linkedin" as const },
+  { label: "X", href: urls.x, brand: "x" as const },
+  { label: "GitHub", href: urls.github, brand: "github" as const },
+  { label: "DEV.to", href: urls.devto, brand: "devto" as const },
+  { label: "Medium", href: urls.medium, brand: "medium" as const },
+  { label: "Hashnode", href: urls.hashnode, brand: "hashnode" as const },
+];
 ---
 
 <footer class="site-footer">
   <div class="site-footer__inner site-container">
-    <a href={urls.email}>
-      <Mail aria-hidden="true" />
-      <span>{copy.identity.email}</span>
-    </a>
-    <p>© {new Date().getUTCFullYear()} {copy.identity.fullName}</p>
+    <div class="site-footer__main">
+      <nav class="site-footer__column" aria-label="About Andrii">
+        <h2>About</h2>
+        <a href="/#services">Services</a>
+        <a href="/#approach">Approach</a>
+        <a href={urls.cv}>CV</a>
+      </nav>
+
+      <nav class="site-footer__column" aria-label="Work and writing">
+        <h2>Work</h2>
+        <a href="/#work">Use cases</a>
+        <a href="/#experience">Experience</a>
+        <a href={urls.blogPath}>Blog</a>
+        <a href="/blog/rss.xml">
+          <span>RSS</span>
+          <Rss aria-hidden="true" />
+        </a>
+      </nav>
+
+      <div class="site-footer__column site-footer__column--connect">
+        <h2>Connect</h2>
+        <SiteLink class="site-footer__email" href={urls.email} external={false}>
+          <Mail aria-hidden="true" />
+          <span>{copy.identity.email}</span>
+        </SiteLink>
+        <div class="site-footer__socials" aria-label="Social profiles">
+          {socialLinks.map((link) => (
+            <SiteLink
+              class="site-footer__social-link"
+              href={link.href}
+              indicator="none"
+              ariaLabel={link.label}
+              title={link.label}
+            >
+              <LinkIcon brand={link.brand} />
+            </SiteLink>
+          ))}
+        </div>
+      </div>
+    </div>
+
+    <div class="site-footer__bottom">
+      {context === "blog" ? (
+        <a href="/">
+          <span>Back home</span>
+          <ArrowUpRight aria-hidden="true" />
+        </a>
+      ) : null}
+      <span>© {year} {copy.identity.fullName}</span>
+    </div>
   </div>
 </footer>
