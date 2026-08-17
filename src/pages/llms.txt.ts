@@ -4,7 +4,7 @@ import { getBlogPosts, getPostPath } from "../lib/blog";
 const homepage = "https://andriishupta.dev";
 const blog = new URL(urls.blogPath, homepage).toString();
 
-const socials = ["LinkedIn", "GitHub", "Twitter", "Upwork"]
+const socials = ["LinkedIn", "GitHub", "X", "Upwork"]
   .map((label) =>
     copy.mainPage.header.outerLinks.find((item) => item.label === label),
   )

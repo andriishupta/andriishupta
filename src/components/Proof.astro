@@ -4,41 +4,119 @@ import { copy } from "../copy";
 import LinkIcon from "./LinkIcon.astro";
 import SiteLink from "./SiteLink.astro";
 
+interface Props {
+  kind: "clients" | "teammates";
+}
+
 const { proof } = copy.mainPage;
+const { kind } = Astro.props;
+const isClients = kind === "clients";
+const sectionId = isClients ? "proof" : "teammates";
+const titleId = `${sectionId}-title`;
 ---
 
-<section class="consulting-proof" aria-labelledby="proof-title">
+<section
+  class:list={["consulting-proof", `consulting-proof--${kind}`]}
+  id={sectionId}
+  data-proof-kind={kind}
+  aria-labelledby={titleId}
+>
   <div class="consulting-proof__inner site-container">
     <header class="section-heading">
-      <h2 class="heading-display" id="proof-title">{proof.heading}</h2>
-      <p>{proof.description}</p>
+      <h2 class="heading-display" id={titleId}>
+        {isClients ? proof.clientsHeading : proof.teammatesHeading}
+      </h2>
+      <p>{isClients ? proof.clientsDescription : proof.teammatesDescription}</p>
     </header>
 
-    <div class="proof-list">
-      {proof.facts.map((fact) => (
-        <article>
-          <strong>{fact.value}</strong>
-          <p>{fact.label}</p>
-        </article>
-      ))}
-    </div>
+    {
+      isClients ? (
+        <div class="proof-platform proof-platform--upwork">
+          <header class="proof-platform__heading">
+            <div>
+              <h3><LinkIcon icon="upwork" /> Client feedback</h3>
+              <p>Selected feedback from real engagements.</p>
+            </div>
+            <SiteLink
+              href={proof.upworkHref}
+              indicator="none"
+              ariaLabel="View Upwork profile"
+            >
+              View Upwork profile
+              <ArrowUpRight aria-hidden="true" />
+            </SiteLink>
+          </header>
 
-    <nav class="proof-sources" aria-label="Where to find social proof">
-      {proof.sources.map((source) => (
-        <SiteLink
-          class="proof-source"
-          href={source.href}
-          indicator="none"
-          ariaLabel={`Open ${source.label}`}
-        >
-          <span class="proof-source__label">
-            <LinkIcon brand={source.brand} icon={source.icon} />
-            {source.label}
-          </span>
-          <span class="proof-source__title">{source.title}</span>
-          <ArrowUpRight aria-hidden="true" />
-        </SiteLink>
-      ))}
-    </nav>
+          <div class="proof-message-grid proof-message-grid--upwork">
+            {proof.upwork.map((message) => (
+              <article class:list={["proof-message", { "proof-message--featured": message.featured }]}>
+                <header class="proof-message__header">
+                  <span class="proof-message__avatar" aria-hidden="true">{message.initial}</span>
+                  <div>
+                    <strong>{message.author}</strong>
+                    <span>Upwork · Client feedback</span>
+                  </div>
+                  <span class="proof-message__rating">{message.rating}</span>
+                </header>
+                <blockquote>“{message.quote}”</blockquote>
+                {message.tags && message.tags.length > 0 && (
+                  <ul class="proof-message__tags" aria-label="Client qualities">
+                    {message.tags.map((tag) => <li>{tag}</li>)}
+                  </ul>
+                )}
+                <p class="proof-message__context">{message.context}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div class="proof-platform proof-platform--linkedin">
+          <header class="proof-platform__heading">
+            <div>
+              <h3><LinkIcon brand="linkedin" /> Teammate recommendations</h3>
+              <p>Short recommendations from people I worked with directly.</p>
+            </div>
+            <SiteLink
+              href={proof.linkedinHref}
+              indicator="none"
+              ariaLabel="View LinkedIn profile"
+            >
+              View LinkedIn profile
+              <ArrowUpRight aria-hidden="true" />
+            </SiteLink>
+          </header>
+
+          <div class="proof-message-grid proof-message-grid--linkedin">
+            {proof.linkedin.map((message) => (
+              <article class="proof-message proof-message--linkedin-card">
+                <header class="proof-message__header">
+                  <span class="proof-message__avatar" aria-hidden="true">{message.initial}</span>
+                  <div>
+                    <strong>{message.author}</strong>
+                    <span>LinkedIn · Teammate recommendation</span>
+                  </div>
+                </header>
+                <blockquote>“{message.quote}”</blockquote>
+                <p class="proof-message__context">{message.context}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      )
+    }
   </div>
 </section>
+
+<script>
+  import { revealOnScroll } from "../lib/motion";
+
+  document.querySelectorAll<HTMLElement>("[data-proof-kind]").forEach((section) => {
+    const isClientProof = section.dataset.proofKind === "clients";
+    revealOnScroll(section, {
+      selector: ".proof-message",
+      x: isClientProof ? -12 : 0,
+      y: isClientProof ? 16 : 12,
+      stagger: 0.08,
+    });
+  });
+</script>

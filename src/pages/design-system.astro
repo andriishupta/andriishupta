@@ -1,0 +1,144 @@
+---
+import ArrowUpRight from "@lucide/astro/icons/arrow-up-right";
+import Mail from "@lucide/astro/icons/mail";
+import { copy, urls } from "../copy";
+import Layout from "../layouts/Layout.astro";
+import "../styles/design-system.css";
+
+const title = `Internal design system | ${copy.identity.fullName}`;
+const description = "Internal visual regression and design-system test page.";
+const spacing = [
+  ["1", "0.25rem"],
+  ["2", "0.5rem"],
+  ["3", "0.75rem"],
+  ["4", "1rem"],
+  ["5", "1.25rem"],
+  ["6", "1.5rem"],
+  ["8", "2rem"],
+  ["10", "2.5rem"],
+  ["12", "3rem"],
+] as const;
+const typeScale = [
+  ["XS", "0.75rem", "12px", "Metadata and compact annotations"],
+  ["SM", "0.875rem", "14px", "Navigation and compact actions"],
+  ["Base", "1rem", "16px", "Default body copy"],
+  ["Lead", "1.125rem", "18px", "Introductions and lead text"],
+  ["H3", "1.25rem", "20px", "Card and timeline titles"],
+  ["H2", "1.5–1.75rem", "24–28px", "Shared section headings"],
+  ["H1", "1.75–2.25rem", "28–36px", "Page headings"],
+  ["Display", "2–3rem", "32–48px", "Large editorial headings"],
+] as const;
+const breakpoints = [
+  ["Compact", "≤ 30rem / 480px", "Narrow-phone refinements only"],
+  ["Mobile", "≤ 48rem / 768px", "Single-column content and compact spacing"],
+  [
+    "Tablet",
+    "≤ 64rem / 1024px",
+    "Mobile navigation and stacked primary layouts",
+  ],
+  ["Desktop", "> 64rem / 1024px", "Full navigation and desktop compositions"],
+] as const;
+---
+
+<Layout
+  title={title}
+  description={description}
+  pathname="/design-system"
+  image="/og-image.png"
+  robots="noindex, nofollow"
+  canonical={false}
+>
+  <main class="design-system-page">
+    <header class="design-system-intro">
+      <p>Internal reference · not part of public navigation</p>
+      <h1>Design system test page</h1>
+      <span>Typography, spacing, surfaces, controls, and states used across the site.</span>
+    </header>
+
+    <section class="design-system-section" aria-labelledby="type-title">
+      <header><h2 id="type-title">Typography</h2><p>Geologica, with a restrained production scale.</p></header>
+      <div class="type-specimens">
+        <div><small>Display / H1</small><h3 class="type-display">Build the product. Clarify the system.</h3></div>
+        <div><small>Section / H2</small><h3 class="type-section">What I can help with</h3></div>
+        <div><small>Card / H3</small><h3 class="type-card">Architecture &amp; system design</h3></div>
+        <div><small>Body</small><p>Good software work is about making the right decisions early enough for the business to benefit.</p></div>
+        <div><small>Secondary</small><p class="type-secondary">Supporting context remains readable in both themes.</p></div>
+      </div>
+      <dl class="type-scale-specimens">
+        {typeScale.map(([name, rem, pixels, purpose]) => (
+          <div>
+            <dt>{name}</dt>
+            <dd><code>{rem} / {pixels}</code><span>{purpose}</span></dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+
+    <section class="design-system-section" aria-labelledby="spacing-title">
+      <header><h2 id="spacing-title">Spacing</h2><p>Tailwind-aligned spacing for gaps, padding, and section rhythm.</p></header>
+      <div class="spacing-specimens">
+        {spacing.map(([name, value]) => (
+          <div><code>--space-{name}</code><span style={`--specimen-space: ${value}`}></span><small>{value}</small></div>
+        ))}
+      </div>
+    </section>
+
+    <section class="design-system-section" aria-labelledby="breakpoint-title">
+      <header>
+        <h2 id="breakpoint-title">Breakpoints</h2>
+        <p>Tablet and smaller use the mobile navigation and stacked layout model.</p>
+      </header>
+      <dl class="breakpoint-specimens">
+        {breakpoints.map(([name, range, purpose]) => (
+          <div>
+            <dt>{name}</dt>
+            <dd><code>{range}</code><span>{purpose}</span></dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+
+    <section class="design-system-section" aria-labelledby="surface-title">
+      <header><h2 id="surface-title">Surfaces and components</h2><p>One radius, one border treatment, and one action hierarchy.</p></header>
+      <div class="component-specimens">
+        <article class="specimen-card">
+          <div><span class="specimen-avatar">A</span><strong>Client feedback</strong></div>
+          <h3>Clear decisions, reliable delivery.</h3>
+          <p>Cards group related information; they are not section containers.</p>
+          <ul aria-label="Example tags"><li>Reliable</li><li>Clear communicator</li></ul>
+          <a href={urls.linkedin}>Related work <ArrowUpRight aria-hidden="true" /></a>
+        </article>
+
+        <div class="control-specimens">
+          <a class="specimen-button specimen-button--primary" href={urls.email}><Mail aria-hidden="true" /> Write to me</a>
+          <a class="specimen-button" href={urls.blogPath}>Read the blog <ArrowUpRight aria-hidden="true" /></a>
+          <a class="specimen-text-link" href={urls.github}>Text action <ArrowUpRight aria-hidden="true" /></a>
+          <button type="button" disabled>Disabled action</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="design-system-section" aria-labelledby="color-title">
+      <header><h2 id="color-title">Theme tokens</h2><p>True black and white with gray reserved for secondary information.</p></header>
+      <div class="token-specimens">
+        <div class="token-page"><span></span><code>page</code></div>
+        <div class="token-ink"><span></span><code>ink</code></div>
+        <div class="token-muted"><span></span><code>muted</code></div>
+        <div class="token-line"><span></span><code>line</code></div>
+      </div>
+    </section>
+
+    <section class="design-system-section" aria-labelledby="motion-title">
+      <header>
+        <h2 id="motion-title">Motion</h2>
+        <p>GSAP reveals clarify sequence without delaying the content.</p>
+      </header>
+      <ul class="motion-principles">
+        <li><strong>Component-owned</strong><span>Initialize motion beside the component that owns the UI.</span></li>
+        <li><strong>Subtle</strong><span>Use 12–20px movement, short fades, and 40–120ms staggers.</span></li>
+        <li><strong>Accessible</strong><span>Honor reduced-motion preferences and keep content usable without animation.</span></li>
+        <li><strong>Purposeful</strong><span>Animate reading order and state changes, not decoration for its own sake.</span></li>
+      </ul>
+    </section>
+  </main>
+</Layout>

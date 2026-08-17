@@ -1,0 +1,64 @@
+---
+import { copy, urls } from "../copy";
+import LinkIcon from "./LinkIcon.astro";
+import PlatformLinks from "./PlatformLinks.astro";
+import SocialProfileLinks from "./SocialProfileLinks.astro";
+import ThemeSwitcher from "./ThemeSwitcher.astro";
+
+interface Props {
+  context?: "home" | "blog";
+  animated?: boolean;
+}
+
+const { context = "home", animated = false } = Astro.props;
+const homeLinks = [
+  { label: "Services", href: "#services" },
+  { label: "Proof", href: "#proof" },
+  { label: "Approach", href: "#approach" },
+  { label: "Work", href: "#work" },
+  { label: "Blog", href: urls.blogPath, icon: "blog" as const },
+] as const;
+---
+
+<header
+  class:list={["site-header", `site-header--${context}`]}
+  data-hero-identity={animated ? "" : undefined}
+>
+  <div class="site-header__inner site-container">
+    <a
+      class="site-header__brand"
+      href="/"
+      aria-label={`${copy.identity.fullName} — home`}
+      title="Home"
+    >
+      <img src="/favicon.svg" alt="" width="32" height="32" />
+    </a>
+
+    {
+      context === "home" ? (
+        <nav class="site-header__primary" aria-label="Primary navigation">
+          {homeLinks.map((link) => (
+            <a href={link.href}>
+              {"icon" in link && <LinkIcon icon={link.icon} />}
+              <span>{link.label}</span>
+            </a>
+          ))}
+        </nav>
+      ) : (
+        <PlatformLinks
+          class="site-header__platforms"
+          links={copy.mainPage.blog.platformLinks}
+          rel="me"
+        />
+      )
+    }
+
+    <div class="site-header__actions">
+      <SocialProfileLinks
+        class="site-header__socials"
+        linkClass="site-header__social-link"
+      />
+      <ThemeSwitcher embedded />
+    </div>
+  </div>
+</header>

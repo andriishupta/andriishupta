@@ -15,6 +15,9 @@ export const urls = {
   medium: "https://medium.com/@andriishupta",
   hashnode: "https://andriishupta.hashnode.dev/",
   email: `mailto:${email}`,
+  useLens: "https://github.com/use-lens/use-lens",
+  nestjsSupabase: "https://github.com/andriishupta/nestjs-supabase-setup",
+  strapiSeed: "https://github.com/andriishupta/strapi-generate-seed-data",
 } as const;
 
 export const copy = {
@@ -26,7 +29,7 @@ export const copy = {
     email,
   },
   seo: {
-    title: "Andrii Shupta - Software Consultant",
+    title: "Andrii Shupta — Software Consultant and Developer",
     description:
       "Andrii Shupta helps product teams make better technical decisions and ship reliable software through architecture and delivery consulting.",
     imageAlt:
@@ -77,7 +80,7 @@ export const copy = {
           href: urls.linkedin,
           brand: "linkedin",
         },
-        { id: "x", label: "Twitter", href: urls.x, brand: "x" },
+        { id: "x", label: "X", href: urls.x, brand: "x" },
         {
           id: "github",
           label: "GitHub",
@@ -125,15 +128,15 @@ export const copy = {
       ],
     },
     intro: {
-      heading: "Software consulting for complex products.",
+      heading: "Build the product. Clarify the system.",
       description:
         "I help teams turn ambiguous product and technical problems into systems that are easier to ship, change, and trust.",
       aside:
         "Good software work is not only about writing code. It is about making the right decisions early enough for the business to benefit.",
       focus: [
-        "Architecture & system design",
-        "Software development",
-        "Technical direction",
+        "Consulting on architecture & system design",
+        "Helping with software development",
+        "Leading technical direction",
       ],
       scrollLabel: "Explore",
       scrollAriaLabel: "Explore consulting services",
@@ -234,54 +237,85 @@ export const copy = {
       ],
     },
     proof: {
-      heading: "Proof of work",
-      description:
-        "Experience is easier to trust when it is visible: shipped systems, measurable outcomes, recommendations, and client feedback.",
-      facts: [
+      clientsHeading: "What clients say",
+      clientsDescription:
+        "Feedback from real engagements, kept short enough to read and clear enough to trust.",
+      teammatesHeading: "What teammates say",
+      teammatesDescription:
+        "Recommendations from people who worked with me directly.",
+      upworkHref: urls.upwork,
+      linkedinHref: urls.linkedin,
+      upwork: [
         {
-          value: "10+ years",
-          label: "building and evolving production software",
+          initial: "SR",
+          author: "SR",
+          quote:
+            "Andrii is very experienced and thoughtful in Next.js. He recommends best practices and will push back if something you require goes against that, as well as suggest a better way...",
+          context: "Next.js CMS dashboard · solution-oriented",
+          rating: "5.0 / 5",
+          featured: true,
+          tags: ["Solution Oriented"],
         },
         {
-          value: "Millions",
-          label: "of database entities migrated for thousands of customers",
+          initial: "SR",
+          author: "SR",
+          quote: "Excellent skill level, versed in Next.js.",
+          context: "CMS development using Next.js · long-term engagement",
+          rating: "5.0 / 5",
+          featured: false,
+          tags: ["Committed to Quality", "Next.js"],
         },
         {
-          value: "20+ interviews",
-          label: "conducted across hiring and engineering teams",
+          initial: "B",
+          author: "Client",
+          quote:
+            "Quick and prompt help on an add-hoc need. Next step: preparing to continue with specific tasks.",
+          context: "Advisory help on Supabase setup",
+          rating: "5.0 / 5",
+          featured: false,
+          tags: ["Reliable"],
         },
         {
-          value: "Startups to enterprise",
-          label: "from MVP decisions to platform modernization",
+          initial: "C",
+          author: "Client",
+          quote:
+            "Andrii is a really good React.js developer, I hope to work with him again.",
+          context: "React.js / Redux front-end development",
+          rating: "5.0 / 5",
+          featured: false,
+          tags: ["Committed to Quality"],
+        },
+        {
+          initial: "D",
+          author: "Client",
+          quote:
+            "Great consultant, very knowledgeable and proactive, highly recommended!",
+          context: "Frontend developer · quick problem solution",
+          rating: "5.0 / 5",
+          tags: ["Clear Communicator"],
         },
       ],
-      sources: [
+      linkedin: [
         {
-          label: "LinkedIn",
-          brand: "linkedin" as const,
-          icon: undefined,
-          href: urls.linkedin,
-          title: "Professional background and recommendations",
-          description:
-            "See the teams, roles, and experience behind the work — with recommendations where available.",
+          initial: "R",
+          author: "Roksolana",
+          quote:
+            "Working with Andrii was a great experience. He is highly professional, reliable, and an excellent collaborator. Throughout our projects, he provided clear communication, valuable feedback, and maintained an efficient workflow...",
+          context: "On cooperation",
         },
         {
-          label: "Upwork",
-          brand: undefined,
-          icon: "upwork" as const,
-          href: urls.upwork,
-          title: "Freelance projects and client feedback",
-          description:
-            "A direct view of selected freelance work, client relationships, and delivery history.",
+          initial: "D",
+          author: "Darren",
+          quote:
+            "During his time supporting the England football teams, Andrii delivered across a number of projects that delivered real, measurable benefit to our stakeholders. He was consistent in his delivery throughout the engagement...",
+          context: "Engineering manager",
         },
         {
-          label: "X",
-          brand: "x" as const,
-          icon: undefined,
-          href: urls.x,
-          title: "Short notes from the work in progress",
-          description:
-            "Small observations on software, tools, and the decisions behind building products.",
+          initial: "B",
+          author: "Bohdan",
+          quote:
+            "Andrii is a skilled software engineer and open-minded person. He is not afraid of challenges and new technologies. He always took a proactive approach, offering better technical solutions...",
+          context: "Teammate recommendation",
         },
       ],
     },
@@ -310,6 +344,53 @@ export const copy = {
           title: "Scaling billing workflows without losing trust",
           description:
             "Worked on billing and payment-account flows, including a migration of millions of database entities for thousands of customers.",
+        },
+      ],
+    },
+    openSource: {
+      heading: "Public code people used",
+      description:
+        "Three open-source projects that developers found useful, paired with the practical notes behind them. These are archived references, not active products.",
+      items: [
+        {
+          repo: "use-lens/use-lens",
+          href: urls.useLens,
+          description:
+            "Type-safe GraphQL tooling and generated React hooks for the Lens API.",
+          stars: 50,
+          forks: 3,
+          article: {
+            title: "Simplify Lens API usage with GraphQL Code Generator",
+            href: "/blog/simplify-usage-of-lens-api-with-use-lens-and-graphql-codegen",
+            image:
+              "/blog/simplify-usage-of-lens-api-with-use-lens-and-graphql-codegen/og.png",
+          },
+        },
+        {
+          repo: "andriishupta/nestjs-supabase-setup",
+          href: urls.nestjsSupabase,
+          description:
+            "A request-scoped Supabase Auth and client setup for NestJS.",
+          stars: 42,
+          forks: 10,
+          article: {
+            title: "Setup Supabase with Nest.js",
+            href: "/blog/setup-supabase-with-nestjs",
+            image: "/blog/setup-supabase-with-nestjs/og.png",
+          },
+        },
+        {
+          repo: "andriishupta/strapi-generate-seed-data",
+          href: urls.strapiSeed,
+          description:
+            "A practical Strapi data seeder covering relations, media, and realistic fixtures.",
+          stars: 18,
+          forks: 2,
+          article: {
+            title: "Generate Dummy Data in Strapi",
+            href: "/blog/generate-dummy-data-in-strapi",
+            image: "/blog/generate-dummy-data-in-strapi/og.png",
+          },
         },
       ],
     },

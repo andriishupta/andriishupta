@@ -3,6 +3,7 @@ import About from "../components/About.astro";
 import Approach from "../components/Approach.astro";
 import Experience from "../components/Experience.astro";
 import Hero from "../components/Hero.astro";
+import OpenSource from "../components/OpenSource.astro";
 import Proof from "../components/Proof.astro";
 import SiteFooter from "../components/SiteFooter.astro";
 import UseCases from "../components/UseCases.astro";
@@ -39,7 +40,7 @@ const structuredData = {
       name: copy.identity.fullName,
       url: siteUrl,
       image: `${siteUrl}/og-image.png`,
-      jobTitle: "Software Consultant",
+      jobTitle: "Software Consultant and Developer",
       description: seo.description,
       email: copy.identity.email,
       sameAs: identityProfileLinks.map(({ href }) => href),
@@ -59,13 +60,17 @@ const structuredData = {
     structuredData={structuredData}
     showThemeSwitcher={false}
 >
-    <main>
-        <Hero />
-        <About />
-        <Approach />
-        <Proof />
-        <UseCases />
-        <Experience />
-    </main>
-    <SiteFooter context="home" />
+    <div class="home-page">
+        <main>
+            <Hero />
+            <About />
+            <Proof kind="clients" />
+            <Approach />
+            <Proof kind="teammates" />
+            <UseCases />
+            <OpenSource />
+            <Experience />
+        </main>
+        <SiteFooter context="home" />
+    </div>
 </Layout>

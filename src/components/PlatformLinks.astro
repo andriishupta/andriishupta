@@ -9,7 +9,7 @@ export type PlatformLink = {
 };
 
 interface Props {
-  links: PlatformLink[];
+  links: Readonly<PlatformLink[]>;
   class?: string;
   ariaLabel?: string;
   rel?: string;

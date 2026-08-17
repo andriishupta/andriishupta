@@ -1,11 +1,11 @@
 ---
-import ArrowRight from "@lucide/astro/icons/arrow-right";
+import ArrowUpRight from "@lucide/astro/icons/arrow-up-right";
 import { copy } from "../copy";
 
 const { about } = copy.mainPage;
 ---
 
-<section class="consulting-services" id="services" aria-labelledby="services-title">
+<section class="consulting-services" id="services" data-services aria-labelledby="services-title">
   <div class="consulting-services__inner site-container">
     <header class="section-heading">
       <h2 class="heading-display" id="services-title">{about.heading}</h2>
@@ -14,14 +14,32 @@ const { about } = copy.mainPage;
 
     <div class="service-list">
       {about.services.map((service) => (
-        <article class="service-row">
-          <div class="service-row__title">
+        <article class="service-block">
+          <header class="service-block__title">
             <h3>{service.title}</h3>
-            <ArrowRight aria-hidden="true" />
+          </header>
+          <div class="service-block__body">
+            <p>{service.description}</p>
+            <a class="text-link" href="#work">
+              See related work
+              <ArrowUpRight aria-hidden="true" />
+            </a>
           </div>
-          <p>{service.description}</p>
         </article>
       ))}
     </div>
   </div>
 </section>
+
+<script>
+  import { revealOnScroll } from "../lib/motion";
+
+  document.querySelectorAll<HTMLElement>("[data-services]").forEach((section) => {
+    revealOnScroll(section, {
+      selector: ".service-block",
+      x: -20,
+      y: 0,
+      stagger: 0.08,
+    });
+  });
+</script>

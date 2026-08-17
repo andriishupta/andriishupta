@@ -1,0 +1,69 @@
+---
+import Archive from "@lucide/astro/icons/archive";
+import ArrowUpRight from "@lucide/astro/icons/arrow-up-right";
+import GitFork from "@lucide/astro/icons/git-fork";
+import Star from "@lucide/astro/icons/star";
+import { copy } from "../copy";
+import BrandIcon from "./BrandIcon.astro";
+import SiteLink from "./SiteLink.astro";
+
+const { openSource } = copy.mainPage;
+---
+
+<section class="open-source" data-open-source aria-labelledby="open-source-title">
+  <div class="open-source__inner site-container">
+    <header class="section-heading">
+      <h2 class="heading-display" id="open-source-title">{openSource.heading}</h2>
+      <p>{openSource.description}</p>
+    </header>
+
+    <div class="open-source-list">
+      {openSource.items.map((item) => (
+        <article class="open-source-item">
+          <figure class="open-source-item__image">
+            <img
+              src={item.article.image}
+              alt=""
+              width="1200"
+              height="630"
+              loading="lazy"
+              decoding="async"
+            />
+          </figure>
+
+          <div class="open-source-item__body">
+            <div class="open-source-item__eyebrow">
+              <span class="open-source-item__stat"><Archive aria-hidden="true" /> Public archive</span>
+              <span class="open-source-item__stat"><Star aria-hidden="true" /> {item.stars} stars</span>
+              <span class="open-source-item__stat"><GitFork aria-hidden="true" /> {item.forks} forks</span>
+            </div>
+            <h3>
+              <SiteLink href={item.href} indicator="none">
+                <BrandIcon name="github" />
+                <span class="open-source-item__repo-name">{item.repo}</span>
+                <ArrowUpRight aria-hidden="true" />
+              </SiteLink>
+            </h3>
+            <p>{item.description}</p>
+            <a class="text-link" href={item.article.href}>
+              Read the connected article
+              <ArrowUpRight aria-hidden="true" />
+            </a>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script>
+  import { revealOnScroll } from "../lib/motion";
+
+  document.querySelectorAll<HTMLElement>("[data-open-source]").forEach((section) => {
+    revealOnScroll(section, {
+      selector: ".open-source-item",
+      y: 16,
+      stagger: 0.08,
+    });
+  });
+</script>

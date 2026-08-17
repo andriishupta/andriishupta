@@ -40,9 +40,11 @@ This repository contains the source for the personal website at `andriishupta.de
 - The first-party blog is public. Do not add a global visibility flag or
   `noindex` header for `/blog`; complete articles must remain discoverable
   through the homepage, RSS, root and blog sitemaps, and `llms.txt`.
-- Keep the homepage header limited to in-page navigation, Blog, and Email.
-  External profiles and CV belong in the shared footer. Blog links always use
-  `/blog`, never the legacy subdomain.
+- Keep the homepage header limited to in-page navigation, an icon-labelled Blog
+  link, LinkedIn, X, GitHub, Upwork, and the theme control. Email remains a hero
+  and footer action rather than header navigation. Reuse the shared social
+  profile component in header and footer. Blog links always use `/blog`, never
+  the legacy subdomain.
 - Reuse `SiteLink.astro` for authored UI links that open external URLs; it owns
   safe new-tab behavior and the shared inline/corner external indicator. Reuse
   `LinkIcon.astro` for navigation link icons instead of duplicating icon maps,
@@ -67,14 +69,16 @@ This repository contains the source for the personal website at `andriishupta.de
   their lowercase hyphenated slugs are stable query values such as
   `?topic=software-design`. Articles may belong to multiple topics, including
   topics with no published entries yet.
-- Keep blog chrome visually aligned with the homepage: reuse the same Geologica
-  widths and weights, icon sizing, monochrome theme control, ruled links, and
-  restrained hover treatment instead of blog-only avatar or card motifs. Article
-  metadata, table of contents, and navigation surfaces should use the same
-  square black/white ruled treatment and remain readable in both themes.
-- Keep the consulting hero as one centered composition. Do not split its
-  background into light and dark columns or repeat the person's name as a
-  decorative brand label.
+- Keep blog chrome visually aligned with the homepage: reuse the same shared
+  header/footer, Geologica widths and weights, icon sizing, monochrome theme
+  control, rounded surfaces, and restrained hover treatment. Article metadata,
+  table of contents, and navigation surfaces should remain readable in both
+  themes without introducing blog-only chrome.
+- Keep the consulting hero as one aligned composition with a left identity and
+  right capability rail. Use the page surface as the default in both themes;
+  reserve contrast for focused controls and do not repeat the person's name as
+  a decorative brand label or add photo placeholders. Keep the capability rail
+  and its rows visually open without card borders.
 - Keep the homepage theme switcher embedded in its header so it participates in
   the mobile layout instead of floating over scrolled content.
 - At widths up to 64rem, the blog list and grid controls intentionally render
@@ -109,13 +113,51 @@ This repository contains the source for the personal website at `andriishupta.de
   for 90rem page chrome, `content-container` for 72rem page content, and
   `heading-display` for the shared condensed heading treatment. Keep
   route-specific composition in its route stylesheet.
+- Keep `SiteHeader.astro` and `SiteFooter.astro` as the shared page chrome for
+  home, blog, and article routes. The header inner width is capped at 64rem;
+  the footer keeps About and Work to the left and Connect to the right on wide
+  screens, with copyright in a separate bottom row. Every footer exposes CV,
+  LinkedIn, X, GitHub, and Upwork; DEV, Medium, and Hashnode stay in blog headers
+  and article distribution metadata. The footer uses the inverse black/white
+  surface for clear separation from page content.
+- Keep header navigation links at their natural text height; do not use large
+  minimum control heights for inline navigation. Keep equal-width desktop side
+  columns around the centered primary navigation. Homepage card actions use the
+  same bottom-right alignment and shared action typography.
+- Use the canonical 30rem compact, 48rem mobile, and 64rem tablet thresholds
+  documented on `/design-system`. Tablet and smaller use the mobile navigation
+  and stacked primary-layout model; desktop compositions start above 64rem.
+- Keep the shared heading scale authoritative. Do not add route-specific H3
+  sizes or character-width limits to compensate for a component layout; let the
+  component reflow around the shared type instead.
+- Use the documented type and spacing tokens instead of one-off values. Type
+  sizes follow a 12/14/16/18/20/24/28/32/36/48px progression, with 16px as the
+  body default and 14px reserved for compact navigation/actions. Spacing uses
+  the discrete rounded scale documented on `/design-system`; do not introduce
+  arbitrary 13px-style values or near-duplicate rem values such as `0.76rem`.
+- Keep approach step numbers and titles in one heading row, and keep the
+  homepage approach as one centered vertical timeline whose connector stops at
+  the final marker. Keep the experience title centered with its LinkedIn action
+  in a right-aligned toolbar above a 32rem-wide experience list. The homepage
+  renders the first three companies in one centered column without company card
+  surfaces.
+- Keep `/design-system` as the reference page for shared typography, surfaces,
+  controls, tags, spacing, focus states, and theme behavior. It is an internal
+  `noindex` test route: do not link it from public chrome or include it in
+  sitemaps. Inspect this route when making visual changes, and prefer updating
+  tokens and shared primitives there before adding route-specific exceptions.
+- Keep the interface simple and system-driven, but let an element's treatment
+  communicate its meaning. Social proof should resemble trustworthy source
+  messages, article previews should behave like content cards, and ordinary
+  informational sections should not become cards by default. Reuse shared
+  composition and action patterns instead of duplicating route-specific UI.
 - Keep the visual direction creative but restrained: minimal, personal,
   terminal/founder/developer energy, with strong typography and spacing.
 - Keep both themes deliberately black and white in `global.css`: light mode
   uses white page surfaces with black text, dark mode uses black surfaces with
   white text. Use gray only for readable secondary text/rules, never as a main
-  section background, and reduce bright blog media luminance in dark mode
-  without modifying the author-supplied assets.
+  section background. Preserve the original luminance of author-supplied media;
+  do not add theme-specific brightness filters.
 - Keep `ThemeSwitcher.astro` compact: show only the selected mode icon, then
   disclose the named System, Light, and Dark choices in its native dropdown.
   Preserve its localStorage, system-theme, and metadata synchronization.
@@ -124,15 +166,31 @@ This repository contains the source for the personal website at `andriishupta.de
 - Keep visible text links conventionally underlined and strengthen the underline
   on hover/focus. Reserve `text-decoration: none` for structural card links,
   branded home links, and icon-only controls with accessible labels.
-- Use animation sparingly. Prefer subtle fades, hover response, and small
-  ambient motion over heavy parallax, particle systems, or large counters.
-- Prefer Tailwind utilities for styling and Motion for client-side animation
-  when animation needs JavaScript.
+- Use animation sparingly. Author client-side motion with GSAP, initialize it in
+  the component that owns the animated UI, keep reveals subtle and short, and
+  respect `prefers-reduced-motion`. Prefer fades, small directional movement,
+  staggered timelines, and restrained hover response over heavy effects.
+- Keep service cards fully visible; do not use disclosure controls for the core
+  homepage service copy. Service blocks show one title and one description;
+  keep their related-work action in normal content flow rather than pushing it
+  to the bottom of an equal-height column.
+- Present homepage use cases as borderless content blocks rather than cards.
+  Keep each related-notes action in the normal flow directly after its
+  description; reserve card surfaces for proof, articles, and public code.
+- Blog cards may lift slightly on hover, but must stay within the active theme:
+  use a subtle raised surface and stronger rule instead of inverting to solid
+  black or white.
+- Prefer Tailwind utilities for styling where they fit the existing codebase;
+  use GSAP for authored client-side animation.
 - Use Astro view transitions for internal navigation when they improve flow
   without adding unnecessary complexity.
-- Favor one-page content sections for the main site: consulting hero, services,
-  approach, proof, use cases, and experience. Keep full experience at the bottom;
-  do not add a separate projects section unless asked.
+- Keep the homepage narrative order: consulting hero, services, client proof,
+  approach, teammate proof, use cases, public code, and experience. Keep full
+  experience at the bottom; do not add a separate projects section unless asked.
+- Use short verified client and teammate excerpts as source-labeled message cards;
+  keep the proof easy to scan, link each source profile, and avoid a generic
+  testimonial wall. Pair up to three public repositories with their first-party
+  articles behind them.
 - Keep all homepage content sections inside one page-level `main`; `Hero.astro`
   is a labelled `section`, not a second document landmark.
 - Run `npm run build` before handing off changes that affect rendering,

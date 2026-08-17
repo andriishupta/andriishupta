@@ -1,0 +1,398 @@
+.design-system-page {
+  width: min(calc(100% - 2 * var(--subpage-gutter)), 64rem);
+  margin-inline: auto;
+  padding-block: var(--space-8);
+}
+
+.design-system-intro {
+  max-width: 44rem;
+}
+
+.design-system-intro p,
+.type-specimens small,
+.design-system-section > header p {
+  color: var(--muted-on-page);
+}
+
+.design-system-intro p {
+  margin: 0 0 var(--space-3);
+  font-size: var(--text-sm);
+}
+
+.design-system-intro h1 {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 3rem);
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.design-system-intro > span {
+  display: block;
+  max-width: 60ch;
+  margin-top: var(--space-4);
+  color: var(--muted-on-page);
+  line-height: 1.6;
+}
+
+.design-system-section {
+  margin-top: var(--space-section);
+}
+
+.design-system-section > header {
+  display: flex;
+  gap: var(--space-4) var(--space-6);
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: var(--space-5);
+}
+
+.design-system-section > header h2,
+.design-system-section > header p {
+  margin: 0;
+}
+
+.design-system-section > header h2 {
+  font-size: var(--text-h2);
+}
+
+.design-system-section > header p {
+  max-width: 42ch;
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  text-align: right;
+}
+
+.type-specimens,
+.type-scale-specimens,
+.spacing-specimens,
+.breakpoint-specimens {
+  display: grid;
+  gap: 0;
+  margin: 0;
+  border-top: 1px solid var(--line-on-page);
+}
+
+.type-specimens > div {
+  display: grid;
+  grid-template-columns: 8rem minmax(0, 1fr);
+  gap: var(--space-5);
+  align-items: baseline;
+  padding-block: var(--space-4);
+  border-bottom: 1px solid var(--line-on-page);
+}
+
+.type-specimens :is(h3, p) {
+  margin: 0;
+}
+
+.type-display {
+  font-size: clamp(2rem, 4vw, 3rem);
+  letter-spacing: -0.03em;
+  line-height: 1;
+}
+
+.type-section {
+  font-size: var(--text-h2);
+}
+
+.type-card {
+  font-size: var(--text-h3);
+}
+
+.type-specimens p {
+  max-width: 65ch;
+  line-height: 1.6;
+}
+
+.type-scale-specimens > div,
+.motion-principles li {
+  display: grid;
+  grid-template-columns: 8rem minmax(0, 1fr);
+  gap: var(--space-5);
+  padding-block: var(--space-4);
+  border-bottom: 1px solid var(--line-on-page);
+}
+
+.type-scale-specimens dt,
+.motion-principles strong {
+  font-weight: 720;
+}
+
+.type-scale-specimens dd {
+  display: flex;
+  gap: var(--space-4);
+  justify-content: space-between;
+  margin: 0;
+}
+
+.type-scale-specimens dd span,
+.motion-principles span {
+  color: var(--muted-on-page);
+  font-size: var(--text-sm);
+  text-align: right;
+}
+
+.type-secondary {
+  color: var(--muted-on-page);
+}
+
+.spacing-specimens > div {
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr) 4rem;
+  gap: var(--space-4);
+  align-items: center;
+  min-height: 3rem;
+  border-bottom: 1px solid var(--line-on-page);
+}
+
+.spacing-specimens span {
+  width: var(--specimen-space);
+  height: 0.5rem;
+  background: var(--ink);
+}
+
+.spacing-specimens small {
+  color: var(--muted-on-page);
+  text-align: right;
+}
+
+.breakpoint-specimens > div {
+  display: grid;
+  grid-template-columns: 8rem minmax(0, 1fr);
+  gap: var(--space-5);
+  padding-block: var(--space-4);
+  border-bottom: 1px solid var(--line-on-page);
+}
+
+.breakpoint-specimens dt {
+  font-weight: 720;
+}
+
+.breakpoint-specimens dd {
+  display: flex;
+  gap: var(--space-3) var(--space-5);
+  align-items: baseline;
+  justify-content: space-between;
+  margin: 0;
+}
+
+.breakpoint-specimens dd span {
+  color: var(--muted-on-page);
+  font-size: var(--text-sm);
+  text-align: right;
+}
+
+.component-specimens {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(16rem, 0.8fr);
+  gap: var(--space-4);
+}
+
+.specimen-card {
+  display: flex;
+  min-height: 16rem;
+  flex-direction: column;
+  padding: var(--card-padding);
+  border: 1px solid var(--line-on-page);
+  border-radius: var(--radius-surface);
+  background: var(--surface-card);
+}
+
+.specimen-card > div {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  font-size: var(--text-sm);
+}
+
+.specimen-avatar {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--page);
+}
+
+.specimen-card h3 {
+  margin: var(--space-5) 0 0;
+  font-size: var(--text-h3);
+}
+
+.specimen-card p {
+  margin: var(--space-3) 0 0;
+  color: var(--muted-on-page);
+  line-height: 1.55;
+}
+
+.specimen-card ul {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  margin: var(--space-4) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.specimen-card li {
+  padding: 0.35rem 0.6rem;
+  border: 1px solid var(--line-on-page);
+  border-radius: var(--radius-pill);
+  color: var(--muted-on-page);
+  font-size: var(--text-xs);
+}
+
+.specimen-card > a,
+.specimen-text-link {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+  align-self: flex-end;
+  margin-top: auto;
+  font-size: var(--text-action);
+  font-weight: 620;
+}
+
+.specimen-card svg,
+.control-specimens svg {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+.control-specimens {
+  display: flex;
+  gap: var(--space-3);
+  align-content: start;
+  flex-wrap: wrap;
+  padding: var(--card-padding);
+  border: 1px solid var(--line-on-page);
+  border-radius: var(--radius-surface);
+}
+
+.specimen-button,
+.control-specimens button {
+  display: inline-flex;
+  min-height: var(--control-size);
+  gap: var(--space-2);
+  align-items: center;
+  padding-inline: var(--space-4);
+  border: 1px solid var(--ink);
+  border-radius: var(--radius-surface);
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: var(--text-sm);
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.specimen-button--primary {
+  background: var(--ink);
+  color: var(--page);
+}
+
+.control-specimens button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+.specimen-text-link {
+  width: 100%;
+}
+
+.token-specimens {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+.token-specimens > div {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.token-specimens span {
+  display: block;
+  height: 5rem;
+  border: 1px solid var(--line-on-page);
+  border-radius: var(--radius-surface);
+}
+
+.token-page span {
+  background: var(--page);
+}
+
+.token-ink span {
+  background: var(--ink);
+}
+
+.token-muted span {
+  background: var(--muted-on-page);
+}
+
+.token-line span {
+  background: var(--line-on-page);
+}
+
+.motion-principles {
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--line-on-page);
+  list-style: none;
+}
+
+@media (max-width: 48rem) {
+  .design-system-page {
+    padding-block: var(--space-6);
+  }
+
+  .design-system-section > header,
+  .component-specimens {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .design-system-section > header p {
+    text-align: left;
+  }
+
+  .type-specimens > div {
+    grid-template-columns: 1fr;
+    gap: var(--space-2);
+  }
+
+  .type-scale-specimens > div,
+  .motion-principles li {
+    grid-template-columns: 1fr;
+    gap: var(--space-2);
+  }
+
+  .type-scale-specimens dd {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .type-scale-specimens dd span,
+  .motion-principles span {
+    text-align: left;
+  }
+
+  .breakpoint-specimens > div,
+  .breakpoint-specimens dd {
+    grid-template-columns: 1fr;
+  }
+
+  .breakpoint-specimens dd {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .breakpoint-specimens dd span {
+    text-align: left;
+  }
+
+  .token-specimens {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

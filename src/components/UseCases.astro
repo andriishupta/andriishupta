@@ -6,7 +6,7 @@ import SiteLink from "./SiteLink.astro";
 const { useCases } = copy.mainPage;
 ---
 
-<section class="consulting-use-cases" id="work" aria-labelledby="work-title">
+<section class="consulting-use-cases" id="work" data-use-cases aria-labelledby="work-title">
   <div class="consulting-use-cases__inner site-container">
     <header class="section-heading">
       <h2 class="heading-display" id="work-title">{useCases.heading}</h2>
@@ -15,21 +15,31 @@ const { useCases } = copy.mainPage;
 
     <div class="use-case-list">
       {useCases.items.map((item) => (
-        <article class="use-case-row">
-          <div class="use-case-row__meta">
-            <span>{item.client}</span>
+        <article class="use-case-block">
+          <div class="use-case-block__top">
+            <span class="use-case-block__client">{item.client}</span>
             <span>{item.context}</span>
           </div>
-          <div class="use-case-row__body">
-            <h3>{item.title}</h3>
-            <p>{item.description}</p>
-            <SiteLink class="text-link" href="/blog?topic=api-development" external={false}>
-              Related notes
-              <ArrowUpRight aria-hidden="true" />
-            </SiteLink>
-          </div>
+          <h3>{item.title}</h3>
+          <p>{item.description}</p>
+          <SiteLink class="text-link" href="/blog?topic=consulting" external={false}>
+            Related notes
+            <ArrowUpRight aria-hidden="true" />
+          </SiteLink>
         </article>
       ))}
     </div>
   </div>
 </section>
+
+<script>
+  import { revealOnScroll } from "../lib/motion";
+
+  document.querySelectorAll<HTMLElement>("[data-use-cases]").forEach((section) => {
+    revealOnScroll(section, {
+      selector: ".use-case-block",
+      y: 16,
+      stagger: 0.08,
+    });
+  });
+</script>

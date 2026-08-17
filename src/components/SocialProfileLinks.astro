@@ -1,0 +1,38 @@
+---
+import { copy } from "../copy";
+import LinkIcon from "./LinkIcon.astro";
+import SiteLink from "./SiteLink.astro";
+
+interface Props {
+  class?: string;
+  linkClass?: string;
+  ariaLabel?: string;
+}
+
+const {
+  class: className,
+  linkClass,
+  ariaLabel = "Social profiles",
+} = Astro.props;
+const links = copy.mainPage.header.outerLinks;
+---
+
+<nav class={className} aria-label={ariaLabel}>
+  {
+    links.map((link) => (
+      <SiteLink
+        class={linkClass}
+        href={link.href}
+        indicator="none"
+        rel="me"
+        ariaLabel={link.label}
+        title={link.label}
+      >
+        <LinkIcon
+          brand={"brand" in link ? link.brand : undefined}
+          icon={"icon" in link ? link.icon : undefined}
+        />
+      </SiteLink>
+    ))
+  }
+</nav>

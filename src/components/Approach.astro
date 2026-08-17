@@ -4,18 +4,18 @@ import { copy } from "../copy";
 const { approach } = copy.mainPage;
 ---
 
-<section class="consulting-approach" id="approach" aria-labelledby="approach-title">
+<section class="consulting-approach" id="approach" data-approach aria-labelledby="approach-title">
   <div class="consulting-approach__inner site-container">
     <header class="section-heading section-heading--compact">
       <h2 class="heading-display" id="approach-title">{approach.heading}</h2>
       <p>{approach.description}</p>
     </header>
 
-    <ol class="approach-list">
+    <ol class="approach-timeline">
       {approach.steps.map((step) => (
-        <li>
-          <span class="approach-list__index">{step.index}</span>
-          <div>
+        <li class="approach-step">
+          <span class="approach-step__index">{step.index}</span>
+          <div class="approach-step__content">
             <h3>{step.title}</h3>
             <p>{step.description}</p>
           </div>
@@ -24,3 +24,15 @@ const { approach } = copy.mainPage;
     </ol>
   </div>
 </section>
+
+<script>
+  import { revealOnScroll } from "../lib/motion";
+
+  document.querySelectorAll<HTMLElement>("[data-approach]").forEach((section) => {
+    revealOnScroll(section, {
+      selector: ".approach-step",
+      y: 16,
+      stagger: 0.12,
+    });
+  });
+</script>

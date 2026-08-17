@@ -1,6 +1,5 @@
 ---
 import CodeXml from "@lucide/astro/icons/code-xml";
-import Star from "@lucide/astro/icons/star";
 import { copy } from "../copy";
 import SiteLink from "./SiteLink.astro";
 
@@ -10,11 +9,14 @@ const { experience } = copy.mainPage;
 <section
   class="experience home-experience"
   id="experience"
+  data-experience
   aria-labelledby="experience-title"
 >
   <div class="experience__inner">
     <div class="experience__intro">
       <h2 class="heading-display" id="experience-title">{experience.heading}</h2>
+    </div>
+    <div class="experience__toolbar">
       <SiteLink
         class="experience__more"
         href={experience.moreHref}
@@ -26,7 +28,7 @@ const { experience } = copy.mainPage;
 
     <ol class="experience__companies" aria-label={experience.companiesLabel}>
       {
-        experience.companies.map((company) => (
+        experience.companies.slice(0, 3).map((company) => (
           <li class="experience__company">
             <article>
               <header class="experience__company-header">
@@ -61,7 +63,7 @@ const { experience } = copy.mainPage;
 
                     <ul class="experience__responsibilities" aria-label="Responsibilities">
                       {project.responsibilities.map((responsibility) => (
-                        <li>{responsibility}</li>
+                        <li><span>{responsibility.replace(/^[-•]\s*/, "")}</span></li>
                       ))}
                     </ul>
 
@@ -69,7 +71,7 @@ const { experience } = copy.mainPage;
                       <ul class="experience__achievements" aria-label="Achievements">
                         {project.achievements.map((achievement) => (
                           <li>
-                            <Star aria-hidden="true" />
+                            <span class="experience__bullet" aria-hidden="true">•</span>
                             <span>{achievement}</span>
                           </li>
                         ))}
@@ -96,9 +98,9 @@ const { experience } = copy.mainPage;
                   )}
                   <ul class="experience__achievements" aria-label="Additional achievements">
                     {company.additionalAchievements.map((achievement) => (
-                      <li>
-                        <Star aria-hidden="true" />
-                        <span>{achievement}</span>
+                    <li>
+                      <span class="experience__bullet" aria-hidden="true">•</span>
+                      <span>{achievement}</span>
                       </li>
                     ))}
                   </ul>
@@ -111,3 +113,15 @@ const { experience } = copy.mainPage;
     </ol>
   </div>
 </section>
+
+<script>
+  import { revealOnScroll } from "../lib/motion";
+
+  document.querySelectorAll<HTMLElement>("[data-experience]").forEach((section) => {
+    revealOnScroll(section, {
+      selector: ".experience__intro, .experience__toolbar, .experience__company",
+      y: 12,
+      stagger: 0.06,
+    });
+  });
+</script>
