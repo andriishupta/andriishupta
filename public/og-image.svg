@@ -1,21 +1,49 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title description">
-  <title id="title">Andrii Shupta — Full-stack engineer</title>
-  <desc id="description">A monochrome social preview for Andrii Shupta, a full-stack engineer building secure, production-ready software.</desc>
-  <rect width="1200" height="630" fill="#ffffff" />
-  <rect width="620" height="630" fill="#080808" />
+  <title id="title">Andrii Shupta — Software Consultant and Developer</title>
+  <desc id="description">Dark social preview showing Andrii Shupta's software consulting hero.</desc>
+  <rect width="1200" height="630" fill="#000000" />
 
-  <g fill="#ffffff" font-family="Arial, Helvetica, sans-serif">
-    <text x="72" y="235" font-size="96" font-weight="700" letter-spacing="-4">Andrii</text>
-    <text x="72" y="330" font-size="96" font-weight="700" letter-spacing="-4">Shupta</text>
-    <text x="72" y="556" font-size="22" font-weight="600">andriishupta.dev</text>
-  </g>
+  <g font-family="Arial, Helvetica, sans-serif" fill="#ffffff">
+    <rect x="60" y="18" width="32" height="32" rx="7" fill="#ffffff" />
+    <text x="76" y="42" fill="#000000" font-size="24" font-weight="800" text-anchor="middle">A</text>
 
-  <g fill="#080808" font-family="Arial, Helvetica, sans-serif">
-    <text x="700" y="178" font-size="50" font-weight="700" letter-spacing="-1.5">Full-stack</text>
-    <text x="700" y="236" font-size="50" font-weight="700" letter-spacing="-1.5">engineer</text>
-    <text x="700" y="288" font-size="24" font-weight="600">10+ years of experience</text>
-    <line x1="700" y1="348" x2="1128" y2="348" stroke="#080808" stroke-width="2" />
-    <text x="700" y="410" font-size="29" font-weight="500">Secure, maintainable systems</text>
-    <text x="700" y="450" font-size="29" font-weight="500">with AI-assisted delivery.</text>
+    <g font-size="15" font-weight="700">
+      <text x="416" y="39">Services</text>
+      <text x="494" y="39">Proof</text>
+      <text x="552" y="39">Approach</text>
+      <text x="642" y="39">Use cases</text>
+      <text x="752" y="39">Blog</text>
+      <text x="915" y="39">in</text>
+      <text x="966" y="39">X</text>
+      <text x="1010" y="39">GitHub</text>
+      <text x="1080" y="39">Upwork</text>
+    </g>
+
+    <text x="60" y="226" font-size="42" font-weight="800" letter-spacing="-1.4">Andrii Shupta —</text>
+    <text x="60" y="267" font-size="42" font-weight="800" letter-spacing="-1.4">Software Consultant and</text>
+    <text x="60" y="308" font-size="42" font-weight="800" letter-spacing="-1.4">Developer</text>
+    <text x="60" y="358" font-size="26" font-weight="700" letter-spacing="-0.4">Build the product. Clarify the system.</text>
+    <text x="60" y="404" fill="#b6b6b6" font-size="17" font-weight="500">I help teams turn ambiguous product and technical problems into</text>
+    <text x="60" y="430" fill="#b6b6b6" font-size="17" font-weight="500">systems that are easier to ship, change, and trust.</text>
+
+    <rect x="60" y="470" width="143" height="44" rx="12" fill="#ffffff" />
+    <text x="77" y="498" fill="#000000" font-size="15" font-weight="700">Write to me</text>
+    <text x="218" y="498" font-size="15" font-weight="700" text-decoration="underline">See how I can help</text>
+
+    <text x="706" y="226" font-size="27" font-weight="800" letter-spacing="-0.7">Bring me in when a product needs</text>
+    <text x="706" y="257" font-size="27" font-weight="800" letter-spacing="-0.7">a clearer technical path.</text>
+
+    <g font-size="16" font-weight="700">
+      <text x="706" y="303">▶</text>
+      <text x="738" y="303">Consulting on architecture &amp; system design</text>
+      <text x="706" y="355">▶</text>
+      <text x="738" y="355">Helping with software development</text>
+      <text x="706" y="407">▶</text>
+      <text x="738" y="407">Leading technical direction</text>
+    </g>
+
+    <text x="706" y="457" fill="#b6b6b6" font-size="17" font-weight="500">Good software work is not only about writing code. It is</text>
+    <text x="706" y="483" fill="#b6b6b6" font-size="17" font-weight="500">about making the right decisions early enough for the</text>
+    <text x="706" y="509" fill="#b6b6b6" font-size="17" font-weight="500">business to benefit.</text>
   </g>
 </svg>

@@ -33,7 +33,7 @@ export const copy = {
     description:
       "Andrii Shupta helps product teams make better technical decisions and ship reliable software through architecture and delivery consulting.",
     imageAlt:
-      "Andrii Shupta - Software consultant helping teams build reliable products",
+      "Andrii Shupta — Software Consultant and Developer helping teams build reliable products",
     twitterHandle: "@andriishupta",
     keywords: [
       "Andrii Shupta",
