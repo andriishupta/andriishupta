@@ -15,7 +15,7 @@ const homeLinks = [
   { label: "Services", href: "#services" },
   { label: "Proof", href: "#proof" },
   { label: "Approach", href: "#approach" },
-  { label: "Work", href: "#work" },
+  { label: "Use cases", href: "#work" },
   { label: "Blog", href: urls.blogPath, icon: "blog" as const },
 ] as const;
 ---
@@ -24,7 +24,7 @@ const homeLinks = [
   class:list={["site-header", `site-header--${context}`]}
   data-hero-identity={animated ? "" : undefined}
 >
-  <div class="site-header__inner site-container">
+  <div class="site-header__inner">
     <a
       class="site-header__brand"
       href="/"

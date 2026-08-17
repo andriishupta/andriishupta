@@ -1,15 +1,17 @@
 ---
 import { copy } from "../copy";
+import SectionHeading from "./SectionHeading.astro";
 
 const { approach } = copy.mainPage;
 ---
 
 <section class="consulting-approach" id="approach" data-approach aria-labelledby="approach-title">
   <div class="consulting-approach__inner site-container">
-    <header class="section-heading section-heading--compact">
-      <h2 class="heading-display" id="approach-title">{approach.heading}</h2>
-      <p>{approach.description}</p>
-    </header>
+    <SectionHeading
+      id="approach-title"
+      heading={approach.heading}
+      description={approach.description}
+    />
 
     <ol class="approach-timeline">
       {approach.steps.map((step) => (

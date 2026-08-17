@@ -1,7 +1,9 @@
 ---
 import ArrowUpRight from "@lucide/astro/icons/arrow-up-right";
 import { copy } from "../copy";
+import FeedbackMessage from "./FeedbackMessage.astro";
 import LinkIcon from "./LinkIcon.astro";
+import SectionHeading from "./SectionHeading.astro";
 import SiteLink from "./SiteLink.astro";
 
 interface Props {
@@ -22,12 +24,11 @@ const titleId = `${sectionId}-title`;
   aria-labelledby={titleId}
 >
   <div class="consulting-proof__inner site-container">
-    <header class="section-heading">
-      <h2 class="heading-display" id={titleId}>
-        {isClients ? proof.clientsHeading : proof.teammatesHeading}
-      </h2>
-      <p>{isClients ? proof.clientsDescription : proof.teammatesDescription}</p>
-    </header>
+    <SectionHeading
+      id={titleId}
+      heading={isClients ? proof.clientsHeading : proof.teammatesHeading}
+      description={isClients ? proof.clientsDescription : proof.teammatesDescription}
+    />
 
     {
       isClients ? (
@@ -49,23 +50,10 @@ const titleId = `${sectionId}-title`;
 
           <div class="proof-message-grid proof-message-grid--upwork">
             {proof.upwork.map((message) => (
-              <article class:list={["proof-message", { "proof-message--featured": message.featured }]}>
-                <header class="proof-message__header">
-                  <span class="proof-message__avatar" aria-hidden="true">{message.initial}</span>
-                  <div>
-                    <strong>{message.author}</strong>
-                    <span>Upwork · Client feedback</span>
-                  </div>
-                  <span class="proof-message__rating">{message.rating}</span>
-                </header>
-                <blockquote>“{message.quote}”</blockquote>
-                {message.tags && message.tags.length > 0 && (
-                  <ul class="proof-message__tags" aria-label="Client qualities">
-                    {message.tags.map((tag) => <li>{tag}</li>)}
-                  </ul>
-                )}
-                <p class="proof-message__context">{message.context}</p>
-              </article>
+              <FeedbackMessage
+                {...message}
+                source="Upwork · Client feedback"
+              />
             ))}
           </div>
         </div>
@@ -88,17 +76,10 @@ const titleId = `${sectionId}-title`;
 
           <div class="proof-message-grid proof-message-grid--linkedin">
             {proof.linkedin.map((message) => (
-              <article class="proof-message proof-message--linkedin-card">
-                <header class="proof-message__header">
-                  <span class="proof-message__avatar" aria-hidden="true">{message.initial}</span>
-                  <div>
-                    <strong>{message.author}</strong>
-                    <span>LinkedIn · Teammate recommendation</span>
-                  </div>
-                </header>
-                <blockquote>“{message.quote}”</blockquote>
-                <p class="proof-message__context">{message.context}</p>
-              </article>
+              <FeedbackMessage
+                {...message}
+                source="LinkedIn · Teammate recommendation"
+              />
             ))}
           </div>
         </div>

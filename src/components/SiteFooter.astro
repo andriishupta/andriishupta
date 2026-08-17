@@ -2,12 +2,9 @@
 import Mail from "@lucide/astro/icons/mail";
 import Rss from "@lucide/astro/icons/rss";
 import { copy, urls } from "../copy";
+import LinkIcon from "./LinkIcon.astro";
 import SiteLink from "./SiteLink.astro";
 import SocialProfileLinks from "./SocialProfileLinks.astro";
-
-interface Props {
-  context?: "home" | "blog";
-}
 
 const year = new Date().getUTCFullYear();
 ---
@@ -19,15 +16,26 @@ const year = new Date().getUTCFullYear();
         <nav class="site-footer__column" aria-label="About Andrii">
           <h2>About</h2>
           <a href="/#services">Services</a>
+          <a href="/#proof">Proof</a>
           <a href="/#approach">Approach</a>
-          <a href={urls.cv}>CV</a>
+          <SiteLink
+            class="site-footer__external-text-link"
+            href={urls.cv}
+            external
+            indicator="corner"
+          >
+            CV
+          </SiteLink>
         </nav>
 
         <nav class="site-footer__column" aria-label="Work and writing">
           <h2>Work</h2>
           <a href="/#work">Use cases</a>
           <a href="/#experience">Experience</a>
-          <a href={urls.blogPath}>Blog</a>
+          <a href={urls.blogPath}>
+            <span>Blog</span>
+            <LinkIcon icon="blog" />
+          </a>
           <a href="/blog/rss.xml">
             <span>RSS</span>
             <Rss aria-hidden="true" />

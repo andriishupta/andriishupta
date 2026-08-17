@@ -151,6 +151,12 @@ const options = [
     if (!switcher.contains(event.target)) switcher.removeAttribute("open");
   });
 
+  document.addEventListener("keydown", (event) => {
+    if (event.key !== "Escape" || !switcher?.open) return;
+    switcher.removeAttribute("open");
+    trigger?.focus();
+  });
+
   systemDark.addEventListener("change", () => {
     if (root.dataset.theme === "device") syncTheme("device");
   });

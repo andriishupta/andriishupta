@@ -1,6 +1,8 @@
 ---
 import ArrowUpRight from "@lucide/astro/icons/arrow-up-right";
 import Mail from "@lucide/astro/icons/mail";
+import FeedbackMessage from "../components/FeedbackMessage.astro";
+import SiteLink from "../components/SiteLink.astro";
 import { copy, urls } from "../copy";
 import Layout from "../layouts/Layout.astro";
 import "../styles/design-system.css";
@@ -26,7 +28,8 @@ const typeScale = [
   ["H3", "1.25rem", "20px", "Card and timeline titles"],
   ["H2", "1.5–1.75rem", "24–28px", "Shared section headings"],
   ["H1", "1.75–2.25rem", "28–36px", "Page headings"],
-  ["Display", "2–3rem", "32–48px", "Large editorial headings"],
+  ["Section", "2–3rem", "32–48px", "Homepage section introductions"],
+  ["Display", "2.2–4rem", "35–64px", "Large editorial headings"],
 ] as const;
 const breakpoints = [
   ["Compact", "≤ 30rem / 480px", "Narrow-phone refinements only"],
@@ -52,8 +55,21 @@ const breakpoints = [
     <header class="design-system-intro">
       <p>Internal reference · not part of public navigation</p>
       <h1>Design system test page</h1>
-      <span>Typography, spacing, surfaces, controls, and states used across the site.</span>
+      <span>Tailwind theme tokens, semantic aliases, shared components, and route states used across the site.</span>
     </header>
+
+    <section class="design-system-section" aria-labelledby="architecture-title">
+      <header>
+        <h2 id="architecture-title">System architecture</h2>
+        <p>One source of truth per level; route styles only compose existing primitives.</p>
+      </header>
+      <ul class="principle-list">
+        <li><strong>Tailwind @theme</strong><span>Primitive type, spacing, containers, breakpoints, radii, colors, and easing.</span></li>
+        <li><strong>:root aliases</strong><span>Theme-aware colors and semantic component measures such as gutters and controls.</span></li>
+        <li><strong>@layer components</strong><span>Shared section headings use the 48rem reading measure; page chrome, links, controls, and footer behavior stay reusable.</span></li>
+        <li><strong>Route styles</strong><span>Page-specific layout and composition without redefining primitive scales.</span></li>
+      </ul>
+    </section>
 
     <section class="design-system-section" aria-labelledby="type-title">
       <header><h2 id="type-title">Typography</h2><p>Geologica, with a restrained production scale.</p></header>
@@ -75,10 +91,10 @@ const breakpoints = [
     </section>
 
     <section class="design-system-section" aria-labelledby="spacing-title">
-      <header><h2 id="spacing-title">Spacing</h2><p>Tailwind-aligned spacing for gaps, padding, and section rhythm.</p></header>
+      <header><h2 id="spacing-title">Spacing</h2><p>Tailwind-aligned spacing. Page sections and section content use shared flex gaps; padding remains local to real surfaces and controls.</p></header>
       <div class="spacing-specimens">
         {spacing.map(([name, value]) => (
-          <div><code>--space-{name}</code><span style={`--specimen-space: ${value}`}></span><small>{value}</small></div>
+          <div><code>--spacing-{name}</code><span style={`--specimen-space: var(--spacing-${name})`}></span><small>{value}</small></div>
         ))}
       </div>
     </section>
@@ -101,18 +117,20 @@ const breakpoints = [
     <section class="design-system-section" aria-labelledby="surface-title">
       <header><h2 id="surface-title">Surfaces and components</h2><p>One radius, one border treatment, and one action hierarchy.</p></header>
       <div class="component-specimens">
-        <article class="specimen-card">
-          <div><span class="specimen-avatar">A</span><strong>Client feedback</strong></div>
-          <h3>Clear decisions, reliable delivery.</h3>
-          <p>Cards group related information; they are not section containers.</p>
-          <ul aria-label="Example tags"><li>Reliable</li><li>Clear communicator</li></ul>
-          <a href={urls.linkedin}>Related work <ArrowUpRight aria-hidden="true" /></a>
-        </article>
+        <FeedbackMessage
+          author="Client A"
+          initial="A"
+          source="Upwork · Client feedback"
+          quote="Clear decisions, reliable delivery, and communication throughout."
+          context="Production component with representative content."
+          rating="5.0"
+          tags={["Reliable", "Clear communicator"]}
+        />
 
         <div class="control-specimens">
-          <a class="specimen-button specimen-button--primary" href={urls.email}><Mail aria-hidden="true" /> Write to me</a>
-          <a class="specimen-button" href={urls.blogPath}>Read the blog <ArrowUpRight aria-hidden="true" /></a>
-          <a class="specimen-text-link" href={urls.github}>Text action <ArrowUpRight aria-hidden="true" /></a>
+          <SiteLink class="specimen-button specimen-button--primary" href={urls.email} external={false}><Mail aria-hidden="true" /> Write to me</SiteLink>
+          <SiteLink class="specimen-button" href={urls.blogPath} external={false}>Read the blog <ArrowUpRight aria-hidden="true" /></SiteLink>
+          <SiteLink class="specimen-text-link" href={urls.github}>Text action</SiteLink>
           <button type="button" disabled>Disabled action</button>
         </div>
       </div>
@@ -133,7 +151,7 @@ const breakpoints = [
         <h2 id="motion-title">Motion</h2>
         <p>GSAP reveals clarify sequence without delaying the content.</p>
       </header>
-      <ul class="motion-principles">
+      <ul class="principle-list">
         <li><strong>Component-owned</strong><span>Initialize motion beside the component that owns the UI.</span></li>
         <li><strong>Subtle</strong><span>Use 12–20px movement, short fades, and 40–120ms staggers.</span></li>
         <li><strong>Accessible</strong><span>Honor reduced-motion preferences and keep content usable without animation.</span></li>

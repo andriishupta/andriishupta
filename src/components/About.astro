@@ -1,16 +1,18 @@
 ---
 import ArrowUpRight from "@lucide/astro/icons/arrow-up-right";
 import { copy } from "../copy";
+import SectionHeading from "./SectionHeading.astro";
 
 const { about } = copy.mainPage;
 ---
 
 <section class="consulting-services" id="services" data-services aria-labelledby="services-title">
   <div class="consulting-services__inner site-container">
-    <header class="section-heading">
-      <h2 class="heading-display" id="services-title">{about.heading}</h2>
-      <p>{about.description}</p>
-    </header>
+    <SectionHeading
+      id="services-title"
+      heading={about.heading}
+      description={about.description}
+    />
 
     <div class="service-list">
       {about.services.map((service) => (

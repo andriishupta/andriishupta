@@ -1,11 +1,7 @@
 .design-system-page {
   width: min(calc(100% - 2 * var(--subpage-gutter)), 64rem);
   margin-inline: auto;
-  padding-block: var(--space-8);
-}
-
-.design-system-intro {
-  max-width: 44rem;
+  padding-block: var(--spacing-8);
 }
 
 .design-system-intro p,
@@ -15,35 +11,34 @@
 }
 
 .design-system-intro p {
-  margin: 0 0 var(--space-3);
+  margin: 0 0 var(--spacing-3);
   font-size: var(--text-sm);
 }
 
 .design-system-intro h1 {
   margin: 0;
-  font-size: clamp(2rem, 4vw, 3rem);
+  font-size: var(--text-display);
   letter-spacing: -0.03em;
   line-height: 1;
 }
 
 .design-system-intro > span {
   display: block;
-  max-width: 60ch;
-  margin-top: var(--space-4);
+  margin-top: var(--spacing-4);
   color: var(--muted-on-page);
   line-height: 1.6;
 }
 
 .design-system-section {
-  margin-top: var(--space-section);
+  margin-top: var(--section-space);
 }
 
 .design-system-section > header {
   display: flex;
-  gap: var(--space-4) var(--space-6);
+  gap: var(--spacing-4) var(--spacing-6);
   align-items: baseline;
   justify-content: space-between;
-  margin-bottom: var(--space-5);
+  margin-bottom: var(--spacing-5);
 }
 
 .design-system-section > header h2,
@@ -56,7 +51,6 @@
 }
 
 .design-system-section > header p {
-  max-width: 42ch;
   font-size: var(--text-sm);
   line-height: 1.5;
   text-align: right;
@@ -75,9 +69,9 @@
 .type-specimens > div {
   display: grid;
   grid-template-columns: 8rem minmax(0, 1fr);
-  gap: var(--space-5);
+  gap: var(--spacing-5);
   align-items: baseline;
-  padding-block: var(--space-4);
+  padding-block: var(--spacing-4);
   border-bottom: 1px solid var(--line-on-page);
 }
 
@@ -86,13 +80,13 @@
 }
 
 .type-display {
-  font-size: clamp(2rem, 4vw, 3rem);
+  font-size: var(--text-display);
   letter-spacing: -0.03em;
   line-height: 1;
 }
 
 .type-section {
-  font-size: var(--text-h2);
+  font-size: var(--text-section);
 }
 
 .type-card {
@@ -100,33 +94,32 @@
 }
 
 .type-specimens p {
-  max-width: 65ch;
   line-height: 1.6;
 }
 
 .type-scale-specimens > div,
-.motion-principles li {
+.principle-list li {
   display: grid;
   grid-template-columns: 8rem minmax(0, 1fr);
-  gap: var(--space-5);
-  padding-block: var(--space-4);
+  gap: var(--spacing-5);
+  padding-block: var(--spacing-4);
   border-bottom: 1px solid var(--line-on-page);
 }
 
 .type-scale-specimens dt,
-.motion-principles strong {
+.principle-list strong {
   font-weight: 720;
 }
 
 .type-scale-specimens dd {
   display: flex;
-  gap: var(--space-4);
+  gap: var(--spacing-4);
   justify-content: space-between;
   margin: 0;
 }
 
 .type-scale-specimens dd span,
-.motion-principles span {
+.principle-list span {
   color: var(--muted-on-page);
   font-size: var(--text-sm);
   text-align: right;
@@ -139,7 +132,7 @@
 .spacing-specimens > div {
   display: grid;
   grid-template-columns: 7rem minmax(0, 1fr) 4rem;
-  gap: var(--space-4);
+  gap: var(--spacing-4);
   align-items: center;
   min-height: 3rem;
   border-bottom: 1px solid var(--line-on-page);
@@ -159,8 +152,8 @@
 .breakpoint-specimens > div {
   display: grid;
   grid-template-columns: 8rem minmax(0, 1fr);
-  gap: var(--space-5);
-  padding-block: var(--space-4);
+  gap: var(--spacing-5);
+  padding-block: var(--spacing-4);
   border-bottom: 1px solid var(--line-on-page);
 }
 
@@ -170,7 +163,7 @@
 
 .breakpoint-specimens dd {
   display: flex;
-  gap: var(--space-3) var(--space-5);
+  gap: var(--spacing-3) var(--spacing-5);
   align-items: baseline;
   justify-content: space-between;
   margin: 0;
@@ -185,68 +178,12 @@
 .component-specimens {
   display: grid;
   grid-template-columns: minmax(0, 1.2fr) minmax(16rem, 0.8fr);
-  gap: var(--space-4);
+  gap: var(--spacing-4);
 }
 
-.specimen-card {
-  display: flex;
-  min-height: 16rem;
-  flex-direction: column;
-  padding: var(--card-padding);
-  border: 1px solid var(--line-on-page);
-  border-radius: var(--radius-surface);
-  background: var(--surface-card);
-}
-
-.specimen-card > div {
-  display: flex;
-  gap: var(--space-3);
-  align-items: center;
-  font-size: var(--text-sm);
-}
-
-.specimen-avatar {
-  display: grid;
-  width: 2rem;
-  height: 2rem;
-  place-items: center;
-  border-radius: 50%;
-  background: var(--ink);
-  color: var(--page);
-}
-
-.specimen-card h3 {
-  margin: var(--space-5) 0 0;
-  font-size: var(--text-h3);
-}
-
-.specimen-card p {
-  margin: var(--space-3) 0 0;
-  color: var(--muted-on-page);
-  line-height: 1.55;
-}
-
-.specimen-card ul {
-  display: flex;
-  gap: var(--space-2);
-  flex-wrap: wrap;
-  margin: var(--space-4) 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.specimen-card li {
-  padding: 0.35rem 0.6rem;
-  border: 1px solid var(--line-on-page);
-  border-radius: var(--radius-pill);
-  color: var(--muted-on-page);
-  font-size: var(--text-xs);
-}
-
-.specimen-card > a,
 .specimen-text-link {
   display: inline-flex;
-  gap: var(--space-2);
+  gap: var(--spacing-2);
   align-items: center;
   align-self: flex-end;
   margin-top: auto;
@@ -254,15 +191,14 @@
   font-weight: 620;
 }
 
-.specimen-card svg,
 .control-specimens svg {
-  width: 0.9rem;
-  height: 0.9rem;
+  width: var(--spacing-4);
+  height: var(--spacing-4);
 }
 
 .control-specimens {
   display: flex;
-  gap: var(--space-3);
+  gap: var(--spacing-3);
   align-content: start;
   flex-wrap: wrap;
   padding: var(--card-padding);
@@ -274,9 +210,9 @@
 .control-specimens button {
   display: inline-flex;
   min-height: var(--control-size);
-  gap: var(--space-2);
+  gap: var(--spacing-2);
   align-items: center;
-  padding-inline: var(--space-4);
+  padding-inline: var(--spacing-4);
   border: 1px solid var(--ink);
   border-radius: var(--radius-surface);
   background: transparent;
@@ -304,12 +240,12 @@
 .token-specimens {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: var(--space-3);
+  gap: var(--spacing-3);
 }
 
 .token-specimens > div {
   display: grid;
-  gap: var(--space-2);
+  gap: var(--spacing-2);
 }
 
 .token-specimens span {
@@ -335,7 +271,7 @@
   background: var(--line-on-page);
 }
 
-.motion-principles {
+.principle-list {
   margin: 0;
   padding: 0;
   border-top: 1px solid var(--line-on-page);
@@ -344,7 +280,7 @@
 
 @media (max-width: 48rem) {
   .design-system-page {
-    padding-block: var(--space-6);
+    padding-block: var(--spacing-6);
   }
 
   .design-system-section > header,
@@ -357,24 +293,28 @@
     text-align: left;
   }
 
+  .design-system-intro {
+    padding-right: calc(var(--control-size) + var(--spacing-4));
+  }
+
   .type-specimens > div {
     grid-template-columns: 1fr;
-    gap: var(--space-2);
+    gap: var(--spacing-2);
   }
 
   .type-scale-specimens > div,
-  .motion-principles li {
+  .principle-list li {
     grid-template-columns: 1fr;
-    gap: var(--space-2);
+    gap: var(--spacing-2);
   }
 
   .type-scale-specimens dd {
     display: grid;
-    gap: var(--space-2);
+    gap: var(--spacing-2);
   }
 
   .type-scale-specimens dd span,
-  .motion-principles span {
+  .principle-list span {
     text-align: left;
   }
 
@@ -385,7 +325,7 @@
 
   .breakpoint-specimens dd {
     display: grid;
-    gap: var(--space-2);
+    gap: var(--spacing-2);
   }
 
   .breakpoint-specimens dd span {

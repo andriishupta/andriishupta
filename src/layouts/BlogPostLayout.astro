@@ -3,9 +3,9 @@ import ArrowLeft from "@lucide/astro/icons/arrow-left";
 import ArrowRight from "@lucide/astro/icons/arrow-right";
 import { render } from "astro:content";
 import ArticleToc from "../components/ArticleToc.astro";
-import BlogFooter from "../components/BlogFooter.astro";
-import BlogHeader from "../components/BlogHeader.astro";
 import PlatformLinks from "../components/PlatformLinks.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+import SiteHeader from "../components/SiteHeader.astro";
 import SiteLink from "../components/SiteLink.astro";
 import { copy, identityProfileLinks } from "../copy";
 import {
@@ -102,10 +102,10 @@ const structuredData = {
   modifiedTime={dateModified.toISOString()}
   tags={data.tags}
 >
-  <BlogHeader />
+  <SiteHeader context="blog" />
 
   <main>
-    <header class="article-hero content-container">
+    <header class="article-hero">
       <a class="article-back" href="/blog">
         <ArrowLeft aria-hidden="true" />
         <span>Back to blog</span>
@@ -260,7 +260,7 @@ const structuredData = {
     </div>
   </main>
 
-  <BlogFooter />
+  <SiteFooter />
 </Layout>
 
 <script>

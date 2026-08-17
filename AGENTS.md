@@ -78,7 +78,11 @@ This repository contains the source for the personal website at `andriishupta.de
   right capability rail. Use the page surface as the default in both themes;
   reserve contrast for focused controls and do not repeat the person's name as
   a decorative brand label or add photo placeholders. Keep the capability rail
-  and its rows visually open without card borders.
+  and its rows visually open without card borders. Render the visible H1 as two
+  explicit block parts: `Andrii Shupta —` and `Software Consultant and
+  Developer`. The hero includes the header within a 100svh minimum height and
+  vertically centers its body; the next section begins below the initial
+  viewport.
 - Keep the homepage theme switcher embedded in its header so it participates in
   the mobile layout instead of floating over scrolled content.
 - At widths up to 64rem, the blog list and grid controls intentionally render
@@ -113,28 +117,59 @@ This repository contains the source for the personal website at `andriishupta.de
   for 90rem page chrome, `content-container` for 72rem page content, and
   `heading-display` for the shared condensed heading treatment. Keep
   route-specific composition in its route stylesheet.
+- Treat Tailwind v4's `@theme static` block in `global.css` as the source of truth for
+  primitive type, spacing, containers, breakpoints, radii, black/white colors,
+  and easing. Keep only theme-aware semantic aliases and component measures in
+  `:root`; do not duplicate primitive values in route styles.
+- Put reusable site-wide UI rules in `@layer components`. Keep page-specific
+  layout in the relevant route stylesheet, and extract a component or shared
+  class when the same authored pattern appears three or more times. Reuse
+  `SectionHeading.astro`, `FeedbackMessage.astro`, and
+  `SocialProfileLinks.astro` for their established patterns.
 - Keep `SiteHeader.astro` and `SiteFooter.astro` as the shared page chrome for
-  home, blog, and article routes. The header inner width is capped at 64rem;
-  the footer keeps About and Work to the left and Connect to the right on wide
-  screens, with copyright in a separate bottom row. Every footer exposes CV,
+  home, blog, and article routes. Align the header to the shared 72rem content
+  width. The footer keeps About and Work to the left and a right-positioned,
+  16rem-wide Connect column with left-aligned contents on wide screens, with
+  copyright in a separate bottom row. Every footer exposes CV,
   LinkedIn, X, GitHub, and Upwork; DEV, Medium, and Hashnode stay in blog headers
-  and article distribution metadata. The footer uses the inverse black/white
-  surface for clear separation from page content.
+  and article distribution metadata. Keep the Blog and RSS footer links paired
+  with their established icons. External profile controls in both header and
+  footer use the shared corner indicator, while CV opens in a new tab with the
+  same corner treatment. External indicators are 12px with a 6px top and 4px
+  right inset, and move 1px up-right on hover/focus with reduced-motion support;
+  text-only corner links such as CV retain a 44px-high interaction area. The
+  footer uses the inverse black/white surface for clear separation from page
+  content.
 - Keep header navigation links at their natural text height; do not use large
   minimum control heights for inline navigation. Keep equal-width desktop side
-  columns around the centered primary navigation. Homepage card actions use the
-  same bottom-right alignment and shared action typography.
+  columns around the centered primary navigation. Use the shared Services,
+  Proof, Approach, Use cases, and Blog labels consistently between header and
+  footer navigation. Homepage card actions use the same bottom-right alignment
+  and shared action typography.
 - Use the canonical 30rem compact, 48rem mobile, and 64rem tablet thresholds
   documented on `/design-system`. Tablet and smaller use the mobile navigation
   and stacked primary-layout model; desktop compositions start above 64rem.
+  Add a route-local breakpoint only when the content measure demonstrably needs
+  it, and document the reason beside that media query.
 - Keep the shared heading scale authoritative. Do not add route-specific H3
   sizes or character-width limits to compensate for a component layout; let the
   component reflow around the shared type instead.
+- Constrain full-width section heading compositions with the shared 48rem
+  reading measure so long titles and subtitles stay readable. Do not add
+  character-width limits or one-off `max-width` rules to text inside cards,
+  service blocks, testimonials, or other already-bounded layouts. Apply reading
+  measures to the shared composition container rather than its individual text
+  nodes. Accessibility utilities such as `.sr-only` may retain the white-space
+  behavior they require.
 - Use the documented type and spacing tokens instead of one-off values. Type
   sizes follow a 12/14/16/18/20/24/28/32/36/48px progression, with 16px as the
   body default and 14px reserved for compact navigation/actions. Spacing uses
   the discrete rounded scale documented on `/design-system`; do not introduce
   arbitrary 13px-style values or near-duplicate rem values such as `0.76rem`.
+- Compose the homepage as a vertical flex stack. Use `--section-space` between
+  sibling sections and `--section-content-gap` between a section heading and
+  its content instead of symmetric section padding or collapsed margins. Keep
+  padding for actual component surfaces, controls, and mobile overflow safety.
 - Keep approach step numbers and titles in one heading row, and keep the
   homepage approach as one centered vertical timeline whose connector stops at
   the final marker. Keep the experience title centered with its LinkedIn action

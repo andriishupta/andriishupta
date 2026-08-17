@@ -1,0 +1,43 @@
+---
+interface Props {
+  author: string;
+  context: string;
+  initial: string;
+  quote: string;
+  source: string;
+  featured?: boolean;
+  rating?: string;
+  tags?: readonly string[];
+}
+
+const {
+  author,
+  context,
+  initial,
+  quote,
+  source,
+  featured = false,
+  rating,
+  tags = [],
+} = Astro.props;
+---
+
+<article class:list={["proof-message", { "proof-message--featured": featured }]}>
+  <header class="proof-message__header">
+    <span class="proof-message__avatar" aria-hidden="true">{initial}</span>
+    <div>
+      <strong>{author}</strong>
+      <span>{source}</span>
+    </div>
+    {rating && <span class="proof-message__rating">{rating}</span>}
+  </header>
+  <blockquote>“{quote}”</blockquote>
+  {
+    tags.length > 0 && (
+      <ul class="proof-message__tags" aria-label="Client qualities">
+        {tags.map((tag) => <li>{tag}</li>)}
+      </ul>
+    )
+  }
+  <p class="proof-message__context">{context}</p>
+</article>

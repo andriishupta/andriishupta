@@ -1,6 +1,7 @@
 ---
 import ArrowUpRight from "@lucide/astro/icons/arrow-up-right";
 import { copy } from "../copy";
+import SectionHeading from "./SectionHeading.astro";
 import SiteLink from "./SiteLink.astro";
 
 const { useCases } = copy.mainPage;
@@ -8,10 +9,11 @@ const { useCases } = copy.mainPage;
 
 <section class="consulting-use-cases" id="work" data-use-cases aria-labelledby="work-title">
   <div class="consulting-use-cases__inner site-container">
-    <header class="section-heading">
-      <h2 class="heading-display" id="work-title">{useCases.heading}</h2>
-      <p>{useCases.description}</p>
-    </header>
+    <SectionHeading
+      id="work-title"
+      heading={useCases.heading}
+      description={useCases.description}
+    />
 
     <div class="use-case-list">
       {useCases.items.map((item) => (

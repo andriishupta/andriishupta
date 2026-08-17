@@ -5,6 +5,7 @@ import GitFork from "@lucide/astro/icons/git-fork";
 import Star from "@lucide/astro/icons/star";
 import { copy } from "../copy";
 import BrandIcon from "./BrandIcon.astro";
+import SectionHeading from "./SectionHeading.astro";
 import SiteLink from "./SiteLink.astro";
 
 const { openSource } = copy.mainPage;
@@ -12,10 +13,11 @@ const { openSource } = copy.mainPage;
 
 <section class="open-source" data-open-source aria-labelledby="open-source-title">
   <div class="open-source__inner site-container">
-    <header class="section-heading">
-      <h2 class="heading-display" id="open-source-title">{openSource.heading}</h2>
-      <p>{openSource.description}</p>
-    </header>
+    <SectionHeading
+      id="open-source-title"
+      heading={openSource.heading}
+      description={openSource.description}
+    />
 
     <div class="open-source-list">
       {openSource.items.map((item) => (
