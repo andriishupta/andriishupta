@@ -164,18 +164,6 @@ export const copy = {
             "Turn competing opinions into decisions, unblock teams, review code and architecture, and leave behind a stronger engineering practice.",
         },
       ],
-      coreStack: {
-        heading: "Core stack",
-        listLabel: "Core technologies",
-        technologies: [
-          { name: "TypeScript", icon: "code" },
-          { name: "React / Next.js", icon: "react" },
-          { name: "Node.js / Hono.js", icon: "server" },
-          { name: "PostgreSQL / Supabase", icon: "database" },
-          { name: "AWS / Cloudflare", icon: "cloud" },
-          { name: "Codex / Claude", icon: "rocket" },
-        ],
-      },
       additional: [
         {
           label: "Worked with:",
@@ -209,6 +197,65 @@ export const copy = {
         },
         { before: "short updates on", label: "X", href: urls.x },
         { before: "a concise overview in", label: "my CV", href: urls.cv },
+      ],
+    },
+    technologies: {
+      heading: "Main technologies I work with",
+      description:
+        "A practical toolkit for products, data, cloud, interfaces, integrations, and payments. The stack follows the problem, not the other way around. Hover or focus to pause.",
+      regionLabel: "Technology toolkit",
+      items: [
+        {
+          name: "TypeScript / JavaScript",
+          detail: "Product and platform code",
+          icon: "code",
+        },
+        { name: "React / Next.js", detail: "Product interfaces", icon: "ui" },
+        {
+          name: "Node.js / Bun",
+          detail: "APIs, services, and tooling",
+          icon: "runtime",
+        },
+        {
+          name: "Data / AI / LLM",
+          detail: "Applied AI workflows and integrations",
+          icon: "ai",
+        },
+        {
+          name: "PostgreSQL / Supabase",
+          detail: "Data, auth, and realtime",
+          icon: "data",
+        },
+        {
+          name: "Redis",
+          detail: "Cache, queues, and fast state",
+          icon: "data",
+        },
+        {
+          name: "AWS / Cloudflare / Vercel",
+          detail: "Infrastructure, edge, and deployment",
+          icon: "cloud",
+        },
+        {
+          name: "Tailwind CSS / shadcn/ui / Material UI",
+          detail: "Interface systems",
+          icon: "ui",
+        },
+        {
+          name: "Third-party APIs",
+          detail: "System integrations",
+          icon: "integration",
+        },
+        {
+          name: "Stripe / payment systems",
+          detail: "Payments and billing",
+          icon: "payment",
+        },
+        {
+          name: "Best fit first",
+          detail: "The technology serves the product",
+          icon: "principle",
+        },
       ],
     },
     approach: {

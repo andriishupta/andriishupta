@@ -220,9 +220,14 @@ This repository contains the source for the personal website at `andriishupta.de
   use GSAP for authored client-side animation.
 - Use Astro view transitions for internal navigation when they improve flow
   without adding unnecessary complexity.
-- Keep the homepage narrative order: consulting hero, services, client proof,
-  approach, teammate proof, use cases, public code, and experience. Keep full
+- Keep the homepage narrative order: consulting hero, services, technology
+  toolkit, client proof, approach, teammate proof, use cases, public code, and experience. Keep full
   experience at the bottom; do not add a separate projects section unless asked.
+- Keep the homepage technology toolkit data-driven in `copy.ts` and render it as
+  one full-viewport horizontal rail after services. Use one server-rendered
+  semantic list, clone it only for the GSAP loop, pause on hover and focus, and
+  keep the non-animated version horizontally scrollable for reduced-motion and
+  no-script use.
 - Use short verified client and teammate excerpts as source-labeled message cards;
   keep the proof easy to scan, link each source profile, and avoid a generic
   testimonial wall. Pair up to three public repositories with their first-party

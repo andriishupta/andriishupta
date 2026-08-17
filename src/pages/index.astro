@@ -6,6 +6,7 @@ import Hero from "../components/Hero.astro";
 import OpenSource from "../components/OpenSource.astro";
 import Proof from "../components/Proof.astro";
 import SiteFooter from "../components/SiteFooter.astro";
+import TechnologyMarquee from "../components/TechnologyMarquee.astro";
 import UseCases from "../components/UseCases.astro";
 import { copy, identityProfileLinks } from "../copy";
 import Layout from "../layouts/Layout.astro";
@@ -64,6 +65,7 @@ const structuredData = {
         <main>
             <Hero />
             <About />
+            <TechnologyMarquee />
             <Proof kind="clients" />
             <Approach />
             <Proof kind="teammates" />

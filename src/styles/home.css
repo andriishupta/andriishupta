@@ -191,6 +191,7 @@
 
 .consulting-proof,
 .consulting-services,
+.technology-marquee,
 .consulting-approach,
 .consulting-use-cases,
 .open-source,
@@ -200,6 +201,7 @@
 }
 
 .consulting-services__inner,
+.technology-marquee__inner,
 .consulting-approach__inner,
 .consulting-proof__inner,
 .consulting-use-cases__inner,
@@ -209,6 +211,86 @@
   flex-direction: column;
   gap: var(--section-content-gap);
   margin-inline: auto;
+}
+
+.technology-marquee {
+  overflow: clip;
+}
+
+.technology-marquee__viewport {
+  width: 100%;
+  overflow-x: auto;
+  margin-block: var(--spacing-6);
+  padding-block: var(--spacing-3);
+  cursor: default;
+  scrollbar-width: thin;
+}
+
+.technology-marquee__viewport[data-marquee-active="true"] {
+  overflow: hidden;
+}
+
+.technology-marquee__viewport:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+.technology-marquee__track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+}
+
+.technology-marquee__list {
+  display: flex;
+  flex: none;
+  align-items: center;
+  margin: 0;
+  padding: 0 var(--spacing-4) 0 0;
+  list-style: none;
+}
+
+.technology-marquee__item {
+  display: flex;
+  flex: none;
+  gap: var(--spacing-3);
+  align-items: center;
+  padding-inline: var(--spacing-4);
+  white-space: nowrap;
+}
+
+.technology-marquee__item::after {
+  width: var(--spacing-1);
+  height: var(--spacing-1);
+  flex: 0 0 auto;
+  margin-left: var(--spacing-4);
+  border-radius: 50%;
+  background: var(--line-on-page-strong);
+  content: "";
+}
+
+.technology-marquee__item > svg {
+  width: var(--spacing-6);
+  height: var(--spacing-6);
+  flex: 0 0 auto;
+  stroke-width: 1.8;
+}
+
+.technology-marquee__copy {
+  display: grid;
+  gap: var(--spacing-1);
+}
+
+.technology-marquee__copy strong {
+  font-size: var(--text-lead);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+.technology-marquee__copy > span {
+  color: var(--muted-on-page);
+  font-size: var(--text-sm);
+  line-height: 1.35;
 }
 
 .home-experience .experience__intro h2 {
@@ -820,6 +902,10 @@
   .open-source-item .text-link svg,
   .home-experience .experience__more svg {
     transition: none;
+  }
+
+  .technology-marquee__viewport {
+    overflow-x: auto;
   }
 }
 

@@ -16,8 +16,8 @@ const writingProfiles = copy.mainPage.blog.platformLinks
   .map((item) => `- [${item.label}](${item.href})`)
   .join("\n");
 
-const mainTechnologies = copy.mainPage.about.coreStack.technologies
-  .map((tech) => tech.name)
+const mainTechnologies = copy.mainPage.technologies.items
+  .map((technology) => technology.name)
   .join(", ");
 
 const additionalFacts = copy.mainPage.about.additional

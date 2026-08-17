@@ -1,0 +1,148 @@
+---
+import BrainCircuit from "@lucide/astro/icons/brain-circuit";
+import Cloud from "@lucide/astro/icons/cloud";
+import Code from "@lucide/astro/icons/code";
+import CreditCard from "@lucide/astro/icons/credit-card";
+import Database from "@lucide/astro/icons/database";
+import PanelsTopLeft from "@lucide/astro/icons/panels-top-left";
+import Plug from "@lucide/astro/icons/plug";
+import Server from "@lucide/astro/icons/server";
+import Sparkles from "@lucide/astro/icons/sparkles";
+import { copy } from "../copy";
+import SectionHeading from "./SectionHeading.astro";
+
+const { technologies } = copy.mainPage;
+const technologyIcons = {
+  ai: BrainCircuit,
+  cloud: Cloud,
+  code: Code,
+  data: Database,
+  integration: Plug,
+  payment: CreditCard,
+  principle: Sparkles,
+  runtime: Server,
+  ui: PanelsTopLeft,
+};
+---
+
+<section
+  class="technology-marquee"
+  data-technology-marquee-section
+  aria-labelledby="technologies-title"
+>
+  <div class="technology-marquee__inner site-container">
+    <SectionHeading
+      id="technologies-title"
+      heading={technologies.heading}
+      description={technologies.description}
+    />
+  </div>
+
+  <div
+    class="technology-marquee__viewport"
+    data-technology-marquee
+    role="region"
+    aria-label={technologies.regionLabel}
+    tabindex="0"
+  >
+    <div class="technology-marquee__track" data-technology-track>
+      <ul class="technology-marquee__list" data-technology-list>
+        {technologies.items.map((item) => {
+          const Icon = technologyIcons[item.icon];
+
+          return (
+            <li class="technology-marquee__item">
+              <Icon aria-hidden="true" />
+              <span class="technology-marquee__copy">
+                <strong>{item.name}</strong>
+                <span>{item.detail}</span>
+              </span>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { gsap } from "gsap";
+
+  document
+    .querySelectorAll<HTMLElement>("[data-technology-marquee]")
+    .forEach((viewport) => {
+      if (viewport.dataset.marqueeReady === "true") return;
+      viewport.dataset.marqueeReady = "true";
+
+      const track = viewport.querySelector<HTMLElement>("[data-technology-track]");
+      const list = viewport.querySelector<HTMLElement>("[data-technology-list]");
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+      if (!track || !list || reduceMotion.matches) return;
+
+      const clone = list.cloneNode(true) as HTMLElement;
+      clone.removeAttribute("data-technology-list");
+      clone.setAttribute("aria-hidden", "true");
+      track.append(clone);
+      viewport.dataset.marqueeActive = "true";
+
+      let tween: gsap.core.Tween | undefined;
+      let inView = false;
+      let pointerPaused = false;
+      let focusPaused = false;
+
+      const updatePlayback = () => {
+        if (!tween) return;
+        tween.paused(!inView || pointerPaused || focusPaused || document.hidden);
+      };
+
+      const createTween = () => {
+        tween?.kill();
+        gsap.set(track, { x: 0 });
+        const distance = list.getBoundingClientRect().width;
+        tween = gsap.to(track, {
+          x: -distance,
+          duration: Math.max(36, distance / 48),
+          ease: "none",
+          repeat: -1,
+          paused: true,
+        });
+        updatePlayback();
+      };
+
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          inView = entry.isIntersecting;
+          updatePlayback();
+        },
+        { rootMargin: "80px 0px" },
+      );
+
+      const resizeObserver = new ResizeObserver(createTween);
+      const onPointerEnter = () => {
+        pointerPaused = true;
+        updatePlayback();
+      };
+      const onPointerLeave = () => {
+        pointerPaused = false;
+        updatePlayback();
+      };
+      const onFocusIn = () => {
+        focusPaused = true;
+        updatePlayback();
+      };
+      const onFocusOut = () => {
+        focusPaused = false;
+        updatePlayback();
+      };
+
+      createTween();
+      observer.observe(viewport);
+      resizeObserver.observe(list);
+      viewport.addEventListener("pointerenter", onPointerEnter);
+      viewport.addEventListener("pointerleave", onPointerLeave);
+      viewport.addEventListener("focusin", onFocusIn);
+      viewport.addEventListener("focusout", onFocusOut);
+      document.addEventListener("visibilitychange", updatePlayback);
+    });
+</script>
