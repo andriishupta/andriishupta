@@ -110,11 +110,12 @@ This repository contains the source for the personal website at `andriishupta.de
   required.
 - Keep homepage meta descriptions within roughly 110–160 characters; update both
   `public/og-image.svg` and its 1200×630 PNG export when refreshing the share preview.
-- Keep shared page chrome and main-page content within the 90rem content measure;
-  the homepage hero may retain full-bleed split surfaces, but its inner content
+- Keep shared page chrome and main-page content within the 72rem content measure;
+  full-bleed section surfaces may span the viewport, but their inner content
   must align to that measure. Keep article prose narrower for reading.
 - Reuse the layout and typography primitives in `global.css`: `site-container`
-  for 90rem page chrome, `content-container` for 72rem page content, and
+  for the shared 72rem page chrome and content measure, `content-container` for
+  nested 72rem content, and
   `heading-display` for the shared condensed heading treatment. Keep
   route-specific composition in its route stylesheet.
 - Treat Tailwind v4's `@theme static` block in `global.css` as the source of truth for
@@ -136,7 +137,7 @@ This repository contains the source for the personal website at `andriishupta.de
   with their established icons. External profile controls in both header and
   footer use the shared corner indicator, while CV opens in a new tab with the
   same corner treatment. External indicators are 12px with a 6px top and 4px
-  right inset, and move 1px up-right on hover/focus with reduced-motion support;
+  right inset, and move 2px up-right on hover/focus with reduced-motion support;
   text-only corner links such as CV retain a 44px-high interaction area. The
   footer uses the inverse black/white surface for clear separation from page
   content.

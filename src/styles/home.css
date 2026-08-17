@@ -24,7 +24,6 @@
 
 .consulting-hero__body {
   display: grid;
-  width: min(calc(100% - 2 * var(--gutter)), var(--container-content));
   flex: 1;
   grid-template-columns: minmax(0, 1.1fr) minmax(18rem, 0.85fr);
   gap: clamp(3rem, 7vw, 6rem);
@@ -207,7 +206,6 @@
 .open-source__inner,
 .home-experience .experience__inner {
   display: flex;
-  width: min(calc(100% - 2 * var(--gutter)), var(--container-content));
   flex-direction: column;
   gap: var(--section-content-gap);
   margin-inline: auto;
