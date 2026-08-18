@@ -228,7 +228,7 @@ export const copy = {
         },
         {
           name: "Redis / CDN",
-          detail: "Fast state and edge delivery",
+          detail: "Performance layer",
           icon: "cloud",
         },
         {
@@ -279,8 +279,9 @@ export const copy = {
               },
               {
                 name: "Redis / CDN",
-                detail: "Fast state and edge delivery",
-                description: "Fast state, caching, and edge delivery.",
+                detail: "Performance layer",
+                description:
+                  "Caching and edge delivery when a product needs a faster path.",
                 icon: "cloud",
               },
             ],
