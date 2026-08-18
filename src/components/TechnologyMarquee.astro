@@ -1,28 +1,9 @@
 ---
-import BrainCircuit from "@lucide/astro/icons/brain-circuit";
-import Cloud from "@lucide/astro/icons/cloud";
-import Code from "@lucide/astro/icons/code";
-import CreditCard from "@lucide/astro/icons/credit-card";
-import Database from "@lucide/astro/icons/database";
-import PanelsTopLeft from "@lucide/astro/icons/panels-top-left";
-import Plug from "@lucide/astro/icons/plug";
-import Server from "@lucide/astro/icons/server";
-import Sparkles from "@lucide/astro/icons/sparkles";
 import { copy } from "../copy";
 import SectionHeading from "./SectionHeading.astro";
+import TechnologyIcon from "./TechnologyIcon.astro";
 
 const { technologies } = copy.mainPage;
-const technologyIcons = {
-  ai: BrainCircuit,
-  cloud: Cloud,
-  code: Code,
-  data: Database,
-  integration: Plug,
-  payment: CreditCard,
-  principle: Sparkles,
-  runtime: Server,
-  ui: PanelsTopLeft,
-};
 ---
 
 <section
@@ -48,11 +29,9 @@ const technologyIcons = {
     <div class="technology-marquee__track" data-technology-track>
       <ul class="technology-marquee__list" data-technology-list>
         {technologies.items.map((item) => {
-          const Icon = technologyIcons[item.icon];
-
           return (
             <li class="technology-marquee__item">
-              <Icon aria-hidden="true" />
+              <TechnologyIcon name={item.icon} />
               <span class="technology-marquee__copy">
                 <strong>{item.name}</strong>
                 <span>{item.detail}</span>

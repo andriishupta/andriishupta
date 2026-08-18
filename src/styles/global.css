@@ -31,6 +31,7 @@
   --spacing-8: 2rem;
   --spacing-10: 2.5rem;
   --spacing-12: 3rem;
+  --spacing-32: 8rem;
 
   /* Content measures and responsive thresholds */
   --container-site: 72rem;
@@ -63,7 +64,7 @@
 
   /* Shared component measures */
   --control-size: 2.75rem;
-  --section-space: clamp(3.25rem, 5vw, 4.5rem);
+  --section-space: clamp(4rem, 6vw, 6rem);
   --section-content-gap: clamp(2.25rem, 4vw, 3.25rem);
   --card-padding: 1.25rem;
   --external-indicator-inset: 0.375rem;
@@ -111,6 +112,12 @@
     --surface-card-hover: color-mix(in srgb, var(--ink) 12%, var(--page));
     --media-surface: var(--color-site-black);
     color-scheme: dark;
+  }
+}
+
+@media (min-width: 64rem) {
+  :root {
+    --section-space: 7rem;
   }
 }
 

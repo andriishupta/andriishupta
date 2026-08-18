@@ -1,0 +1,97 @@
+---
+import ArrowDown from "@lucide/astro/icons/arrow-down";
+import Mail from "@lucide/astro/icons/mail";
+import { copy, urls } from "../copy";
+import SectionHeading from "./SectionHeading.astro";
+import SiteLink from "./SiteLink.astro";
+import TechnologyIcon from "./TechnologyIcon.astro";
+
+const { technologies } = copy.mainPage;
+const { pyramid } = technologies;
+---
+
+<section
+  class="technology-pyramid"
+  id="technologies"
+  data-technology-pyramid
+  aria-labelledby="technologies-title"
+>
+  <div class="technology-pyramid__inner site-container">
+    <SectionHeading
+      id="technologies-title"
+      heading={technologies.heading}
+      description={pyramid.description}
+    />
+
+    <div class="technology-pyramid__content">
+      <div class="technology-pyramid__levels" role="group" aria-label="Technology layers">
+        {pyramid.levels.map((level, levelIndex) => (
+          <>
+            <div
+              class:list={[
+                "technology-pyramid__level",
+                `technology-pyramid__level--${level.items.length}`,
+              ]}
+            >
+              {level.items.map((item) => (
+                <article
+                  class="technology-pyramid__item"
+                >
+                  <TechnologyIcon name={item.icon} />
+                  <span class="technology-pyramid__item-copy">
+                    <strong>{item.name}</strong>
+                    <span>{item.detail}</span>
+                    <span class="technology-pyramid__item-description">{item.description}</span>
+                  </span>
+                </article>
+              ))}
+            </div>
+            {levelIndex < pyramid.levels.length - 1 && (
+              <ArrowDown class="technology-pyramid__connector" aria-hidden="true" />
+            )}
+          </>
+        ))}
+
+        <ArrowDown class="technology-pyramid__connector" aria-hidden="true" />
+        <article
+          class="technology-pyramid__item technology-pyramid__foundation"
+        >
+          <TechnologyIcon name={pyramid.foundation.icon} />
+          <span class="technology-pyramid__item-copy">
+            <strong>{pyramid.foundation.name}</strong>
+            <span>{pyramid.foundation.detail}</span>
+            <span class="technology-pyramid__item-description">{pyramid.foundation.description}</span>
+          </span>
+        </article>
+      </div>
+
+      <div class="technology-pyramid__cta">
+        <div>
+          <h3>{pyramid.cta.heading}</h3>
+          <p>{pyramid.cta.description}</p>
+        </div>
+        <div class="technology-pyramid__actions">
+          <SiteLink class="button button--solid" href={urls.email} external={false}>
+            Write to me
+            <Mail aria-hidden="true" />
+          </SiteLink>
+          <SiteLink class="text-link" href={urls.x} ariaLabel="Let's discuss on X">
+            Let’s discuss on X
+          </SiteLink>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { revealOnScroll } from "../lib/motion";
+
+  document.querySelectorAll<HTMLElement>("[data-technology-pyramid]").forEach((section) => {
+    revealOnScroll(section, {
+      selector: ".technology-pyramid__item, .technology-pyramid__cta",
+      y: 16,
+      stagger: 0.08,
+    });
+  });
+</script>

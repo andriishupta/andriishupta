@@ -223,11 +223,14 @@ This repository contains the source for the personal website at `andriishupta.de
 - Keep the homepage narrative order: consulting hero, services, technology
   toolkit, client proof, approach, teammate proof, use cases, public code, and experience. Keep full
   experience at the bottom; do not add a separate projects section unless asked.
-- Keep the homepage technology toolkit data-driven in `copy.ts` and render it as
-  one full-viewport horizontal rail after services. Use one server-rendered
-  semantic list, clone it only for the GSAP loop, pause on hover and focus, and
-  keep the non-animated version horizontally scrollable for reduced-motion and
-  no-script use.
+- Keep the homepage technology strategy data-driven in `copy.ts` and render it
+  as an inverted pyramid after services: three top-level blocks for data/AI,
+  third-party APIs, and Redis/CDN; two implementation/data blocks for
+  TypeScript/JavaScript and PostgreSQL/Supabase; one cloud foundation, and a
+  final best-fit principle. Technology blocks use equal-size surfaces with
+  short always-visible descriptions; the component is semantic, responsive,
+  and GSAP-revealed with reduced-motion support. Keep
+  `TechnologyMarquee.astro` available as a separate future-use component.
 - Use short verified client and teammate excerpts as source-labeled message cards;
   keep the proof easy to scan, link each source profile, and avoid a generic
   testimonial wall. Pair up to three public repositories with their first-party

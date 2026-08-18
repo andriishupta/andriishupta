@@ -1,0 +1,32 @@
+---
+import BrainCircuit from "@lucide/astro/icons/brain-circuit";
+import Cloud from "@lucide/astro/icons/cloud";
+import Code from "@lucide/astro/icons/code";
+import CreditCard from "@lucide/astro/icons/credit-card";
+import Database from "@lucide/astro/icons/database";
+import PanelsTopLeft from "@lucide/astro/icons/panels-top-left";
+import Plug from "@lucide/astro/icons/plug";
+import Server from "@lucide/astro/icons/server";
+import Sparkles from "@lucide/astro/icons/sparkles";
+
+const technologyIcons = {
+  ai: BrainCircuit,
+  cloud: Cloud,
+  code: Code,
+  data: Database,
+  integration: Plug,
+  payment: CreditCard,
+  principle: Sparkles,
+  runtime: Server,
+  ui: PanelsTopLeft,
+} as const;
+
+interface Props {
+  name: keyof typeof technologyIcons;
+}
+
+const { name } = Astro.props;
+const Icon = technologyIcons[name];
+---
+
+<Icon class="technology-icon" aria-hidden="true" />

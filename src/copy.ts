@@ -227,9 +227,9 @@ export const copy = {
           icon: "data",
         },
         {
-          name: "Redis",
-          detail: "Cache, queues, and fast state",
-          icon: "data",
+          name: "Redis / CDN",
+          detail: "Fast state and edge delivery",
+          icon: "cloud",
         },
         {
           name: "AWS / Cloudflare / Vercel",
@@ -257,6 +257,77 @@ export const copy = {
           icon: "principle",
         },
       ],
+      pyramid: {
+        description:
+          "A practical stack starts with the problem, then grows from language and data to infrastructure.",
+        levels: [
+          {
+            items: [
+              {
+                name: "Data / AI / LLM",
+                detail: "Applied intelligence",
+                description:
+                  "Useful data and AI capabilities, chosen for the product outcome.",
+                icon: "ai",
+              },
+              {
+                name: "Third-party APIs",
+                detail: "External capabilities",
+                description:
+                  "External services for payments, billing, and integrations.",
+                icon: "integration",
+              },
+              {
+                name: "Redis / CDN",
+                detail: "Fast state and edge delivery",
+                description: "Fast state, caching, and edge delivery.",
+                icon: "cloud",
+              },
+            ],
+          },
+          {
+            items: [
+              {
+                name: "TypeScript / JavaScript",
+                detail: "Product language",
+                description:
+                  "The everyday language layer for full-stack product work.",
+                icon: "code",
+              },
+              {
+                name: "PostgreSQL / Supabase",
+                detail: "Data foundation",
+                description:
+                  "Reliable relational data, auth, and realtime features.",
+                icon: "data",
+              },
+            ],
+          },
+          {
+            items: [
+              {
+                name: "Cloud providers",
+                detail: "AWS / Cloudflare / Others",
+                description:
+                  "Infrastructure shaped by delivery, security, and operations.",
+                icon: "cloud",
+              },
+            ],
+          },
+        ],
+        foundation: {
+          name: "Best fit first",
+          detail: "The right technology for your product",
+          description:
+            "Choose the technology that fits the team, constraints, and product.",
+          icon: "principle",
+        },
+        cta: {
+          heading: "Not sure what fits?",
+          description:
+            "Let’s choose a practical stack for the product you want to ship.",
+        },
+      },
     },
     approach: {
       heading: "A practical way of working",
