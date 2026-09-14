@@ -5,7 +5,10 @@ const siteUrl = "https://andriishupta.dev";
 export const prerender = true;
 
 export async function GET() {
-  const posts = await getBlogPosts({ includeStubs: false });
+  const posts = await getBlogPosts({
+    includeStubs: false,
+    includeTranslations: true,
+  });
   const pages = [
     { path: "/blog", lastmod: undefined },
     ...posts.map((post) => ({

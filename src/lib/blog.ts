@@ -7,10 +7,13 @@ export {
 } from "./blog-topics";
 
 export type BlogPost = CollectionEntry<"blog">;
+export type BlogLanguage = "en" | "uk";
 
 interface BlogPostOptions {
   includeDrafts?: boolean;
   includeStubs?: boolean;
+  lang?: BlogLanguage;
+  includeTranslations?: boolean;
 }
 
 const wordPattern = /[\p{L}\p{N}]+(?:['’.-][\p{L}\p{N}]+)*/gu;
@@ -37,11 +40,43 @@ export function isBlogPostReady(post: BlogPost) {
   return !getReadingStats(post.body).isStub;
 }
 
+export function getTranslationKey(post: BlogPost) {
+  return post.data.translationKey ?? post.data.slug;
+}
+
+export function getBlogLanguage(post: BlogPost): BlogLanguage {
+  return post.data.lang;
+}
+
 export async function getBlogPosts(options: BlogPostOptions = {}) {
-  const { includeDrafts = false, includeStubs = true } = options;
-  const posts = await getCollection("blog", ({ data }) =>
+  const {
+    includeDrafts = false,
+    includeStubs = true,
+    lang,
+    includeTranslations = false,
+  } = options;
+  let posts = await getCollection("blog", ({ data }) =>
     includeDrafts ? true : !data.draft,
   );
+
+  if (lang) {
+    posts = posts.filter((post) => post.data.lang === lang);
+  }
+
+  if (!includeTranslations) {
+    const defaultPosts = new Map<string, BlogPost>();
+
+    for (const post of posts) {
+      const key = getTranslationKey(post);
+      const current = defaultPosts.get(key);
+
+      if (!current || (post.data.defaultLang && !current.data.defaultLang)) {
+        defaultPosts.set(key, post);
+      }
+    }
+
+    posts = [...defaultPosts.values()];
+  }
 
   return posts
     .filter((post) => includeStubs || isBlogPostReady(post))
@@ -53,8 +88,8 @@ export async function getBlogPosts(options: BlogPostOptions = {}) {
     });
 }
 
-export function formatBlogDate(date: Date) {
-  return new Intl.DateTimeFormat("en", {
+export function formatBlogDate(date: Date, lang: BlogLanguage = "en") {
+  return new Intl.DateTimeFormat(lang === "uk" ? "uk-UA" : "en", {
     day: "numeric",
     month: "long",
     year: "numeric",
@@ -67,7 +102,9 @@ export function toIsoDate(date: Date) {
 }
 
 export function getPostPath(post: BlogPost) {
-  return `/blog/${post.data.slug}`;
+  return post.data.lang === "uk"
+    ? `/blog/ua/${post.data.slug}`
+    : `/blog/${post.data.slug}`;
 }
 
 export function hasMeaningfulUpdate(post: BlogPost) {

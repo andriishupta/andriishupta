@@ -63,6 +63,12 @@ This repository contains the source for the personal website at `andriishupta.de
   merge or deployment.
 - Keep blog slugs stable. Article order is derived from `publishedAt`, while
   `updatedAt` is reserved for material changes to first-party content.
+- Keep translated article pairs linked by the same `slug` and `translationKey`.
+  English content lives in `src/content/blog/`, Ukrainian content lives in
+  `src/content/blog-ua/`, and Ukrainian routes use `/blog/ua/[slug]`. Set
+  `lang` explicitly for translated content and mark exactly one version with
+  `defaultLang: true` so the main blog index shows the intended audience
+  language.
 - Keep article-specific `tags` separate from the blog index's controlled
   `topics` filters. Topics use the shared AI, Web3, Software Design,
   Consulting, UI Development, API Development, and Mobile Development list;
@@ -255,4 +261,7 @@ This repository contains the source for the personal website at `andriishupta.de
 - For first-load hero animation states, set a pre-paint HTML data attribute in
   `Layout.astro` and style every animated hero panel's initial visual state in
   CSS; do not use layout-changing hiding such as `display: none` or zero height.
+- Treat original repository code and content as CC BY-NC-ND 4.0 by default.
+  `README.md`, `LICENSE`, and `CITATION.cff` define the attribution and
+  permission policy; preserve third-party dependency and asset licenses.
 - update AGENTS.md when code/approaches changed

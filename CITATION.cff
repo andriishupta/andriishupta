@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "If you use or reference this repository, please cite it as follows."
+title: "Andrii Shupta — personal website, articles, and source code"
+type: software
+authors:
+  - family-names: Shupta
+    given-names: Andrii
+    email: hello@andriishupta.dev
+    website: https://andriishupta.dev
+version: "2026.09.14"
+date-released: 2026-09-14
+url: https://andriishupta.dev
+repository-code: https://github.com/andriishupta/andriishupta
+license: CC-BY-NC-ND-4.0
+keywords:
+  - software consulting
+  - software architecture
+  - full-stack development
+  - TypeScript
+  - React
+  - Next.js
+  - Node.js
+  - Supabase
+  - PostgreSQL
+  - applied AI

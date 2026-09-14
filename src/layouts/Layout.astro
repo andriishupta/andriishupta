@@ -1,6 +1,7 @@
 ---
 import ThemeSwitcher from "../components/ThemeSwitcher.astro";
 import { copy, identityProfileLinks } from "../copy";
+import { type BlogLanguage } from "../lib/blog";
 import { themeColors } from "../lib/theme";
 import "../styles/global.css";
 
@@ -19,6 +20,11 @@ interface Props {
   publishedTime?: string;
   modifiedTime?: string;
   tags?: string[];
+  lang?: BlogLanguage;
+  alternateLanguages?: ReadonlyArray<{
+    lang: BlogLanguage;
+    href: string;
+  }>;
 }
 
 const {
@@ -36,6 +42,8 @@ const {
   publishedTime,
   modifiedTime,
   tags = [],
+  lang = "en",
+  alternateLanguages = [],
 } = Astro.props;
 const siteUrl = new URL(pathname, "https://andriishupta.dev");
 const imageUrl = new URL(image, siteUrl);
@@ -44,7 +52,7 @@ const keywords = copy.seo.keywords.join(", ");
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -109,6 +117,15 @@ const keywords = copy.seo.keywords.join(", ");
             )
         }
         {canonical && <link rel="canonical" href={siteUrl} />}
+        {
+            alternateLanguages.map((alternate) => (
+                <link
+                    rel="alternate"
+                    hreflang={alternate.lang}
+                    href={new URL(alternate.href, siteUrl)}
+                />
+            ))
+        }
         {identityProfileLinks.map(({ href }) => <link rel="me" href={href} />)}
         <meta name="description" content={description} />
         <meta name="keywords" content={keywords} />
@@ -118,7 +135,7 @@ const keywords = copy.seo.keywords.join(", ");
         <meta property="og:type" content={ogType} />
         <meta property="og:url" content={siteUrl} />
         <meta property="og:site_name" content={copy.identity.fullName} />
-        <meta property="og:locale" content="en_US" />
+        <meta property="og:locale" content={lang === "uk" ? "uk_UA" : "en_US"} />
         <meta property="og:image" content={imageUrl} />
         <meta property="og:image:secure_url" content={imageUrl} />
         <meta property="og:image:type" content="image/png" />

@@ -11,11 +11,21 @@ const distributionSchema = z
   })
   .default({});
 
+const languageSchema = z.enum(["en", "uk"]);
+
 const blog = defineCollection({
-  loader: glob({ base: "./src/content/blog", pattern: "**/*.{md,mdx}" }),
+  loader: glob({
+    base: "./src/content",
+    pattern: "**/*.{md,mdx}",
+    generateId: ({ entry }) =>
+      entry.replace(/\.(md|mdx)$/i, "").replaceAll("/", "-"),
+  }),
   schema: z.object({
     title: z.string().min(1),
     slug: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
+    lang: languageSchema.default("en"),
+    translationKey: z.string().min(1).optional(),
+    defaultLang: z.boolean().default(true),
     subtitle: z.string().optional(),
     description: z.string().min(1).max(200),
     publishedAt: z.coerce.date(),

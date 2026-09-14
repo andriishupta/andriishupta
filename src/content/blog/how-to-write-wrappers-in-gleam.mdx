@@ -1,0 +1,740 @@
+---
+title: "How I Built a Hono Wrapper in Gleam"
+slug: "how-to-write-wrappers-in-gleam"
+subtitle: "What a small library taught me about FFI, JavaScript interop, and package design"
+description: "How I built Gono, a small Hono wrapper, to learn Gleam and understand safe JavaScript FFI boundaries."
+publishedAt: 2026-09-14
+tags:
+  - gleam
+  - javascript
+  - ffi
+  - hono
+  - gono
+  - wrappers
+  - functional-programming
+topics:
+  - API Development
+draft: true
+---
+
+## 🔗 Links
+
+- [Gono repository](https://github.com/andriishupta/gono)
+- [Hono documentation](https://hono.dev/docs)
+- [Gleam externals](https://gleam.run/documentation/externals/)
+- [`gleam/javascript/promise`](https://gleam-javascript.hexdocs.pm/gleam/javascript/promise.html)
+- [Gleam pipelines](https://tour.gleam.run/functions/pipelines/)
+- [Gleam `use` expressions](https://tour.gleam.run/advanced-features/use/)
+
+## 🤓 Why I built Gono
+
+I wanted to learn Gleam by building something real.
+
+Not a large product or a new web framework. Just a small library that would force me to go beyond basic language examples.
+
+I chose [Hono](https://hono.dev/) because I already understood its API. The experiment became [Gono](https://github.com/andriishupta/gono): a Gleam wrapper around Hono for JavaScript runtimes.
+
+My goals were simple:
+
+- learn Gleam through working code;
+- understand package and library design;
+- use the Foreign Function Interface, or FFI;
+- connect typed Gleam code with an existing JavaScript library.
+
+The wrapper eventually worked. I could define routes in Gleam, run the application on Node or Bun, use middleware, and test requests without starting a real server.
+
+But the most useful lesson was not about routing. It was about the boundary between two languages.
+
+Calling JavaScript from Gleam is easy. Making every value and failure cross that boundary in a predictable form takes much more care.
+
+```text
+Gleam application
+  → public Gono API
+  → JavaScript FFI
+  → Hono
+
+Hono values and JavaScript failures
+  → FFI conversion
+  → Option / Result / Promise / custom types
+  → Gleam application
+```
+
+This article shows the parts of Gono that helped me understand that flow. The project is still experimental, but the same lessons apply to many JavaScript wrappers.
+
+## 🔌 A binding is not yet a good wrapper
+
+A basic binding answers one question: how can Gleam call this JavaScript function?
+
+A useful wrapper also decides what the JavaScript API should feel like in Gleam. This matters when the original library uses:
+
+- mutable instances;
+- `null` or `undefined`;
+- callbacks with several possible outcomes;
+- promises that can reject with any JavaScript value;
+- runtime-specific resources such as Node and Bun servers;
+- variadic functions and JavaScript arrays.
+
+Hono uses all of these patterns. Gono therefore needed more than direct bindings. It needed its own application type, handler and middleware results, runtime errors, and pipeline-friendly functions.
+
+## 🧱 Keep foreign values opaque
+
+The first decision was how much Gleam should know about a Hono object.
+
+Gono does not try to model all of Hono's internal state in Gleam. It declares the value as an opaque foreign type:
+
+```gleam
+pub type Hono
+```
+
+The type has no constructors that a Gono user can call. A value of type `Hono` can only come from the wrapper. The same approach is used for Hono's request context and response objects:
+
+```gleam
+pub type GonoContext(body)
+
+pub type GonoRequest
+
+pub type GonoResponse
+```
+
+JavaScript creates and operates on these values. Gleam controls where they can be used. A caller cannot create a fake Hono context or depend on its internal fields.
+
+The JavaScript side can document the real shape with JSDoc:
+
+```js
+/**
+ * @typedef {import("hono").Hono} Hono
+ * @typedef {import("hono").Context} Context
+ */
+```
+
+JSDoc gives JavaScript tooling useful information, while the Gleam declaration protects callers on the Gleam side. Neither validates the runtime boundary by itself.
+
+## 🧩 Define small FFI functions
+
+An external function has no Gleam body. `@external` tells Gleam which JavaScript function to call:
+
+```gleam
+@external(javascript, "./gono/gono_ffi.mjs", "new_hono")
+fn new_hono() -> Result(Hono, String)
+```
+
+The type annotation is required, but Gleam cannot verify the JavaScript implementation. It cannot prove that the function exists or returns the declared type.
+
+The JavaScript implementation must return the representation expected by compiled Gleam code:
+
+```js
+import { Hono } from "hono";
+import * as $gleam from "../gleam.mjs";
+
+export function new_hono() {
+  try {
+    return $gleam.Result$Ok(new Hono());
+  } catch (error) {
+    const original = JSON.stringify(error);
+    return $gleam.Result$Error(`GONO_ERROR_NEW:${original}`);
+  }
+}
+```
+
+The wrapper keeps the raw string error private and maps it to a Gleam error type:
+
+```gleam
+pub type GonoError {
+  GonoErrorMissingModule
+  GonoErrorUnsupportedVersion
+  GonoErrorNew(original: String)
+  GonoErrorUnknown
+  GonoErrorRuntime(derived: String)
+}
+
+pub fn new(builder: GonoBuilder) -> Result(Gono, GonoError) {
+  new_hono()
+  |> result.map(fn(hono) {
+    Gono(hono:, host: builder.host, port: builder.port)
+  })
+  |> result.map_error(string_error_to_gono_error)
+}
+```
+
+This gives callers a normal Gleam `Result` instead of exposing a JavaScript exception. The declaration describes the contract; the JavaScript code still has to keep it at runtime.
+
+## 🏗️ Keep the public API natural in Gleam
+
+I did not want users to configure Gono through a JavaScript-shaped object. The configuration is normal Gleam code:
+
+```gleam
+pub opaque type GonoBuilder {
+  GonoBuilder(host: String, port: Int)
+}
+
+pub fn builder() -> GonoBuilder {
+  GonoBuilder(host: "0.0.0.0", port: 3000)
+}
+
+pub fn with_host(builder builder: GonoBuilder, host host: String) -> GonoBuilder {
+  GonoBuilder(..builder, host:)
+}
+
+pub fn with_port(builder builder: GonoBuilder, port port: Int) -> GonoBuilder {
+  GonoBuilder(..builder, port:)
+}
+```
+
+The builder functions return a new Gleam value. They do not mutate a configuration object and they are designed for the pipe operator:
+
+```gleam
+let assert Ok(instance) =
+  gono.builder()
+  |> gono.with_host("localhost")
+  |> gono.with_port(3000)
+  |> gono.new
+```
+
+The resulting `Gono` value contains both the foreign Hono application and the runtime configuration:
+
+```gleam
+pub opaque type Gono {
+  Gono(hono: Hono, host: String, port: Int)
+}
+```
+
+The instance keeps configuration beside the Hono object without exposing its internal shape. It also separates building configuration from creating the foreign object.
+
+## 🔁 Wrap mutation in a pipeline-friendly API
+
+Hono's registration methods mutate an application and return the same Hono instance:
+
+```js
+export function app_get(app, path, handlerOrMiddleware) {
+  return app.get(path, handlerOrMiddleware);
+}
+```
+
+Gono keeps this behavior inside JavaScript, but presents a pipeline API in Gleam:
+
+```gleam
+pub fn get(
+  instance: gono.Gono,
+  path: String,
+  handler: gono.GonoContextHandler(body),
+) -> gono.Gono {
+  instance
+  |> gono.get_hono
+  |> app_get(path, unwrap_handler(handler))
+  |> gono.set_hono(instance, _)
+}
+```
+
+Gono returns a reconstructed wrapper after registration, while Hono keeps mutating its application object. This is not real immutability. It is a pipeline-friendly interface around controlled JavaScript mutation.
+
+Gono includes a small reference-identity test to ensure rebuilding the wrapper does not clone the foreign object:
+
+```gleam
+let hono = gono.get_hono(instance)
+let updated = gono.set_hono(instance, hono)
+
+gono.hono_same_ref(gono.get_hono(instance), gono.get_hono(updated))
+|> should.be_true
+```
+
+The API reads functionally, but registering a route still changes Hono. The wrapper improves composition; it does not pretend that Hono works differently.
+
+The result is readable route composition:
+
+```gleam
+let app =
+  instance
+  |> app.get("/health", fn(c) {
+    c
+    |> context.text("ok")
+    |> context.reply
+  })
+  |> app.get("/users/:id", user_handler)
+```
+
+Gleam's pipe operator passes the value on the left as the first argument to the next function. Put the wrapper's main subject first so callers can compose operations naturally.
+
+## 🎭 Make handler results explicit
+
+Hono handlers may return a response immediately or through a promise. Gono makes those two cases visible in the type:
+
+```gleam
+pub type GonoHandlerReply(body) {
+  GonoReplySync(response.Response(body))
+  GonoReplyAsync(promise.Promise(response.Response(body)))
+}
+
+pub type GonoContextHandler(body) =
+  fn(GonoContext(body)) -> GonoHandlerReply(body)
+```
+
+The helpers make both branches explicit:
+
+```gleam
+pub fn reply(response: response.Response(body)) -> gono.GonoHandlerReply(body) {
+  gono.GonoReplySync(response)
+}
+
+pub fn reply_async(
+  response: promise.Promise(response.Response(body)),
+) -> gono.GonoHandlerReply(body) {
+  gono.GonoReplyAsync(response)
+}
+```
+
+The adapter then normalizes both forms into the JavaScript contract, which is a promise of a response:
+
+```gleam
+fn unwrap_handler(
+  handler: gono.GonoContextHandler(body),
+) -> GonoFfiContextHandler(body) {
+  fn(context, next) {
+    let context = context_bind_next(context, next)
+
+    case handler(context) {
+      gono.GonoReplySync(response) -> promise.resolve(response)
+      gono.GonoReplyAsync(response) -> response
+    }
+  }
+}
+```
+
+The caller can see that a handler may finish now or later. The adapter converts both cases into the promise-based shape expected by Hono.
+
+## 🧠 Put policy in Gleam
+
+Most JavaScript functions in Gono are deliberately small:
+
+```js
+export function app_not_found(app, handler) {
+  return app.notFound((context) =>
+    handler(context, () => Promise.resolve(undefined))
+  );
+}
+```
+
+The wrapper's policy stays in Gleam. For example, a custom not-found handler defaults to `404` only when the response still has status `200`:
+
+```gleam
+fn with_default_status(
+  response response: response.Response(body),
+  status status: Int,
+) -> response.Response(body) {
+  case response {
+    response.Response(status: 200, ..) -> response.Response(..response, status:)
+    _ -> response
+  }
+}
+
+fn with_default_not_found_status(
+  handler: gono.GonoContextHandler(body),
+) -> gono.GonoContextHandler(body) {
+  fn(context) {
+    case handler(context) {
+      gono.GonoReplySync(response) ->
+        response
+        |> with_default_status(404)
+        |> gono.GonoReplySync
+
+      gono.GonoReplyAsync(response_promise) ->
+        response_promise
+        |> promise.map(fn(response) { with_default_status(response, 404) })
+        |> gono.GonoReplyAsync
+    }
+  }
+}
+```
+
+This became an important rule for Gono:
+
+- JavaScript handles mechanics that require Hono or runtime objects.
+- Gleam owns defaults, variants, error mapping, and composition.
+
+The JavaScript file stays focused on interop. The behavior that Gono owns remains visible and testable in Gleam.
+
+## 🧅 Model middleware flow instead of hiding it
+
+Hono middleware has two useful outcomes:
+
+1. call `next()` and let the downstream handler continue;
+2. return a response early and stop the chain.
+
+Gono represents that distinction directly:
+
+```gleam
+pub type GonoMiddlewareReply(body) {
+  GonoReplyNext
+  GonoReplyAsyncNext(GonoHandlerReply(body))
+}
+
+pub type GonoMiddleware(body) =
+  fn(GonoContext(body)) -> promise.Promise(GonoMiddlewareReply(body))
+```
+
+The context helpers cover continuing the chain and returning either a synchronous or asynchronous response. Callers do not need to know what `undefined` means to Hono middleware:
+
+```gleam
+pub fn continue() -> promise.Promise(gono.GonoMiddlewareReply(body)) {
+  gono.GonoReplyNext |> promise.resolve
+}
+
+pub fn reply_next(
+  response: response.Response(body),
+) -> promise.Promise(gono.GonoMiddlewareReply(body)) {
+  response
+  |> reply
+  |> gono.GonoReplyAsyncNext
+  |> promise.resolve
+}
+
+pub fn reply_async_next(
+  response: promise.Promise(response.Response(body)),
+) -> promise.Promise(gono.GonoMiddlewareReply(body)) {
+  response
+  |> reply_async
+  |> gono.GonoReplyAsyncNext
+  |> promise.resolve
+}
+```
+
+A middleware that adds a header and continues can be written as:
+
+```gleam
+fn request_id(c) {
+  let _ = c |> context.set_res_header("x-request-id", "123")
+
+  c
+  |> context.next
+  |> promise.await(fn(_) { context.continue() })
+}
+```
+
+An early response is a different outcome:
+
+```gleam
+fn forbidden(c) {
+  c
+  |> context.text("forbidden")
+  |> context.reply_next
+}
+```
+
+The adapter converts these outcomes to Hono's middleware contract:
+
+```gleam
+fn unwrap_middleware(
+  middleware: gono.GonoMiddleware(body),
+) -> GonoFfiMiddleware(body) {
+  fn(context, next) {
+    let context = context_bind_next(context, next)
+
+    middleware(context)
+    |> promise.await(fn(next_result) {
+      case next_result {
+        gono.GonoReplyNext -> promise.resolve(dynamic.nil())
+        gono.GonoReplyAsyncNext(handler_result) ->
+          case handler_result {
+            gono.GonoReplySync(response) ->
+              response |> as_dynamic |> promise.resolve
+            gono.GonoReplyAsync(response_promise) ->
+              response_promise |> promise.map(as_dynamic)
+          }
+      }
+    })
+  }
+}
+```
+
+This is also why `context.next` is a wrapper function instead of a plain field access. The actual Hono `next` callback is supplied by JavaScript and bound to the context before the Gleam handler runs:
+
+```js
+const NEXT_SYMBOL = Symbol.for("gono.next");
+
+export function context_bind_next(context, next) {
+  context[NEXT_SYMBOL] = next;
+  return context;
+}
+
+export function context_next(context) {
+  const next = context[NEXT_SYMBOL];
+  if (typeof next !== "function") {
+    return Promise.resolve(context);
+  }
+
+  return Promise.resolve(next()).then(() => context);
+}
+```
+
+The symbol keeps this bridge private and reduces the chance of a property collision. Gleam users only see `context.next`, not the mutable value attached to the JavaScript context.
+
+## ⚠️ The main lesson: contain JavaScript failures
+
+This was the most important lesson from the project.
+
+A JavaScript function can throw immediately. A promise can reject later. A server can start successfully and emit an error afterward. If one of these failures crosses the FFI boundary unchanged, it becomes much harder to reason about from Gleam.
+
+The Gleam JavaScript promise type deliberately does not include a generic error type because JavaScript can reject with any value. If an operation needs a typed success-or-failure contract, put the `Result` inside the promise:
+
+```gleam
+promise.Promise(Result(value, error))
+```
+
+For a new external call, the boundary can look like this:
+
+```gleam
+@external(javascript, "./provider_ffi.mjs", "load_text")
+fn load_text(url: String) -> promise.Promise(Result(String, String))
+```
+
+```js
+import * as $gleam from "../gleam.mjs";
+
+export async function load_text(url) {
+  try {
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      return $gleam.Result$Error(`HTTP_${response.status}`);
+    }
+
+    return $gleam.Result$Ok(await response.text());
+  } catch (error) {
+    return $gleam.Result$Error(String(error));
+  }
+}
+```
+
+Now the promise resolves in both cases. Success becomes `Ok`, and a recoverable failure becomes `Error`. Gleam receives the value described by the external function instead of an unexpected rejected promise.
+
+Gono uses this boundary selectively:
+
+- `new_hono` catches construction failures and returns a Gleam `Result`.
+- Node and Bun server creation catch runtime failures and map them to runtime errors.
+- URL query parsing catches invalid URL failures and returns `Error(Nil)`.
+- The mock request helper is intentionally a small async bridge used by tests.
+- Hono route and middleware promises can still reject; Hono catches handler and middleware errors and sends them to `onError`.
+
+This does not mean adding `try/catch` around everything. Catch a failure when the wrapper can turn it into a useful value. If Hono already owns that failure path, preserve Hono's behavior instead of swallowing it.
+
+For a promise that already contains a `Result`, `promise.try_await` continues the callback only for the `Ok` branch. The surrounding function still returns a promise of a result:
+
+```gleam
+fn read_example() -> promise.Promise(Result(String, String)) {
+  use text <- promise.try_await(load_text("https://example.com"))
+
+  promise.resolve(Ok(text))
+}
+```
+
+If the error needs to be handled at that point, use `promise.await` and match on the result explicitly.
+
+For callback-based APIs, adapt the callback once with `promise.new`, then keep the rest of the flow in Gleam.
+
+## 🔄 Convert values once, at the edge
+
+Gleam lists and JavaScript arrays are different runtime representations. Gono converts them in the FFI rather than making every public function expose JavaScript-specific details:
+
+```js
+function middlewares_to_array(middlewares) {
+  let cursor = middlewares;
+  const converted = [];
+
+  while (!(cursor instanceof $gleam.Empty)) {
+    converted.push(cursor.head);
+    cursor = cursor.tail;
+  }
+
+  return converted;
+}
+```
+
+That helper lets JavaScript call Hono's variadic API:
+
+```js
+export function app_use_get(app, path, middlewares, handler) {
+  return app.get(path, ...middlewares_to_array(middlewares), handler);
+}
+```
+
+The reverse conversion is needed for values returned from JavaScript:
+
+```js
+export async function app_request(app, method, path, headers) {
+  const headerEntries = list_to_array(headers);
+  const request = new Request(`http://localhost${path}`, {
+    method,
+    headers: new Headers(headerEntries),
+  });
+  const response = await app.fetch(request);
+  const body = await response.text();
+  const responseHeaders = Array.from(response.headers.entries());
+
+  return [response.status, body, $gleam.toList(responseHeaders)];
+}
+```
+
+The public Gleam test API can therefore use normal Gleam collections:
+
+```gleam
+runtime_mock.request(app, http.Get, "/hello", [])
+```
+
+The same principle applies to optional values. Hono may return `undefined` for a missing parameter or header, so Gono converts it to `option.Option`:
+
+```js
+export function context_req_param(req, name) {
+  const value = req.param(name);
+  return value == null ? Option$None() : Option$Some(String(value));
+}
+```
+
+Then a Gleam caller can decide how to handle absence instead of receiving `undefined`:
+
+```gleam
+let id =
+  c
+  |> context.req
+  |> context.req_param("id")
+  |> option.unwrap("missing")
+```
+
+This code depends on Gleam's generated JavaScript representation, such as `$gleam.Empty` and `$gleam.toList`. I keep that dependency inside the FFI module so the rest of Gono does not need to know about it. It is also an obvious place to re-test after a Gleam upgrade.
+
+Convert values once, close to the FFI, and keep the rest of the wrapper idiomatic Gleam.
+
+## 🧭 Separate Node and Bun
+
+The Hono application is JavaScript-runtime agnostic, but starting a server is not. Gono keeps Node and Bun adapters in separate modules:
+
+```gleam
+import gono/runtime/node
+
+let assert Ok(server) =
+  instance
+  |> node.builder
+  |> node.on_process_event("SIGTERM", fn(_server, _error) { Nil })
+  |> node.serve
+```
+
+The Node FFI checks the environment before calling the Node adapter:
+
+```js
+export function node_serve(gono, process_events, server_events) {
+  if (!is_node_env()) {
+    return Result$Error("NODE_ERROR_INVALID_ENV");
+  }
+
+  try {
+    const server = serve({
+      port: gono.port,
+      hostname: gono.host,
+      fetch: gono.hono.fetch,
+    });
+
+    // Register process and server events here.
+    return Result$Ok(server);
+  } catch (error) {
+    return Result$Error(`NODE_ERROR_SERVER:${String(error)}`);
+  }
+}
+```
+
+The Gleam module maps those strings into a closed error type:
+
+```gleam
+pub type NodeError {
+  NodeErrorInvalidEnv
+  NodeErrorUnsupportedVersion
+  NodeErrorServer(original: String)
+  NodeErrorUnknown
+}
+```
+
+The `try/catch` only handles failures during setup. A Node server can emit an error after it has started, so Gono also registers an `error` event listener. These are separate failure paths and both need handling.
+
+This keeps Node-specific behavior out of the core wrapper. Gono uses the same structure for Bun.
+
+## 🧪 Use tests as documentation
+
+The Gono tests show how I expect the wrapper to be used. They also verify the part the Gleam compiler cannot see: whether JavaScript really returns the promised representation.
+
+### Test the instance boundary
+
+The instance tests verify defaults, builder overrides, and the identity of the foreign Hono object:
+
+```gleam
+pub fn gono_defaults_test() {
+  let instance =
+    gono.builder()
+    |> gono.new
+    |> should.be_ok
+
+  instance |> gono.get_host |> should.equal("0.0.0.0")
+  instance |> gono.get_port |> should.equal(3000)
+}
+```
+
+### Test routes through the mock runtime
+
+The mock adapter executes the actual Hono app in memory. That makes route tests fast and avoids binding a network port:
+
+```gleam
+pub fn hello_route_test() -> promise.Promise(Nil) {
+  let assert Ok(instance) = gono.builder() |> gono.new
+
+  let app =
+    instance
+    |> app.get("/hello", fn(c) {
+      c |> context.text("hello") |> context.reply
+    })
+
+  runtime_mock.request(app, http.Get, "/hello", [])
+  |> promise.map(fn(result) {
+    result.0 |> should.equal(200)
+    result.1 |> should.equal("hello")
+    Nil
+  })
+}
+```
+
+### Test middleware outcomes separately
+
+Gono's context tests cover both sides of the middleware contract:
+
+- a middleware can mutate a header and continue to the handler;
+- `reply_next` can stop the chain synchronously;
+- `reply_async_next` can stop it with a promise response.
+
+The difficult part of a wrapper is often not the direct method call. It is preserving callback order and return-value semantics across two languages.
+
+### Keep long-running server tests out of `gleeunit`
+
+Gleeunit exits the process when test execution finishes. A test that starts a real Node or Bun server should use a dedicated integration or end-to-end runner instead of relying on the unit-test process to stay alive.
+
+## ✅ What I would repeat
+
+If I write another JavaScript wrapper in Gleam, I will follow the same rules:
+
+1. Identify the smallest foreign values that need to cross the boundary.
+2. Represent them as opaque Gleam types.
+3. Give every external function an explicit type annotation.
+4. Convert JavaScript `undefined` and nullable values to `Option` or `Result`.
+5. Convert lists and records at the FFI edge.
+6. Use custom types for meaningful sync, async, continue, and early-reply outcomes.
+7. Put `try/catch` around JavaScript operations that can fail synchronously.
+8. Handle later callback, event, and promise failures through their own channels.
+9. Return `Promise(Result(...))` when an async operation has a typed error contract.
+10. Keep runtime-specific adapters separate from the core wrapper.
+11. Test the contract the compiler cannot see: foreign identity, callback order, promise behavior, value conversion, and error paths.
+
+## 🏁 What I got from the experiment
+
+Gono is a small project. It was never meant to replace Hono or become a large framework.
+
+It did what I needed: the wrapper worked, I could run it on Node and Bun, and the tests described a usable Gleam API around Hono.
+
+More importantly, it changed how I think about interop. The happy-path call is usually the easy part. The real work is deciding what happens to mutation, missing values, callbacks, exceptions, rejected promises, and runtime errors when they move between languages.
+
+An FFI type is a promise to the compiler, not proof about JavaScript at runtime. The boundary becomes reliable only when the JavaScript implementation, Gleam types, and tests all describe the same behavior.
+
+That lesson was more valuable than the wrapper itself.

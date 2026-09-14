@@ -28,10 +28,25 @@ The first-party blog is public and has no temporary visibility flag:
 Create an `.md` or `.mdx` file in `src/content/blog/`. The filename and `slug`
 should match. Keep the original slug when migrating an existing article.
 
+Ukrainian translations live in `src/content/blog-ua/`. A translated pair uses
+the same `slug` and `translationKey`, but the Ukrainian route adds `/ua/`:
+
+```text
+/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow
+/blog/ua/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow
+```
+
+Use `lang: en` or `lang: uk` for the article language. Set `defaultLang: true`
+on the version that should represent the translation pair in the main blog
+index. Existing articles default to English through the schema default.
+
 ```mdx
 ---
 title: "How I migrated my blog"
 slug: "migrating-blog-to-subpath"
+lang: en
+translationKey: "migrating-blog-to-subpath"
+defaultLang: true
 subtitle: "Optional line shown below the title"
 description: "A concise search and share description under 200 characters."
 publishedAt: 2026-07-22

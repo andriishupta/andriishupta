@@ -1,6 +1,6 @@
 ---
-import { getBlogPosts, type BlogPost } from "../../lib/blog";
-import BlogPostLayout from "../../layouts/BlogPostLayout.astro";
+import { getBlogPosts, type BlogPost } from "../../../lib/blog";
+import BlogPostLayout from "../../../layouts/BlogPostLayout.astro";
 
 interface Props {
   post: BlogPost;
@@ -9,7 +9,7 @@ interface Props {
 }
 
 export async function getStaticPaths() {
-  const posts = await getBlogPosts({ lang: "en", includeTranslations: true });
+  const posts = await getBlogPosts({ lang: "uk", includeTranslations: true });
 
   return posts.map((post, index) => ({
     params: { slug: post.data.slug },

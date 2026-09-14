@@ -4,6 +4,10 @@ import { fileURLToPath } from "node:url";
 
 const repositoryRoot = fileURLToPath(new URL("../", import.meta.url));
 const contentDirectory = path.join(repositoryRoot, "src/content/blog");
+const ukrainianContentDirectory = path.join(
+  repositoryRoot,
+  "src/content/blog-ua",
+);
 const distDirectory = path.join(repositoryRoot, "dist");
 const failures = [];
 
@@ -19,28 +23,48 @@ const rejectText = (source, value, label) => {
   }
 };
 
-const contentFiles = (await readdir(contentDirectory))
-  .filter((file) => /\.(?:md|mdx)$/.test(file))
-  .sort();
 const posts = [];
+const defaultPosts = [];
 
-for (const file of contentFiles) {
-  const source = await readFile(path.join(contentDirectory, file), "utf8");
-  const frontmatter = source.match(/^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/);
+for (const { directory, fallbackLang } of [
+  { directory: contentDirectory, fallbackLang: "en" },
+  { directory: ukrainianContentDirectory, fallbackLang: "uk" },
+]) {
+  let contentFiles = [];
 
-  if (!frontmatter) {
-    failures.push(`${file}: missing frontmatter`);
+  try {
+    contentFiles = (await readdir(directory))
+      .filter((file) => /\.(?:md|mdx)$/.test(file))
+      .sort();
+  } catch {
     continue;
   }
 
-  const slug = frontmatter[1].match(/^slug:\s*["']?([^"'\s]+)["']?\s*$/m)?.[1];
-  const draft = /^draft:\s*true\s*$/m.test(frontmatter[1]);
-  const body = source.slice(frontmatter[0].length).trim();
+  for (const file of contentFiles) {
+    const source = await readFile(path.join(directory, file), "utf8");
+    const frontmatter = source.match(/^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/);
 
-  if (!slug) {
-    failures.push(`${file}: missing slug`);
-  } else if (!draft && body.length > 0) {
-    posts.push(slug);
+    if (!frontmatter) {
+      failures.push(`${file}: missing frontmatter`);
+      continue;
+    }
+
+    const slug = frontmatter[1].match(
+      /^slug:\s*["']?([^"'\s]+)["']?\s*$/m,
+    )?.[1];
+    const lang =
+      frontmatter[1].match(/^lang:\s*([a-z]+)\s*$/m)?.[1] ?? fallbackLang;
+    const defaultLang = !/^defaultLang:\s*false\s*$/m.test(frontmatter[1]);
+    const draft = /^draft:\s*true\s*$/m.test(frontmatter[1]);
+    const body = source.slice(frontmatter[0].length).trim();
+
+    if (!slug) {
+      failures.push(`${file}: missing slug`);
+    } else if (!draft && body.length > 0) {
+      const post = { slug, lang, defaultLang };
+      posts.push(post);
+      if (defaultLang) defaultPosts.push(post);
+    }
   }
 }
 
@@ -87,10 +111,13 @@ requireText(llms, "[Blog](https://andriishupta.dev/blog)", "llms.txt");
 requireText(rss, 'xmlns:atom="http://www.w3.org/2005/Atom"', "RSS");
 requireText(rss, 'href="https://andriishupta.dev/blog/rss.xml"', "RSS");
 
-for (const slug of posts) {
-  const canonicalUrl = `https://andriishupta.dev/blog/${slug}`;
+for (const post of posts) {
+  const { slug, lang, defaultLang } = post;
+  const routePath = lang === "uk" ? `/blog/ua/${slug}` : `/blog/${slug}`;
+  const canonicalUrl = `https://andriishupta.dev${routePath}`;
+  const distPath = routePath.replace(/^\//, "").concat(".html");
   const articleHtml = await readFile(
-    path.join(distDirectory, `blog/${slug}.html`),
+    path.join(distDirectory, distPath),
     "utf8",
   );
 
@@ -102,16 +129,22 @@ for (const slug of posts) {
   requireText(articleHtml, 'name="robots" content="index, follow', slug);
   requireText(rootSitemap, `<loc>${canonicalUrl}</loc>`, "root sitemap");
   requireText(blogSitemap, `<loc>${canonicalUrl}</loc>`, "blog sitemap");
-  requireText(rss, `<link>${canonicalUrl}</link>`, "RSS");
-  requireText(llms, `](${canonicalUrl})`, "llms.txt");
-  requireText(redirects, `/${slug} /blog/${slug} 301`, "Pages redirects");
+  if (defaultLang) {
+    requireText(rss, `<link>${canonicalUrl}</link>`, "RSS");
+    requireText(llms, `](${canonicalUrl})`, "llms.txt");
+  }
+  if (lang === "en") {
+    requireText(redirects, `/${slug} /blog/${slug} 301`, "Pages redirects");
+  }
   rejectText(articleHtml, "blog.andriishupta.dev", slug);
 }
 
 const rssItemCount = rss.match(/<item>/g)?.length ?? 0;
 
-if (rssItemCount !== posts.length) {
-  failures.push(`RSS: expected ${posts.length} items, found ${rssItemCount}`);
+if (rssItemCount !== defaultPosts.length) {
+  failures.push(
+    `RSS: expected ${defaultPosts.length} items, found ${rssItemCount}`,
+  );
 }
 
 rejectText(rootSitemap, "blog.andriishupta.dev", "root sitemap");

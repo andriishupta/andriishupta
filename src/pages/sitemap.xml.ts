@@ -9,7 +9,10 @@ const staticPages = [
 const siteUrl = "https://andriishupta.dev";
 
 export async function GET() {
-  const posts = await getBlogPosts({ includeStubs: false });
+  const posts = await getBlogPosts({
+    includeStubs: false,
+    includeTranslations: true,
+  });
   const pages = [
     ...staticPages,
     ...posts.map((post) => ({

@@ -1,22 +1,25 @@
 ---
 import type { MarkdownHeading } from "astro";
+import type { BlogLanguage } from "../lib/blog";
 
 interface Props {
   headings: MarkdownHeading[];
   mobile?: boolean;
+  lang?: BlogLanguage;
 }
 
-const { headings, mobile = false } = Astro.props;
+const { headings, mobile = false, lang = "en" } = Astro.props;
 const visibleHeadings = headings.filter(
   ({ depth }) => depth === 2 || depth === 3,
 );
+const label = lang === "uk" ? "На цій сторінці" : "On this page";
 ---
 
 {
   visibleHeadings.length > 0 &&
     (mobile ? (
       <details class="article-toc article-toc--mobile">
-        <summary>On this page</summary>
+        <summary>{label}</summary>
         <ol>
           {visibleHeadings.map((heading) => (
             <li class:list={{ "article-toc__nested": heading.depth === 3 }}>
@@ -28,8 +31,8 @@ const visibleHeadings = headings.filter(
         </ol>
       </details>
     ) : (
-      <aside class="article-toc article-toc--desktop" aria-label="Table of contents">
-        <p>On this page</p>
+      <aside class="article-toc article-toc--desktop" aria-label={label}>
+        <p>{label}</p>
         <ol>
           {visibleHeadings.map((heading) => (
             <li class:list={{ "article-toc__nested": heading.depth === 3 }}>

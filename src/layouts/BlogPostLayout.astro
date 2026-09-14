@@ -10,9 +10,12 @@ import SiteLink from "../components/SiteLink.astro";
 import { copy, identityProfileLinks } from "../copy";
 import {
   formatBlogDate,
+  getBlogPosts,
+  getTranslationKey,
   getPostPath,
   getReadingStats,
   hasMeaningfulUpdate,
+  type BlogLanguage,
   toIsoDate,
   type BlogPost,
 } from "../lib/blog";
@@ -28,8 +31,18 @@ interface Props {
 const { post, newerPost, olderPost } = Astro.props;
 const { Content, headings } = await render(post);
 const { data } = post;
+const language: BlogLanguage = data.lang;
+const isUkrainian = language === "uk";
+const allPosts = await getBlogPosts({ includeTranslations: true });
+const alternatePost = allPosts.find(
+  (candidate) =>
+    candidate.id !== post.id &&
+    candidate.data.lang !== language &&
+    getTranslationKey(candidate) === getTranslationKey(post),
+);
 const stats = getReadingStats(post.body, data.originalReadingMinutes);
 const path = getPostPath(post);
+const alternatePath = alternatePost ? getPostPath(alternatePost) : undefined;
 const canonicalUrl = new URL(path, "https://andriishupta.dev").toString();
 const ogImage = data.ogImage ?? "/blog/og.png";
 const dateModified = data.updatedAt ?? data.publishedAt;
@@ -58,7 +71,7 @@ const articleStructuredData = {
   description: data.description,
   datePublished: toIsoDate(data.publishedAt),
   dateModified: toIsoDate(dateModified),
-  inLanguage: "en",
+  inLanguage: isUkrainian ? "uk-UA" : "en-US",
   mainEntityOfPage: canonicalUrl,
   image: new URL(ogImage, canonicalUrl).toString(),
   author: {
@@ -85,6 +98,45 @@ const structuredData = {
   "@context": "https://schema.org",
   "@graph": [articleStructuredData],
 };
+const labels = isUkrainian
+  ? {
+      back: "Назад до блогу",
+      published: "Опубліковано",
+      updated: "Оновлено",
+      readingTime: "Час читання",
+      originalReadingTime: "Початковий час читання",
+      words: "Слів",
+      distribution: "Також опубліковано на",
+      tags: "Теги статті",
+      moreArticles: "Інші статті",
+      newer: "Новіша стаття",
+      older: "Старіша стаття",
+      backToAll: "Назад до всіх статей",
+      language: "Мова статті",
+      availableLanguages: "Available in languages",
+      alternateNotice: "You can read this article in English:",
+      english: "English",
+      ukrainian: "Українська",
+    }
+  : {
+      back: "Back to blog",
+      published: "Published",
+      updated: "Updated",
+      readingTime: "Reading time",
+      originalReadingTime: "Original read",
+      words: "Words",
+      distribution: "Also published on",
+      tags: "Article tags",
+      moreArticles: "More articles",
+      newer: "Newer article",
+      older: "Older article",
+      backToAll: "Back to all articles",
+      language: "Article language",
+      availableLanguages: "Available in languages",
+      alternateNotice: "You can read this article in Ukrainian:",
+      english: "English",
+      ukrainian: "Українська",
+    };
 ---
 
 <Layout
@@ -101,6 +153,12 @@ const structuredData = {
   publishedTime={data.publishedAt.toISOString()}
   modifiedTime={dateModified.toISOString()}
   tags={data.tags}
+  lang={language}
+  alternateLanguages={
+    alternatePost
+      ? [{ lang: alternatePost.data.lang, href: alternatePath ?? path }]
+      : []
+  }
 >
   <SiteHeader context="blog" />
 
@@ -108,7 +166,7 @@ const structuredData = {
     <header class="article-hero">
       <a class="article-back" href="/blog">
         <ArrowLeft aria-hidden="true" />
-        <span>Back to blog</span>
+        <span>{labels.back}</span>
       </a>
       <h1 class="heading-display">{data.title}</h1>
       {data.subtitle && <p class="article-hero__subtitle">{data.subtitle}</p>}
@@ -119,20 +177,20 @@ const structuredData = {
         <div class="article-meta__main">
           <dl>
             <div>
-              <dt>Published</dt>
-              <dd>
-                <time datetime={toIsoDate(data.publishedAt)}>
-                  {formatBlogDate(data.publishedAt)}
+                <dt>{labels.published}</dt>
+                <dd>
+                  <time datetime={toIsoDate(data.publishedAt)}>
+                  {formatBlogDate(data.publishedAt, language)}
                 </time>
               </dd>
             </div>
             {
               hasMeaningfulUpdate(post) && data.updatedAt && (
                 <div>
-                  <dt>Updated</dt>
+                  <dt>{labels.updated}</dt>
                   <dd>
                     <time datetime={toIsoDate(data.updatedAt)}>
-                      {formatBlogDate(data.updatedAt)}
+                      {formatBlogDate(data.updatedAt, language)}
                     </time>
                   </dd>
                 </div>
@@ -141,7 +199,11 @@ const structuredData = {
             {
               stats.readingMinutes > 0 && (
                 <div>
-                  <dt>{stats.isStub ? "Original read" : "Reading time"}</dt>
+                  <dt>
+                    {stats.isStub
+                      ? labels.originalReadingTime
+                      : labels.readingTime}
+                  </dt>
                   <dd>{stats.readingMinutes} min</dd>
                 </div>
               )
@@ -149,7 +211,7 @@ const structuredData = {
             {
               stats.wordCount > 0 && (
                 <div>
-                  <dt>Words</dt>
+                  <dt>{labels.words}</dt>
                   <dd>{stats.wordCount.toLocaleString("en")}</dd>
                 </div>
               )
@@ -159,24 +221,55 @@ const structuredData = {
 
         <div class="article-meta__aside">
           {
+            alternatePost && alternatePath && (
+              <div class="article-language">
+                <span class="article-language__label">
+                  {labels.availableLanguages}
+                </span>
+                <nav aria-label={labels.language}>
+                  <span class="article-language__current" aria-current="page">
+                    {isUkrainian ? labels.ukrainian : labels.english}
+                  </span>
+                  <a
+                    href={alternatePath}
+                    lang={alternatePost.data.lang}
+                    hreflang={alternatePost.data.lang}
+                  >
+                    {isUkrainian ? labels.english : labels.ukrainian}
+                  </a>
+                </nav>
+                <p class="article-language__notice">
+                  {labels.alternateNotice}{" "}
+                  <a
+                    href={alternatePath}
+                    lang={alternatePost.data.lang}
+                    hreflang={alternatePost.data.lang}
+                  >
+                    {isUkrainian ? labels.english : labels.ukrainian}
+                  </a>
+                </p>
+              </div>
+            )
+          }
+          {
             distributionLinks.length > 0 && (
-              <div class="article-distribution">
+              <div class="article-distribution" aria-label={labels.distribution}>
                 <PlatformLinks
                   links={distributionLinks}
-                  ariaLabel="Also published on"
+                  ariaLabel={labels.distribution}
                   rel="syndication"
                 />
               </div>
             )
           }
 
-          <ul class="article-meta__tags" aria-label="Article tags">
+          <ul class="article-meta__tags" aria-label={labels.tags}>
             {data.tags.map((tag) => <li>#{tag}</li>)}
           </ul>
         </div>
       </div>
 
-      <ArticleToc headings={headings} mobile />
+      <ArticleToc headings={headings} mobile lang={language} />
 
     {
       data.cover && (
@@ -199,7 +292,7 @@ const structuredData = {
         { "article-grid--no-toc": headings.length === 0 },
       ]}
     >
-      <ArticleToc headings={headings} />
+      <ArticleToc headings={headings} lang={language} />
       <article class="article-content" data-article-content>
         {
           stats.isStub ? (
@@ -225,13 +318,13 @@ const structuredData = {
     </div>
 
     <footer class="article-end">
-      <nav class="article-neighbors" aria-label="More articles">
+      <nav class="article-neighbors" aria-label={labels.moreArticles}>
         {
           newerPost ? (
             <a href={getPostPath(newerPost)}>
               <ArrowLeft aria-hidden="true" />
               <span>
-                <small>Newer article</small>
+                    <small>{labels.newer}</small>
                 <strong>{newerPost.data.title}</strong>
               </span>
             </a>
@@ -243,7 +336,7 @@ const structuredData = {
           olderPost && (
             <a href={getPostPath(olderPost)}>
               <span>
-                <small>Older article</small>
+                <small>{labels.older}</small>
                 <strong>{olderPost.data.title}</strong>
               </span>
               <ArrowRight aria-hidden="true" />
@@ -254,7 +347,7 @@ const structuredData = {
 
       <a class="article-end__back" href="/blog">
         <ArrowLeft aria-hidden="true" />
-        <span>Back to all articles</span>
+        <span>{labels.backToAll}</span>
       </a>
     </footer>
     </div>

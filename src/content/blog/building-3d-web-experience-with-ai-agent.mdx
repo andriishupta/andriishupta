@@ -1,0 +1,260 @@
+---
+title: "How I Built a 3D Art Page with Astro, GSAP, Webflow, and AI"
+slug: "building-3d-web-experience-with-ai-agent"
+lang: en
+translationKey: "building-3d-web-experience-with-ai-agent"
+defaultLang: true
+subtitle: "What I learned by building with Three.js before I really understood it"
+description: "How I used AI, visual references, and many iterations to build a 3D art experience with Astro, GSAP, Three.js, and Webflow."
+publishedAt: 2026-09-14
+tags:
+  - ai
+  - astro
+  - gsap
+  - threejs
+  - webflow
+  - creative-coding
+topics:
+  - AI
+  - UI Development
+draft: true
+---
+
+## 🔗 Links
+
+- [Cathedral of Threads](https://codetv-gsap-cloud.webflow.io/)
+- [Source code on GitHub](https://github.com/andriishupta/astro-gsap-webflow)
+- [Astro documentation](https://docs.astro.build/)
+- [GSAP documentation](https://gsap.com/docs/)
+- [Three.js documentation](https://threejs.org/docs/)
+- [Webflow Cloud documentation](https://developers.webflow.com/webflow-cloud/bring-your-own-app)
+
+## The idea
+
+I built *Cathedral of Threads* for a small GSAP and Webflow challenge.
+
+The idea was to create a one-page 3D experience inspired by the Coordinate from
+*Attack on Titan*: a strange place outside normal time, with a huge tree, paths
+that feel like human memories, and a transition between night and day.
+
+The page is controlled by scroll. As you move down, the camera moves through the
+scene. The environment changes, the tree gets closer, and the story moves through
+several short chapters.
+
+I wanted it to feel more like a small digital artwork than a normal landing page.
+
+I used Astro for the website, GSAP for the scroll and animation, Three.js for the
+3D scene, and Webflow mainly for deployment through its CLI. Most of the scene,
+animation, and interaction code was created with an AI coding agent.
+
+The unusual part is that I did not know Three.js well when I started.
+
+## I started from the result, not the code
+
+I set up Astro, added GSAP, and prepared the project for Webflow. After that, I
+worked with the agent on the main experience.
+
+At first, I barely looked at the generated Three.js code.
+
+This may sound careless, but reading unfamiliar 3D code was not the best way for
+me to judge the result. I could see camera coordinates, curves, materials,
+lights, particles, and many numbers, but that did not tell me whether the scene
+felt right.
+
+So my main feedback loop was visual:
+
+1. Ask the agent to make one change.
+2. Open the page.
+3. Scroll through the full scene.
+4. Decide what feels wrong.
+5. Explain the problem more clearly.
+6. Repeat.
+
+I added image references and described the composition I wanted. I explained
+where the tree should be, how large it should feel, how close the camera should
+move, which elements should stay in the background, and how the scene should
+change between night and day.
+
+The agent wrote the code. I directed the result.
+
+That sounds simple, but most of the work was hidden inside the last step:
+explaining exactly what “looks right” means.
+
+## Technically correct can still look wrong
+
+AI can generate a valid Three.js scene very quickly. It can create a renderer,
+camera, lights, materials, geometry, particles, and animation. The page can load
+without errors and still look bad.
+
+I saw this many times during the project.
+
+The tree existed, but it looked too small. The paths were animated, but they did
+not create depth. The camera moved, but it did not feel cinematic. The bloom
+worked, but it made the whole image flat. The transition between dark and light
+was technically there, but it did not feel like part of the story.
+
+These were not problems that a build command could find.
+
+I had to turn visual reactions into more useful instructions:
+
+- “Make it more cinematic” became “keep the camera low during the approach, then
+  tilt upward near the tree.”
+- “The scene feels empty” became “add more paths close to the camera, but keep
+  the centre readable.”
+- “The tree is weak” became “show its full silhouette in the first frame and make
+  the branches denser near the top.”
+- “The light mode does not work” became “change the world gradually during the
+  journey instead of switching colours at one point.”
+
+The more specific my feedback became, the better the agent became at changing
+the right part of the scene.
+
+## Why Three.js was difficult to review
+
+Normal UI code is easier for me to connect with the result. I understand what a
+button, grid, breakpoint, or CSS property should do. If something is wrong, I
+usually know where to look.
+
+Three.js was different.
+
+A visual result can depend on camera position, field of view, geometry, material,
+lighting, fog, post-processing, and the relationship between all of them. One
+small change can make the whole scene feel different.
+
+The maths also makes code review harder when you do not know the library. Looking
+at a group of vectors and curves does not immediately tell you what the camera
+journey will feel like.
+
+Because of that, I learned Three.js from the problems I actually had.
+
+I did not try to study the complete library before building. I learned what a
+renderer owns, how a scene and camera work, how geometry and materials are
+connected, why a render loop should stay under one owner, and why resources need
+to be cleaned up.
+
+That was enough to start checking the agent's decisions instead of only checking
+the final image.
+
+This was the point where the project changed from “AI generated this” to “I can
+explain why it is built this way.”
+
+## What Astro, GSAP, and Three.js each did
+
+Keeping the responsibilities simple helped me understand the project.
+
+Astro owned the page structure, HTML content, and the split between desktop and
+mobile experiences.
+
+Three.js owned the canvas: the camera, terrain, tree, memory paths, particles,
+lighting, fog, and rendering.
+
+GSAP connected the scene to the visitor. One main scroll timeline changed camera
+movement, light, scene state, text, and progress as the user moved through the
+page.
+
+Webflow was mostly the deployment target. I was not using Webflow Designer to
+build the visual scene.
+
+This separation was important. GSAP changed values, but Three.js still owned the
+render loop. Astro rendered the real HTML story, but did not try to create the
+WebGL scene on the server.
+
+Once I understood those boundaries, I could give the agent better instructions
+and notice when a change mixed too many responsibilities.
+
+## Performance became a visual problem
+
+The first versions of the scene had too few lines and objects. The world looked
+empty and the central structure did not feel large enough.
+
+I kept asking for more: more paths, more waves, more detail, more particles, and
+a more complex silhouette.
+
+It worked visually until the page started to lag.
+
+This was the moment when I had to stop asking only for visual density and start
+thinking about what the camera could actually see.
+
+The scene did not need the same amount of detail everywhere. Objects close to the
+camera needed more detail because the visitor could see them. Distant objects
+could be simpler. Anything outside the useful view should not consume the same
+amount of work as the centre of the composition.
+
+The optimisation direction became:
+
+- use less detail in the distance;
+- keep more detail near the camera;
+- avoid rendering work that does not affect the visible frame;
+- reuse geometry and materials where possible;
+- do not create new objects during every frame;
+- cap rendering resolution instead of following the full device pixel ratio;
+- design complexity around the camera path.
+
+The last point was the most useful. This was not a free camera in a game. I knew
+where the visitor would be looking during every part of the scroll. The scene
+could spend its detail where it mattered.
+
+Performance was not separate from art direction. It changed how the artwork had
+to be composed.
+
+## Mobile needed a different answer
+
+Trying to keep the full desktop scene on phones would have created more
+performance problems and a worse experience.
+
+Instead, I made mobile a separate 2D passage. It uses a fixed image selected for
+the device theme, normal page scrolling, and real HTML text. It keeps the same
+idea and mood without loading the desktop Three.js experience.
+
+This was another useful lesson: AI often tries to reuse one implementation
+everywhere because it looks cleaner in code. Sometimes the better product has
+two simpler paths.
+
+## What I had to give the agent
+
+The agent needed more than prompts.
+
+I gave it a product brief with the scene, story beats, interaction, visual
+direction, mobile behaviour, and things that were out of scope. I kept technical
+rules in the repository: one renderer, one animation loop, a limited pixel
+ratio, reduced-motion support, cleanup, and no Three.js on mobile.
+
+I also gave it references and continuous visual feedback.
+
+The useful input was a combination of:
+
+- the idea and mood;
+- reference images;
+- a clear description of the camera journey;
+- boundaries between Astro, GSAP, and Three.js;
+- official documentation;
+- performance and accessibility rules;
+- feedback from the real page after every meaningful change.
+
+Without this context, the agent could still generate code. It just could not know
+which result I wanted.
+
+## What I learned
+
+AI lets you start with a technology before you know it deeply. That is real, and
+it is useful.
+
+But it does not remove the cost of not knowing the technology.
+
+You pay for that gap through more iterations, more explanations, more tokens, and
+more wrong directions. If UI or art direction is critical, you either need to
+know the tool or be ready to spend time teaching both yourself and the agent what
+the result should be.
+
+The agent can make a scene work. It cannot know where my line is between
+“technically correct” and “visually right.”
+
+My role was not to type every line of code. My role was to keep the idea clear,
+judge the result, turn visual problems into specific instructions, and gradually
+learn enough to review the important technical decisions.
+
+That is the main thing I took from this project.
+
+You do not need to understand everything before you begin. But you still need to
+look, question, test, and learn. AI can shorten the path between an idea and a
+working result. It does not decide what the result should feel like.

@@ -4,6 +4,10 @@ import { fileURLToPath } from "node:url";
 
 const repositoryRoot = fileURLToPath(new URL("../", import.meta.url));
 const contentDirectory = path.join(repositoryRoot, "src/content/blog");
+const ukrainianContentDirectory = path.join(
+  repositoryRoot,
+  "src/content/blog-ua",
+);
 const publicDirectory = path.join(repositoryRoot, "public");
 const articleImageDirectory = path.join(publicDirectory, "images/blog");
 const articles = [
@@ -14,6 +18,20 @@ const articles = [
   "setup-supabase-with-nestjs",
   "cross-origin-iframe-communication-with-window-post-message",
   "starting-my-web3-journey",
+];
+const miykoSlug =
+  "miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow";
+const localizedArticles = [
+  {
+    filePath: path.join(contentDirectory, `${miykoSlug}.mdx`),
+    lang: "en",
+    defaultLang: false,
+  },
+  {
+    filePath: path.join(ukrainianContentDirectory, `${miykoSlug}.mdx`),
+    lang: "uk",
+    defaultLang: true,
+  },
 ];
 
 const failures = [];
@@ -143,6 +161,97 @@ for (const slug of articles) {
   }
 }
 
+const translationGroups = new Map();
+
+for (const article of localizedArticles) {
+  let source;
+
+  try {
+    source = await readFile(article.filePath, "utf8");
+  } catch {
+    failures.push(`Missing localized article ${article.filePath}`);
+    continue;
+  }
+
+  const { frontmatter, body } = splitMdx(source, article.filePath);
+  const lang = frontmatter.match(/^lang:\s*([a-z]+)$/m)?.[1];
+  const translationKey = frontmatter.match(
+    /^translationKey:\s*["']?([^"'\n]+)["']?$/m,
+  )?.[1];
+  const defaultLang = frontmatter.match(/^defaultLang:\s*(true|false)$/m)?.[1];
+
+  if (lang !== article.lang) {
+    failures.push(
+      `${article.filePath}: lang must be ${article.lang}, found ${lang ?? "missing"}`,
+    );
+  }
+
+  if (!translationKey) {
+    failures.push(`${article.filePath}: missing translationKey`);
+  } else {
+    const group = translationGroups.get(translationKey) ?? [];
+    group.push({ lang, defaultLang, filePath: article.filePath });
+    translationGroups.set(translationKey, group);
+  }
+
+  if (defaultLang !== String(article.defaultLang)) {
+    failures.push(
+      `${article.filePath}: defaultLang must be ${article.defaultLang}, found ${defaultLang ?? "missing"}`,
+    );
+  }
+
+  if (body.length < 500) {
+    failures.push(
+      `${article.filePath}: article body is missing or unexpectedly short`,
+    );
+  }
+
+  if (/^#\s+/m.test(body)) {
+    failures.push(
+      `${article.filePath}: contains a duplicate level-one heading`,
+    );
+  }
+
+  const images = Array.from(
+    body.matchAll(/!\[([^\]]*)\]\((\/images\/blog\/[^)\s]+)\)/g),
+  );
+
+  for (const image of images) {
+    const [, alt, publicPath] = image;
+    imageCount += 1;
+    referencedImages.add(publicPath);
+
+    if (!alt.trim()) {
+      failures.push(
+        `${article.filePath}: image ${publicPath} has empty alternative text`,
+      );
+    }
+
+    if (!publicPath.startsWith(`/images/blog/${miykoSlug}/`)) {
+      failures.push(
+        `${article.filePath}: image is stored outside its article folder: ${publicPath}`,
+      );
+    }
+
+    await validatePng(publicPath, miykoSlug);
+  }
+}
+
+const miykoTranslations = translationGroups.get(miykoSlug) ?? [];
+if (
+  miykoTranslations.length !== 2 ||
+  !miykoTranslations.some(
+    ({ lang, defaultLang }) => lang === "en" && defaultLang === "false",
+  ) ||
+  !miykoTranslations.some(
+    ({ lang, defaultLang }) => lang === "uk" && defaultLang === "true",
+  )
+) {
+  failures.push(
+    `${miykoSlug}: expected one English and one Ukrainian translation with exactly one defaultLang article`,
+  );
+}
+
 await validatePng("/blog/og.png", "blog index", {
   width: 1200,
   height: 630,
@@ -150,7 +259,7 @@ await validatePng("/blog/og.png", "blog index", {
 
 const diskImages = new Set();
 
-for (const slug of articles) {
+for (const slug of [...articles, miykoSlug]) {
   const directory = path.join(articleImageDirectory, slug);
 
   try {
