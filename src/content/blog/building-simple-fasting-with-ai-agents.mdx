@@ -48,6 +48,8 @@ widgets, an optional iOS Live Activity, and a small website.
 But the product was never supposed to become large. The goal was still to make
 one simple action feel calm and reliable.
 
+![Simple Fasting ready and active fasting screens in light and dark themes](/images/blog/building-simple-fasting-with-ai-agents/01-fast-screens.png)
+
 I used AI agents for most parts of the work: product thinking, system design,
 React Native code, tests, UI iterations, documentation, and release setup.
 This made development fast, but it also created new problems. When code becomes
@@ -262,6 +264,8 @@ At some point, I stopped feature work for about two days and cleaned it up. I
 created reusable components, established clearer primitives, aligned the
 styles, and effectively built a small design system.
 
+![Simple Fasting settings screens showing shared controls and theme behavior](/images/blog/building-simple-fasting-with-ai-agents/02-settings-screens.png)
+
 That cleanup changed later work. Instead of describing every visual property, I
 could tell an agent to reuse the existing screen shell, section surface, button,
 heading, spacing, and theme tokens.
@@ -382,6 +386,8 @@ Choose a goal
 If separate agents build the timer, History, and widget independently, they may
 create different models of the same fast. A vertical slice exposes those
 differences early.
+
+![Simple Fasting statistics and history screens using the same session data](/images/blog/building-simple-fasting-with-ai-agents/03-data-screens.png)
 
 The same applies to documentation. Editing the Privacy Policy is only the first
 step. The complete slice includes synchronization, the local app screen, the

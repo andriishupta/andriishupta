@@ -71,6 +71,11 @@ distribution:
 Article content starts here.
 ```
 
+Set `featured: true` for articles that should stay at the top of the blog
+regardless of publication date. Featured articles are ordered by
+`publishedAt`, newest first; non-featured articles follow with the same date
+ordering.
+
 `updatedAt` means the first-party article body changed materially. Adding or
 changing a distribution URL does not count as an article update and must not
 change `updatedAt`.

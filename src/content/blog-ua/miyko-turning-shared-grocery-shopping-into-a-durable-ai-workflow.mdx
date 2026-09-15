@@ -22,6 +22,8 @@ topics:
 draft: true
 ---
 
+import MiykoArchitecture from "../../components/MiykoArchitecture.astro";
+
 MiyKo, або «Мій кошик», — це проєкт, який я зробив для українського AI-хакатону від Silpo.
 
 У Silpo вже є AI assistant, який може додати товар у кошик, замінити його та допомогти із замовленням. Мені захотілося піти на один крок далі: перетворити взаємодію з одного prompt на shopping workflow для цілого household.
@@ -140,6 +142,12 @@ Checkout залишається в Silpo. MiyKo готує та координу
 - LangChain з’єднує model з tools;
 - Mem0 зберігає довготривалу memory;
 - Silpo MCP виконує provider-specific дії.
+
+Повний шлях запиту виглядає так:
+
+<MiykoArchitecture />
+
+API залишається security boundary. LangGraph координує замовлення, отримує потрібний контекст із Mem0 та використовує model, щоб обрати наступний крок. Якщо потрібні дані магазину або зміна кошика, workflow викликає Silpo через MCP. Результат повертається в LangGraph, зберігається у workflow state і стає наступним статусом у застосунку.
 
 Таке розділення важливіше за кількість framework. Якщо permissions перевіряються лише в prompt або UI, це не security boundary. Якщо provider logic змішана з reasoning agent, її складніше замінити та відновити після помилки.
 

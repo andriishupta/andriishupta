@@ -22,6 +22,8 @@ topics:
 draft: true
 ---
 
+import MiykoArchitecture from "../../components/MiykoArchitecture.astro";
+
 ## 🔗 Links
 
 - [AI Factory by Silpo](https://ai-factory.silpo.ua/)
@@ -217,6 +219,12 @@ MiyKo has five main runtime boundaries:
 - **LangGraph** for the active workflow and pause/resume state;
 - **Mem0** for long-term household and member memory;
 - **Silpo MCP** for current products, basket operations, fulfillment and checkout.
+
+The complete request path looks like this:
+
+<MiykoArchitecture />
+
+The API is the security boundary. LangGraph coordinates the order, reads relevant context from Mem0 and uses the model to choose the next step. When that step needs store data or a basket change, it calls Silpo through MCP. The result returns to LangGraph, is saved in the workflow state and becomes the next status shown in the app.
 
 PostgreSQL is a small control plane. It stores users, households, roles, provider bindings, workflow references, approval decisions, audit records and outbox state.
 

@@ -91,9 +91,11 @@ This repository contains the source for the personal website at `andriishupta.de
   viewport.
 - Keep the homepage theme switcher embedded in its header so it participates in
   the mobile layout instead of floating over scrolled content.
-- At widths up to 64rem, the blog list and grid controls intentionally render
-  the same single-column cards with their OG images; their layouts diverge only
-  on larger desktop viewports.
+- The blog archive is always a grid: three columns on large desktop, two on
+  tablet, and one below 48rem. Keep the cards image-first and fluid; do not
+  reintroduce a list/grid view switcher or persisted layout preference. Mark
+  featured articles with the compact icon-only star badge in the card's
+  upper-right corner.
 - Keep blog navigation deliberately minimal: do not render breadcrumb UI or
   `BreadcrumbList` structured data. Article pages use one `Back to blog` link
   above the title; the blog index has no equivalent trail.
@@ -212,6 +214,8 @@ This repository contains the source for the personal website at `andriishupta.de
   the component that owns the animated UI, keep reveals subtle and short, and
   respect `prefers-reduced-motion`. Prefer fades, small directional movement,
   staggered timelines, and restrained hover response over heavy effects.
+- Render authored Mermaid diagrams client-side with the `mermaid` package from
+  their owning Astro component; do not add Playwright-based remark renderers.
 - Keep service cards fully visible; do not use disclosure controls for the core
   homepage service copy. Service blocks show one title and one description;
   keep their related-work action in normal content flow rather than pushing it

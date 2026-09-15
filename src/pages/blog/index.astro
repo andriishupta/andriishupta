@@ -1,7 +1,6 @@
 ---
 import ArrowRight from "@lucide/astro/icons/arrow-right";
-import LayoutGrid from "@lucide/astro/icons/layout-grid";
-import ListIcon from "@lucide/astro/icons/list";
+import Star from "@lucide/astro/icons/star";
 import SiteFooter from "../../components/SiteFooter.astro";
 import SiteHeader from "../../components/SiteHeader.astro";
 import { copy } from "../../copy";
@@ -122,26 +121,6 @@ const structuredData = {
         </div>
       </div>
 
-      <div class="blog-view-switcher" role="group" aria-label="Article layout">
-        <button
-          type="button"
-          data-blog-view="list"
-          aria-label="Show articles as a list"
-          aria-pressed="true"
-          title="List view"
-        >
-          <ListIcon aria-hidden="true" />
-        </button>
-        <button
-          type="button"
-          data-blog-view="grid"
-          aria-label="Show articles as a grid"
-          aria-pressed="false"
-          title="Grid view"
-        >
-          <LayoutGrid aria-hidden="true" />
-        </button>
-      </div>
     </section>
 
     <p
@@ -161,7 +140,6 @@ const structuredData = {
       id="blog-archive"
       aria-label="Articles"
       data-blog-archive
-      data-view="list"
     >
       {
         posts.map((post) => {
@@ -176,6 +154,7 @@ const structuredData = {
               class="blog-entry"
               data-blog-entry
               data-topics={post.data.topics.map(getBlogTopicSlug).join(",")}
+              data-featured={post.data.featured ? "true" : undefined}
             >
               <a class="blog-entry__link" href={getPostPath(post)}>
                 <div class="blog-entry__content">
@@ -227,6 +206,16 @@ const structuredData = {
                     decoding="async"
                   />
                 </figure>
+
+                {post.data.featured && (
+                  <span
+                    class="blog-entry__featured"
+                    aria-label="Featured article"
+                    title="Featured article"
+                  >
+                    <Star aria-hidden="true" />
+                  </span>
+                )}
               </a>
             </article>
           );
@@ -241,25 +230,15 @@ const structuredData = {
 <script>
   import { gsap } from "gsap";
 
-  type BlogView = "list" | "grid";
-
-  const archive = document.querySelector<HTMLElement>("[data-blog-archive]");
   const entries = Array.from(
     document.querySelectorAll<HTMLElement>("[data-blog-entry]"),
   );
   const filterButtons = Array.from(
     document.querySelectorAll<HTMLButtonElement>("[data-blog-filter]"),
   );
-  const viewButtons = Array.from(
-    document.querySelectorAll<HTMLButtonElement>("[data-blog-view]"),
-  );
   const results = document.querySelector<HTMLElement>("[data-blog-results]");
   const emptyState = document.querySelector<HTMLElement>("[data-blog-empty]");
-  const viewStorageKey = "andrii-blog-view";
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  const isBlogView = (value: string | null): value is BlogView =>
-    value === "list" || value === "grid";
 
   const getVisibleEntries = () => entries.filter((entry) => !entry.hidden);
 
@@ -279,28 +258,6 @@ const structuredData = {
         clearProps: "opacity,transform,visibility",
       },
     );
-  };
-
-  const setView = (view: BlogView, persist = true, animate = true) => {
-    if (!archive) return;
-
-    archive.dataset.view = view;
-    viewButtons.forEach((button) => {
-      button.setAttribute(
-        "aria-pressed",
-        String(button.dataset.blogView === view),
-      );
-    });
-
-    if (persist) {
-      try {
-        window.localStorage.setItem(viewStorageKey, view);
-      } catch {
-        // The view still changes when storage is unavailable.
-      }
-    }
-
-    if (animate) animateEntries();
   };
 
   const setFilter = (topic: string, animate = true) => {
@@ -336,25 +293,11 @@ const structuredData = {
     if (animate) animateEntries();
   };
 
-  viewButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      const view = button.dataset.blogView;
-      if (isBlogView(view ?? null)) setView(view);
-    });
-  });
-
   filterButtons.forEach((button) => {
     button.addEventListener("click", () => {
       setFilter(button.dataset.blogFilter ?? "all");
     });
   });
-
-  try {
-    const storedView = window.localStorage.getItem(viewStorageKey);
-    if (isBlogView(storedView)) setView(storedView, false, false);
-  } catch {
-    // List view remains the safe default.
-  }
 
   const requestedTopic = new URLSearchParams(window.location.search).get("topic");
   const availableTopic = filterButtons.some(

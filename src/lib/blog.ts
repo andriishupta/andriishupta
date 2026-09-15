@@ -81,6 +81,10 @@ export async function getBlogPosts(options: BlogPostOptions = {}) {
   return posts
     .filter((post) => includeStubs || isBlogPostReady(post))
     .sort((a, b) => {
+      const featuredDifference =
+        Number(b.data.featured) - Number(a.data.featured);
+      if (featuredDifference) return featuredDifference;
+
       const dateDifference =
         b.data.publishedAt.getTime() - a.data.publishedAt.getTime();
 
