@@ -17,7 +17,7 @@ import {
 import Layout from "../../layouts/Layout.astro";
 import "../../styles/blog.css";
 
-const posts = await getBlogPosts();
+const posts = await getBlogPosts({ featuredFirst: true });
 const topicCounts = new Map<string, number>();
 
 for (const post of posts) {
@@ -109,7 +109,6 @@ const structuredData = {
               <button
                 type="button"
                 data-blog-filter={slug}
-                data-count={count}
                 aria-pressed="false"
                 aria-controls="blog-archive"
               >
@@ -139,7 +138,6 @@ const structuredData = {
       class="blog-archive content-container"
       id="blog-archive"
       aria-label="Articles"
-      data-blog-archive
     >
       {
         posts.map((post) => {
@@ -154,7 +152,6 @@ const structuredData = {
               class="blog-entry"
               data-blog-entry
               data-topics={post.data.topics.map(getBlogTopicSlug).join(",")}
-              data-featured={post.data.featured ? "true" : undefined}
             >
               <a class="blog-entry__link" href={getPostPath(post)}>
                 <div class="blog-entry__content">

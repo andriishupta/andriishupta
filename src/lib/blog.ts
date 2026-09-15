@@ -14,17 +14,29 @@ interface BlogPostOptions {
   includeStubs?: boolean;
   lang?: BlogLanguage;
   includeTranslations?: boolean;
+  featuredFirst?: boolean;
+}
+
+export interface BlogPostPageProps {
+  post: BlogPost;
+  newerPost?: BlogPost;
+  olderPost?: BlogPost;
+  alternatePost?: BlogPost;
 }
 
 const wordPattern = /[\p{L}\p{N}]+(?:['’.-][\p{L}\p{N}]+)*/gu;
+
+export function stripMdxModuleLines(body: string | undefined) {
+  return (body ?? "")
+    .replace(/^import\s.+$/gm, "")
+    .replace(/^export\s.+$/gm, "");
+}
 
 export function getReadingStats(
   body: string | undefined,
   originalReadingMinutes?: number,
 ) {
-  const text = (body ?? "")
-    .replace(/^import\s.+$/gm, "")
-    .replace(/^export\s.+$/gm, "")
+  const text = stripMdxModuleLines(body)
     .replace(/```[\s\S]*?```/g, " ")
     .replace(/<[^>]+>/g, " ");
   const wordCount = text.match(wordPattern)?.length ?? 0;
@@ -44,8 +56,34 @@ export function getTranslationKey(post: BlogPost) {
   return post.data.translationKey ?? post.data.slug;
 }
 
-export function getBlogLanguage(post: BlogPost): BlogLanguage {
-  return post.data.lang;
+function selectDefaultTranslations(posts: BlogPost[]) {
+  const selectedPosts = new Map<string, BlogPost>();
+
+  for (const post of posts) {
+    const key = getTranslationKey(post);
+    const current = selectedPosts.get(key);
+
+    if (!current || (!current.data.defaultLang && post.data.defaultLang)) {
+      selectedPosts.set(key, post);
+    }
+  }
+
+  return [...selectedPosts.values()];
+}
+
+function compareByPublishedDate(a: BlogPost, b: BlogPost) {
+  const dateDifference =
+    b.data.publishedAt.getTime() - a.data.publishedAt.getTime();
+
+  return dateDifference || a.data.title.localeCompare(b.data.title);
+}
+
+function compareFeaturedFirst(a: BlogPost, b: BlogPost) {
+  if (a.data.featured !== b.data.featured) {
+    return a.data.featured ? -1 : 1;
+  }
+
+  return compareByPublishedDate(a, b);
 }
 
 export async function getBlogPosts(options: BlogPostOptions = {}) {
@@ -54,6 +92,7 @@ export async function getBlogPosts(options: BlogPostOptions = {}) {
     includeStubs = true,
     lang,
     includeTranslations = false,
+    featuredFirst = false,
   } = options;
   let posts = await getCollection("blog", ({ data }) =>
     includeDrafts ? true : !data.draft,
@@ -64,32 +103,31 @@ export async function getBlogPosts(options: BlogPostOptions = {}) {
   }
 
   if (!includeTranslations) {
-    const defaultPosts = new Map<string, BlogPost>();
-
-    for (const post of posts) {
-      const key = getTranslationKey(post);
-      const current = defaultPosts.get(key);
-
-      if (!current || (post.data.defaultLang && !current.data.defaultLang)) {
-        defaultPosts.set(key, post);
-      }
-    }
-
-    posts = [...defaultPosts.values()];
+    posts = selectDefaultTranslations(posts);
   }
 
   return posts
     .filter((post) => includeStubs || isBlogPostReady(post))
-    .sort((a, b) => {
-      const featuredDifference =
-        Number(b.data.featured) - Number(a.data.featured);
-      if (featuredDifference) return featuredDifference;
+    .sort(featuredFirst ? compareFeaturedFirst : compareByPublishedDate);
+}
 
-      const dateDifference =
-        b.data.publishedAt.getTime() - a.data.publishedAt.getTime();
+export async function getBlogStaticPaths(lang: BlogLanguage) {
+  const allPosts = await getBlogPosts({ includeTranslations: true });
+  const posts = allPosts.filter((post) => post.data.lang === lang);
 
-      return dateDifference || a.data.title.localeCompare(b.data.title);
-    });
+  return posts.map((post, index) => ({
+    params: { slug: post.data.slug },
+    props: {
+      post,
+      newerPost: posts[index - 1],
+      olderPost: posts[index + 1],
+      alternatePost: allPosts.find(
+        (candidate) =>
+          candidate.data.lang !== post.data.lang &&
+          getTranslationKey(candidate) === getTranslationKey(post),
+      ),
+    } satisfies BlogPostPageProps,
+  }));
 }
 
 export function formatBlogDate(date: Date, lang: BlogLanguage = "en") {

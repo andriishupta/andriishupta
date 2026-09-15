@@ -1,15 +1,8 @@
 import rss from "@astrojs/rss";
 import { marked } from "marked";
-import { getBlogPosts, getPostPath } from "../../lib/blog";
+import { getBlogPosts, getPostPath, stripMdxModuleLines } from "../../lib/blog";
 
 export const prerender = true;
-
-function prepareRssMarkdown(body: string | undefined) {
-  return (body ?? "")
-    .replace(/^import\s.+$/gm, "")
-    .replace(/^export\s.+$/gm, "")
-    .trim();
-}
 
 export async function GET(context: { site?: URL }) {
   const posts = await getBlogPosts({ includeStubs: false });
@@ -31,10 +24,9 @@ export async function GET(context: { site?: URL }) {
       link: getPostPath(post),
       pubDate: post.data.publishedAt,
       categories: post.data.tags,
-      content: (marked.parse(prepareRssMarkdown(post.body)) as string).replace(
-        /\b(href|src)="\/(?!\/)/g,
-        `$1="${siteOrigin}/`,
-      ),
+      content: (
+        marked.parse(stripMdxModuleLines(post.body).trim()) as string
+      ).replace(/\b(href|src)="\/(?!\/)/g, `$1="${siteOrigin}/`),
       customData: `<atom:updated>${(post.data.updatedAt ?? post.data.publishedAt).toISOString()}</atom:updated>`,
     })),
     customData: [

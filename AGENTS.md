@@ -61,7 +61,8 @@ This repository contains the source for the personal website at `andriishupta.de
   a specific restore is run with `--force`. Run `pnpm blog:verify` after an
   import or material content edit. Run `pnpm blog:release-check` before a public
   merge or deployment.
-- Keep blog slugs stable. Article order is derived from `publishedAt`, while
+- Keep blog slugs stable. Article order is derived from `publishedAt`; only the
+  blog index may move `featured: true` posts ahead of that chronological order.
   `updatedAt` is reserved for material changes to first-party content.
 - Keep translated article pairs linked by the same `slug` and `translationKey`.
   English content lives in `src/content/blog/`, Ukrainian content lives in
@@ -247,6 +248,8 @@ This repository contains the source for the personal website at `andriishupta.de
   articles behind them.
 - Keep all homepage content sections inside one page-level `main`; `Hero.astro`
   is a labelled `section`, not a second document landmark.
+- Keep pre-commit checks read-only and fast: run Biome check and the production
+  build, but do not install dependencies or rewrite files from the hook.
 - Run `npm run build` before handing off changes that affect rendering,
   routing, configuration, or dependencies.
 - See `docs/blog-authoring.md` for the blog frontmatter schema, publishing flow,

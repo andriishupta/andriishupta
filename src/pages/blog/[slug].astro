@@ -1,27 +1,19 @@
 ---
-import { getBlogPosts, type BlogPost } from "../../lib/blog";
+import { getBlogStaticPaths, type BlogPostPageProps } from "../../lib/blog";
 import BlogPostLayout from "../../layouts/BlogPostLayout.astro";
 
-interface Props {
-  post: BlogPost;
-  newerPost?: BlogPost;
-  olderPost?: BlogPost;
-}
+type Props = BlogPostPageProps;
 
 export async function getStaticPaths() {
-  const posts = await getBlogPosts({ lang: "en", includeTranslations: true });
-
-  return posts.map((post, index) => ({
-    params: { slug: post.data.slug },
-    props: {
-      post,
-      newerPost: posts[index - 1],
-      olderPost: posts[index + 1],
-    },
-  }));
+  return getBlogStaticPaths("en");
 }
 
-const { post, newerPost, olderPost } = Astro.props;
+const { post, newerPost, olderPost, alternatePost } = Astro.props;
 ---
 
-<BlogPostLayout post={post} newerPost={newerPost} olderPost={olderPost} />
+<BlogPostLayout
+  post={post}
+  newerPost={newerPost}
+  olderPost={olderPost}
+  alternatePost={alternatePost}
+/>

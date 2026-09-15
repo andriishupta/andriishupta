@@ -10,36 +10,22 @@ import SiteLink from "../components/SiteLink.astro";
 import { copy, identityProfileLinks } from "../copy";
 import {
   formatBlogDate,
-  getBlogPosts,
-  getTranslationKey,
   getPostPath,
   getReadingStats,
   hasMeaningfulUpdate,
-  type BlogLanguage,
   toIsoDate,
-  type BlogPost,
+  type BlogPostPageProps,
 } from "../lib/blog";
 import "../styles/blog.css";
 import Layout from "./Layout.astro";
 
-interface Props {
-  post: BlogPost;
-  newerPost?: BlogPost;
-  olderPost?: BlogPost;
-}
+type Props = BlogPostPageProps;
 
-const { post, newerPost, olderPost } = Astro.props;
+const { post, newerPost, olderPost, alternatePost } = Astro.props;
 const { Content, headings } = await render(post);
 const { data } = post;
-const language: BlogLanguage = data.lang;
+const language = data.lang;
 const isUkrainian = language === "uk";
-const allPosts = await getBlogPosts({ includeTranslations: true });
-const alternatePost = allPosts.find(
-  (candidate) =>
-    candidate.id !== post.id &&
-    candidate.data.lang !== language &&
-    getTranslationKey(candidate) === getTranslationKey(post),
-);
 const stats = getReadingStats(post.body, data.originalReadingMinutes);
 const path = getPostPath(post);
 const alternatePath = alternatePost ? getPostPath(alternatePost) : undefined;
@@ -113,8 +99,7 @@ const labels = isUkrainian
       older: "Старіша стаття",
       backToAll: "Назад до всіх статей",
       language: "Мова статті",
-      availableLanguages: "Available in languages",
-      alternateNotice: "You can read this article in English:",
+      availableLanguages: "Доступні мови",
       english: "English",
       ukrainian: "Українська",
     }
@@ -133,7 +118,6 @@ const labels = isUkrainian
       backToAll: "Back to all articles",
       language: "Article language",
       availableLanguages: "Available in languages",
-      alternateNotice: "You can read this article in Ukrainian:",
       english: "English",
       ukrainian: "Українська",
     };
@@ -238,16 +222,6 @@ const labels = isUkrainian
                     {isUkrainian ? labels.english : labels.ukrainian}
                   </a>
                 </nav>
-                <p class="article-language__notice">
-                  {labels.alternateNotice}{" "}
-                  <a
-                    href={alternatePath}
-                    lang={alternatePost.data.lang}
-                    hreflang={alternatePost.data.lang}
-                  >
-                    {isUkrainian ? labels.english : labels.ukrainian}
-                  </a>
-                </p>
               </div>
             )
           }
