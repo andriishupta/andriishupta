@@ -106,6 +106,6 @@ dependencies. Keep pre-commit checks read-only and fast.
 - Use the Cloudflare Bulk Redirect in
   `docs/cloudflare-blog-redirect.csv` for the legacy blog hostname and keep its
   DNS record proxied while the redirect is active.
-- Original code and content are CC BY-NC-ND 4.0 unless stated otherwise.
-  Preserve third-party licenses; `README.md`, `LICENSE`, and `CITATION.cff`
-  define attribution.
+- Original content is CC BY-NC-ND 4.0 unless stated otherwise. Preserve
+  third-party licenses; `README.md`, `LICENSE`, and `CITATION.cff` define
+  attribution.

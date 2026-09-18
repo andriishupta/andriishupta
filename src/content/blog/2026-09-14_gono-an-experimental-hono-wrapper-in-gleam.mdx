@@ -61,6 +61,70 @@ Hono values and JavaScript failures
 
 This article shows the parts of Gono that helped me understand that flow. The project is still experimental, but the same lessons apply to many JavaScript wrappers.
 
+## Full example
+
+Before looking at the wrapper internals, this is what a small Gono application looks like. It combines the same APIs covered by the project tests: a base path, middleware, request context reads, response context writes, and multiple routes.
+
+```gleam
+import gleam/javascript/promise
+import gleam/json
+import gleam/option
+
+import gono
+import gono/app
+import gono/context
+import gono/runtime/node
+
+pub fn main() -> Nil {
+  let assert Ok(instance) =
+    gono.builder()
+    |> gono.with_host("0.0.0.0")
+    |> gono.with_port(3000)
+    |> gono.new
+
+  let api =
+    instance
+    |> app.use_(fn(c) {
+      let _ = c |> context.set_res_header("x-api-version", "v1")
+
+      c
+      |> context.next
+      |> promise.await(fn(_) { context.continue() })
+    })
+    |> app.with_base("/api/v1")
+    |> app.get("/users/:id", fn(c) {
+      let user_id =
+        c
+        |> context.req
+        |> context.req_param("id")
+        |> option.unwrap("unknown")
+
+      c
+      |> context.json(json.object([
+        #("id", json.string(user_id)),
+        #("name", json.string("Example user")),
+      ]))
+      |> context.reply
+    })
+    |> app.post("/users", fn(c) {
+      c
+      |> context.set_status(201)
+      |> context.json(json.object([
+        #("id", json.string("usr_123")),
+        #("created", json.bool(True)),
+      ]))
+      |> context.reply
+    })
+
+  let assert Ok(_server) =
+    api
+    |> node.builder
+    |> node.serve
+}
+```
+
+The middleware runs before both endpoints and writes a response header. `GET /api/v1/users/:id` reads a path parameter from the request context, while `POST /api/v1/users` changes the response status and returns JSON. The rest of the article explains the wrapper decisions behind this API.
+
 ## A binding is not yet a good wrapper
 
 A basic binding answers one question: how can Gleam call this JavaScript function?
