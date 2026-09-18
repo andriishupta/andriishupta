@@ -26,7 +26,7 @@ draft: true
 - [Gleam pipelines](https://tour.gleam.run/functions/pipelines/)
 - [Gleam `use` expressions](https://tour.gleam.run/advanced-features/use/)
 
-## Why I built Gono
+## Why I built Gono - Experimentation 🟡
 
 I wanted to learn Gleam by building something real.
 
@@ -64,6 +64,10 @@ This article shows the parts of Gono that helped me understand that flow. The pr
 ## Full example
 
 Before looking at the wrapper internals, this is what a small Gono application looks like. It combines the same APIs covered by the project tests: a base path, middleware, request context reads, response context writes, and multiple routes.
+
+Because this example uses the Node runtime, the application must have `hono` and `@hono/node-server` installed through its `package.json`.
+
+`src/main.gleam` can then define and start the API:
 
 ```gleam
 import gleam/javascript/promise
@@ -372,7 +376,7 @@ Most JavaScript functions in Gono are deliberately small:
 ```js
 export function app_not_found(app, handler) {
   return app.notFound((context) =>
-    handler(context, () => Promise.resolve(undefined))
+    handler(context, () => Promise.resolve(undefined)),
   );
 }
 ```
