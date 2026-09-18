@@ -27,7 +27,10 @@ const additionalFacts = copy.mainPage.about.additional
   .join("\n");
 
 export async function GET() {
-  const posts = await getBlogPosts({ includeStubs: false });
+  const posts = await getBlogPosts({
+    includeStubs: false,
+    includeTranslations: true,
+  });
   const blogArticles = posts
     .map(
       (post) =>

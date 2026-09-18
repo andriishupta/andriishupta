@@ -56,14 +56,14 @@ export function getTranslationKey(post: BlogPost) {
   return post.data.translationKey ?? post.data.slug;
 }
 
-function selectDefaultTranslations(posts: BlogPost[]) {
+function selectPrimaryTranslations(posts: BlogPost[]) {
   const selectedPosts = new Map<string, BlogPost>();
 
   for (const post of posts) {
     const key = getTranslationKey(post);
     const current = selectedPosts.get(key);
 
-    if (!current || (!current.data.defaultLang && post.data.defaultLang)) {
+    if (!current || (current.data.lang !== "en" && post.data.lang === "en")) {
       selectedPosts.set(key, post);
     }
   }
@@ -88,7 +88,7 @@ function compareFeaturedFirst(a: BlogPost, b: BlogPost) {
 
 export async function getBlogPosts(options: BlogPostOptions = {}) {
   const {
-    includeDrafts = false,
+    includeDrafts = import.meta.env.DEV,
     includeStubs = true,
     lang,
     includeTranslations = false,
@@ -103,7 +103,7 @@ export async function getBlogPosts(options: BlogPostOptions = {}) {
   }
 
   if (!includeTranslations) {
-    posts = selectDefaultTranslations(posts);
+    posts = selectPrimaryTranslations(posts);
   }
 
   return posts

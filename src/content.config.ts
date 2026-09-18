@@ -25,7 +25,6 @@ const blog = defineCollection({
     slug: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
     lang: languageSchema.default("en"),
     translationKey: z.string().min(1).optional(),
-    defaultLang: z.boolean().default(true),
     subtitle: z.string().optional(),
     description: z.string().min(1).max(200),
     publishedAt: z.coerce.date(),

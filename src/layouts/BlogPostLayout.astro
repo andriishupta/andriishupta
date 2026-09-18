@@ -211,16 +211,28 @@ const labels = isUkrainian
                   {labels.availableLanguages}
                 </span>
                 <nav aria-label={labels.language}>
-                  <span class="article-language__current" aria-current="page">
-                    {isUkrainian ? labels.ukrainian : labels.english}
-                  </span>
-                  <a
-                    href={alternatePath}
-                    lang={alternatePost.data.lang}
-                    hreflang={alternatePost.data.lang}
-                  >
-                    {isUkrainian ? labels.english : labels.ukrainian}
-                  </a>
+                  {
+                    isUkrainian ? (
+                      <a href={alternatePath} lang="en" hreflang="en">
+                        {labels.english}
+                      </a>
+                    ) : (
+                      <span class="article-language__current" aria-current="page">
+                        {labels.english}
+                      </span>
+                    )
+                  }
+                  {
+                    isUkrainian ? (
+                      <span class="article-language__current" aria-current="page">
+                        {labels.ukrainian}
+                      </span>
+                    ) : (
+                      <a href={alternatePath} lang="uk" hreflang="uk">
+                        {labels.ukrainian}
+                      </a>
+                    )
+                  }
                 </nav>
               </div>
             )

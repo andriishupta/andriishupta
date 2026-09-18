@@ -25,12 +25,10 @@ const localizedArticles = [
   {
     filePath: path.join(contentDirectory, `${miykoSlug}.mdx`),
     lang: "en",
-    defaultLang: false,
   },
   {
     filePath: path.join(ukrainianContentDirectory, `${miykoSlug}.mdx`),
     lang: "uk",
-    defaultLang: true,
   },
 ];
 
@@ -138,9 +136,16 @@ for (const slug of articles) {
 
   codeBlockCount += fences / 2;
 
-  const images = Array.from(
+  const markdownImages = Array.from(
     body.matchAll(/!\[([^\]]*)\]\((\/images\/blog\/[^)\s]+)\)/g),
   );
+  const phoneScreenshots = Array.from(
+    body.matchAll(
+      /<PhoneScreenshot[\s\S]*?src="(\/images\/blog\/[^"]+)"[\s\S]*?alt="([^"]+)"[\s\S]*?\/>/g,
+    ),
+    ([, publicPath, alt]) => [undefined, alt, publicPath],
+  );
+  const images = [...markdownImages, ...phoneScreenshots];
 
   for (const image of images) {
     const [, alt, publicPath] = image;
@@ -178,7 +183,6 @@ for (const article of localizedArticles) {
   const translationKey = frontmatter.match(
     /^translationKey:\s*["']?([^"'\n]+)["']?$/m,
   )?.[1];
-  const defaultLang = frontmatter.match(/^defaultLang:\s*(true|false)$/m)?.[1];
 
   if (lang !== article.lang) {
     failures.push(
@@ -190,14 +194,12 @@ for (const article of localizedArticles) {
     failures.push(`${article.filePath}: missing translationKey`);
   } else {
     const group = translationGroups.get(translationKey) ?? [];
-    group.push({ lang, defaultLang, filePath: article.filePath });
+    group.push({ lang, filePath: article.filePath });
     translationGroups.set(translationKey, group);
   }
 
-  if (defaultLang !== String(article.defaultLang)) {
-    failures.push(
-      `${article.filePath}: defaultLang must be ${article.defaultLang}, found ${defaultLang ?? "missing"}`,
-    );
+  if (/^defaultLang:/m.test(frontmatter)) {
+    failures.push(`${article.filePath}: obsolete defaultLang frontmatter`);
   }
 
   if (body.length < 500) {
@@ -212,9 +214,16 @@ for (const article of localizedArticles) {
     );
   }
 
-  const images = Array.from(
+  const markdownImages = Array.from(
     body.matchAll(/!\[([^\]]*)\]\((\/images\/blog\/[^)\s]+)\)/g),
   );
+  const phoneScreenshots = Array.from(
+    body.matchAll(
+      /<PhoneScreenshot[\s\S]*?src="(\/images\/blog\/[^"]+)"[\s\S]*?alt="([^"]+)"[\s\S]*?\/>/g,
+    ),
+    ([, publicPath, alt]) => [undefined, alt, publicPath],
+  );
+  const images = [...markdownImages, ...phoneScreenshots];
 
   for (const image of images) {
     const [, alt, publicPath] = image;
@@ -240,15 +249,11 @@ for (const article of localizedArticles) {
 const miykoTranslations = translationGroups.get(miykoSlug) ?? [];
 if (
   miykoTranslations.length !== 2 ||
-  !miykoTranslations.some(
-    ({ lang, defaultLang }) => lang === "en" && defaultLang === "false",
-  ) ||
-  !miykoTranslations.some(
-    ({ lang, defaultLang }) => lang === "uk" && defaultLang === "true",
-  )
+  !miykoTranslations.some(({ lang }) => lang === "en") ||
+  !miykoTranslations.some(({ lang }) => lang === "uk")
 ) {
   failures.push(
-    `${miykoSlug}: expected one English and one Ukrainian translation with exactly one defaultLang article`,
+    `${miykoSlug}: expected one English and one Ukrainian translation`,
   );
 }
 

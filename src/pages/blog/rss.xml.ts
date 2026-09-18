@@ -5,7 +5,10 @@ import { getBlogPosts, getPostPath, stripMdxModuleLines } from "../../lib/blog";
 export const prerender = true;
 
 export async function GET(context: { site?: URL }) {
-  const posts = await getBlogPosts({ includeStubs: false });
+  const posts = await getBlogPosts({
+    includeStubs: false,
+    includeTranslations: true,
+  });
   const site = context.site ?? new URL("https://andriishupta.dev");
   const siteOrigin = site.origin;
 

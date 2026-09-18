@@ -55,6 +55,8 @@ This repository contains the source for the personal website at `andriishupta.de
 - Empty migration stubs stay `noindex` and out of RSS/sitemaps until body content
   is imported. Do not enable the blog-subdomain Bulk Redirect before the
   destination articles are complete.
+- Show draft articles automatically in Astro development mode. Keep them out of
+  production pages, RSS, sitemaps, and `llms.txt` unless explicitly requested.
 - Recover the seven known Hashnode articles with `pnpm blog:import`. The importer
   preserves frontmatter, localizes article media under
   `public/images/blog/[slug]/`, and refuses to overwrite non-empty bodies unless
@@ -67,9 +69,8 @@ This repository contains the source for the personal website at `andriishupta.de
 - Keep translated article pairs linked by the same `slug` and `translationKey`.
   English content lives in `src/content/blog/`, Ukrainian content lives in
   `src/content/blog-ua/`, and Ukrainian routes use `/blog/ua/[slug]`. Set
-  `lang` explicitly for translated content and mark exactly one version with
-  `defaultLang: true` so the main blog index shows the intended audience
-  language.
+  `lang` explicitly for translated content. Prefer English for the blog index;
+  include every language version in RSS, `llms.txt`, and sitemaps.
 - Keep article-specific `tags` separate from the blog index's controlled
   `topics` filters. Topics use the shared AI, Web3, Software Design,
   Consulting, UI Development, API Development, and Mobile Development list;
@@ -109,6 +110,9 @@ This repository contains the source for the personal website at `andriishupta.de
   remain consistent.
 - Blog OG images are author-supplied 1200×630 assets referenced by `ogImage`;
   the build must not overwrite them. `pnpm blog:verify` checks their dimensions.
+- Keep article media within the reading viewport. Use `PhoneScreenshot.astro`
+  for portrait phone captures so they render no larger than 30rem × 50rem while
+  preserving their source resolution and aspect ratio.
 - Keep Cloudflare deployment static on Pages. Do not add an Astro server adapter,
   Pages Functions, or a Wrangler `main` entry unless runtime behavior is requested.
 - Keep Astro's static build format set to `file` so Cloudflare Pages serves the

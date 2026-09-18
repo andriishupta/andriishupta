@@ -3,7 +3,6 @@ title: "MiyKo: A Durable AI Shopping Workflow for a Household"
 slug: "miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow"
 lang: en
 translationKey: "miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow"
-defaultLang: false
 subtitle: "What I learned while building shared shopping, managed memory and long-running agent workflows"
 description: "How MiyKo turns a one-prompt shopping assistant into a shared household workflow with memory, approvals and real Silpo integration."
 publishedAt: 2026-09-14
@@ -23,6 +22,7 @@ draft: true
 ---
 
 import MiykoArchitecture from "../../components/MiykoArchitecture.astro";
+import PhoneScreenshot from "../../components/PhoneScreenshot.astro";
 
 ## 🔗 Links
 
@@ -106,7 +106,12 @@ Other members can use that connection through the workflow, but they never recei
 
 The owner connects Silpo through OAuth 2.1 with PKCE. Authentication happens on the Silpo side, so MiyKo never asks for the owner’s store password.
 
-![Silpo OAuth authorization for MiyKo](/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/04-silpo-oauth-authorization.png)
+<PhoneScreenshot
+  src="/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/04-silpo-oauth-authorization.png"
+  alt="Silpo OAuth authorization for MiyKo"
+  width={892}
+  height={1910}
+/>
 
 The credentials remain encrypted on the backend. When the workflow needs to call Silpo MCP, the API passes the access token as runtime-only context. It is not stored in the mobile app, LangGraph state or memory.
 
@@ -126,11 +131,21 @@ Memory helps the agent make a better suggestion. It does not give permissions an
 
 The owner starts a dinner workflow in the React Native app.
 
-![Owner starting a dinner workflow in MiyKo](/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/06-owner-order-dashboard.png)
+<PhoneScreenshot
+  src="/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/06-owner-order-dashboard.png"
+  alt="Owner starting a dinner workflow in MiyKo"
+  width={884}
+  height={1914}
+/>
 
 MiyKo reads relevant memory and creates the initial shared plan. At this point, the Silpo basket is still untouched.
 
-![Initial shared dinner plan in MiyKo](/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/07-step-order-initial-plan.png)
+<PhoneScreenshot
+  src="/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/07-step-order-initial-plan.png"
+  alt="Initial shared dinner plan in MiyKo"
+  width={880}
+  height={1908}
+/>
 
 I wanted planning and execution to be separate. During planning, people can speak naturally, add ideas and change their minds. Before execution, the system must check the actor, permissions and current provider state.
 
@@ -148,7 +163,12 @@ Only after the household agrees on the plan does an authorized member ask MiyKo 
 
 The workflow discovers the current Silpo MCP tools, resolves products and updates the real provider basket. Product names, images, prices and totals come from Silpo, not from a local MiyKo catalog.
 
-![Real Silpo basket prepared through MiyKo](/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/08-silpo-basket-ready.png)
+<PhoneScreenshot
+  src="/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/08-silpo-basket-ready.png"
+  alt="Real Silpo basket prepared through MiyKo"
+  width={880}
+  height={1914}
+/>
 
 The workflow also writes structured logs for model calls, MCP discovery and provider actions. Credentials, prompts and raw sensitive arguments are not logged.
 
@@ -158,7 +178,12 @@ The workflow also writes structured logs for model calls, MCP discovery and prov
 
 Silpo MCP can work with the basket and return a checkout link, but it does not expose a final place-order tool. MiyKo prepares the basket; the owner finishes the purchase in Silpo.
 
-![Silpo checkout basket prepared by MiyKo](/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/11-silpo-checkout-basket.png)
+<PhoneScreenshot
+  src="/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/11-silpo-checkout-basket.png"
+  alt="Silpo checkout basket prepared by MiyKo"
+  width={916}
+  height={1766}
+/>
 
 That boundary is intentional. MiyKo must not say that an order is complete when it only has a basket and a checkout URL.
 

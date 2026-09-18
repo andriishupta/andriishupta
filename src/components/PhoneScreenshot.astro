@@ -1,0 +1,20 @@
+---
+interface Props {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+}
+
+const { src, alt, width, height } = Astro.props;
+---
+
+<img
+  class="article-phone-screenshot"
+  {src}
+  {alt}
+  {width}
+  {height}
+  loading="lazy"
+  decoding="async"
+/>

@@ -12,6 +12,8 @@ The first-party blog is public and has no temporary visibility flag:
   `llms.txt` use `https://andriishupta.dev/blog`.
 - `/blog` and complete non-draft articles use the default
   `index, follow, max-image-preview:large` robots directive.
+- Draft articles appear automatically during `astro dev` and remain excluded
+  from production pages, RSS, sitemaps, and `llms.txt`.
 - Empty migration stubs remain directly previewable but use `noindex, follow`
   and stay out of RSS and sitemaps until their body exists.
 - The root sitemap contains the main site, blog index, and complete articles.
@@ -36,9 +38,9 @@ the same `slug` and `translationKey`, but the Ukrainian route adds `/ua/`:
 /blog/ua/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow
 ```
 
-Use `lang: en` or `lang: uk` for the article language. Set `defaultLang: true`
-on the version that should represent the translation pair in the main blog
-index. Existing articles default to English through the schema default.
+Use `lang: en` or `lang: uk` for the article language. When a translation pair
+has an English version, it represents the pair in the blog index. RSS,
+`llms.txt`, and sitemaps include every language version.
 
 ```mdx
 ---
@@ -46,7 +48,6 @@ title: "How I migrated my blog"
 slug: "migrating-blog-to-subpath"
 lang: en
 translationKey: "migrating-blog-to-subpath"
-defaultLang: true
 subtitle: "Optional line shown below the title"
 description: "A concise search and share description under 200 characters."
 publishedAt: 2026-07-22

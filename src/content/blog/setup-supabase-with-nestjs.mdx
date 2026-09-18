@@ -25,11 +25,11 @@ This article is created for Supabase **v1** and seems not to work with **v2** du
 
 ## 🤓 My expectations from You
 
-* You know what the Supabase is
+- You know what the Supabase is
 
-* You know the Nest.js framework
+- You know the Nest.js framework
 
-* You will google what is beyond this tutorial if needed
+- You will google what is beyond this tutorial if needed
 
 ## 🤔 My use case for using Supabase in Nest.js
 
@@ -43,9 +43,9 @@ So I switched to the idea of a server(full) app with Nest.js. (want to deploy on
 
 There is one single example of how to use Supabase as Auth library for your Nest.js application, but:
 
-* it didn't seem straightforward (actual implementation) to me, and I didn't want to use an external package
+- it didn't seem straightforward (actual implementation) to me, and I didn't want to use an external package
 
-* it doesn't work as I wanted - it didn't have Supabase Client exposed from within the lib
+- it doesn't work as I wanted - it didn't have Supabase Client exposed from within the lib
 
 \*it is still a good entry if you have never used Passport and need an example - it helped me to understand what to do in my code, so thanks **hiro1107** :)
 
@@ -61,7 +61,7 @@ So I have decided to implement my way for Auth and Client.
 
 In general, like Firebase, Supabase is a client-side tool that works from the client-side by providing the "anon" user with Row Level Security Policies, but it doesn't force us to use Supabase only on the client-side.
 
-*With some rules, we can freely leverage the power of Supabase in our Node.js Server.*
+_With some rules, we can freely leverage the power of Supabase in our Node.js Server._
 
 ## 🍴 Supabase basic setup
 
@@ -75,9 +75,9 @@ Enable it when you create tables
 
 I recommend creating two by default:
 
-* "anon" is rejected by default for ALL actions
+- "anon" is rejected by default for ALL actions
 
-* ALL actions are only could be done by auth.uid(), if your app is "user-oriented"
+- ALL actions are only could be done by auth.uid(), if your app is "user-oriented"
 
 ### `user_id`
 
@@ -103,7 +103,7 @@ passport-jwt - has a ready-to-use Strategy for JWT Auth
 
 @nestjs/passport - Nest.js's module for Passport
 
-### *How JWT Auth works with Passport*
+### _How JWT Auth works with Passport_
 
 How JWT Auth works go beyond this article, but there are plenty of explanations for using Passport and passport-jwt in Nest.js. You can start by checking Nest.js's [Authentication](https://docs.nestjs.com/security/authentication).
 
@@ -123,7 +123,7 @@ Such as Supabase is JWT, we will use a ready-to-use passport-jwt strategy that d
 
 In this code, we extend PassportStrategy with JWT Strategy and pass config in the `super` call.
 
-*strange "extend"* `PassportStrategy(Strategy)` is TypeScript Mixins
+_strange "extend"_ `PassportStrategy(Strategy)` is TypeScript Mixins
 
 🔗 [source-code](https://github.com/andriishupta/nestjs-supabase-setup/blob/main/src/common/supabase/supabase.strategy.ts)
 
@@ -159,9 +159,9 @@ Another example: [Next.js & SSR with react-query](https://react-query-v3.tanstac
 
 ![Injecting the request-scoped Supabase service into another NestJS service](/images/blog/setup-supabase-with-nestjs/06-image.png)
 
-*Disclaimer: I haven't tested it for multiple users yet, but I am pretty sure about it.* I haven't found other ways to pass Auth with one Client in docs by appending `access_token` - only `setAuth` to Client directly.
+_Disclaimer: I haven't tested it for multiple users yet, but I am pretty sure about it._ I haven't found other ways to pass Auth with one Client in docs by appending `access_token` - only `setAuth` to Client directly.
 
-*Possible solution*: Supabase could tweak auth flow, where with a unique setup, we can pass users in each request. With the Passport, we have the user in `req.user` and can still access the Authorization header for `access_token`.
+_Possible solution_: Supabase could tweak auth flow, where with a unique setup, we can pass users in each request. With the Passport, we have the user in `req.user` and can still access the Authorization header for `access_token`.
 
 ## 📭 Testing with Postman
 
@@ -169,7 +169,7 @@ After everything is finished - let's try to call our server.
 
 ![Postman request rejected with a 401 response](/images/blog/setup-supabase-with-nestjs/07-screenshot-2022-07-11-at-17-43-46.png)
 
-As expected, we get a 401 code - this is *passport.js* does it check for JWT in our **SupabaseGuard**
+As expected, we get a 401 code - this is _passport.js_ does it check for JWT in our **SupabaseGuard**
 
 Let's now get a valid `access_token` and repeat the call:
 
@@ -177,36 +177,36 @@ Let's now get a valid `access_token` and repeat the call:
 
 💪 💪 💪
 
-*access token available after you log in with a user. In my case, I have just sent "Magic Link" and got* `acces_token` from the URL
+_access token available after you log in with a user. In my case, I have just sent "Magic Link" and got_ `acces_token` from the URL
 
 ![Supabase magic-link callback URL containing the access token](/images/blog/setup-supabase-with-nestjs/09-screenshot-2022-07-11-at-21-08-01.png)
 
 ## 📋 Summary - TL;DR;
 
-* install required dependencies
+- install required dependencies
 
-* copy **supabase** folder to your project
+- copy **supabase** folder to your project
 
-* add 3 SUPABASE\_\* variables to .env
+- add 3 SUPABASE\_\* variables to .env
 
-* import *supabase.module*: in app.module / @Global() auth.module / etc.
+- import _supabase.module_: in app.module / @Global() auth.module / etc.
 
-* provide global `APP_GUARD` or use it where you need it with `UseGuard`
+- provide global `APP_GUARD` or use it where you need it with `UseGuard`
 
-* use *supabase.ts* in other services by `this.supabase.getClient()` for Supabase calls
+- use _supabase.ts_ in other services by `this.supabase.getClient()` for Supabase calls
 
 ### 🔗 Links
 
-* Github: [https://github.com/andriishupta/nestjs-supabase-setup](https://github.com/andriishupta/nestjs-supabase-setup)
+- Github: [https://github.com/andriishupta/nestjs-supabase-setup](https://github.com/andriishupta/nestjs-supabase-setup)
 
-* Nest.js's [Authentication](https://docs.nestjs.com/security/authentication), including JWT with Passport.js
+- Nest.js's [Authentication](https://docs.nestjs.com/security/authentication), including JWT with Passport.js
 
-* How to use [Guards](https://docs.nestjs.com/guards) in Nest.js
+- How to use [Guards](https://docs.nestjs.com/guards) in Nest.js
 
-* Supabase's Auth [example app with Nest.js](https://github.com/hiro1107/nestjs-supabase-auth)
+- Supabase's Auth [example app with Nest.js](https://github.com/hiro1107/nestjs-supabase-auth)
 
-* [Supabase's docs](https://supabase.com/docs/reference)
+- [Supabase's docs](https://supabase.com/docs/reference)
 
-* Link to [Medium's copy of the article](https://blog.devgenius.io/setup-supabase-with-nest-js-85041b03ec3a)
+- Link to [Medium's copy of the article](https://blog.devgenius.io/setup-supabase-with-nest-js-85041b03ec3a)
 
 Thanks for reading!

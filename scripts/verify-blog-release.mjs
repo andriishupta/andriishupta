@@ -24,7 +24,6 @@ const rejectText = (source, value, label) => {
 };
 
 const posts = [];
-const defaultPosts = [];
 
 for (const { directory, fallbackLang } of [
   { directory: contentDirectory, fallbackLang: "en" },
@@ -54,16 +53,13 @@ for (const { directory, fallbackLang } of [
     )?.[1];
     const lang =
       frontmatter[1].match(/^lang:\s*([a-z]+)\s*$/m)?.[1] ?? fallbackLang;
-    const defaultLang = !/^defaultLang:\s*false\s*$/m.test(frontmatter[1]);
     const draft = /^draft:\s*true\s*$/m.test(frontmatter[1]);
     const body = source.slice(frontmatter[0].length).trim();
 
     if (!slug) {
       failures.push(`${file}: missing slug`);
     } else if (!draft && body.length > 0) {
-      const post = { slug, lang, defaultLang };
-      posts.push(post);
-      if (defaultLang) defaultPosts.push(post);
+      posts.push({ slug, lang });
     }
   }
 }
@@ -112,7 +108,7 @@ requireText(rss, 'xmlns:atom="http://www.w3.org/2005/Atom"', "RSS");
 requireText(rss, 'href="https://andriishupta.dev/blog/rss.xml"', "RSS");
 
 for (const post of posts) {
-  const { slug, lang, defaultLang } = post;
+  const { slug, lang } = post;
   const routePath = lang === "uk" ? `/blog/ua/${slug}` : `/blog/${slug}`;
   const canonicalUrl = `https://andriishupta.dev${routePath}`;
   const distPath = routePath.replace(/^\//, "").concat(".html");
@@ -129,10 +125,8 @@ for (const post of posts) {
   requireText(articleHtml, 'name="robots" content="index, follow', slug);
   requireText(rootSitemap, `<loc>${canonicalUrl}</loc>`, "root sitemap");
   requireText(blogSitemap, `<loc>${canonicalUrl}</loc>`, "blog sitemap");
-  if (defaultLang) {
-    requireText(rss, `<link>${canonicalUrl}</link>`, "RSS");
-    requireText(llms, `](${canonicalUrl})`, "llms.txt");
-  }
+  requireText(rss, `<link>${canonicalUrl}</link>`, "RSS");
+  requireText(llms, `](${canonicalUrl})`, "llms.txt");
   if (lang === "en") {
     requireText(redirects, `/${slug} /blog/${slug} 301`, "Pages redirects");
   }
@@ -141,10 +135,8 @@ for (const post of posts) {
 
 const rssItemCount = rss.match(/<item>/g)?.length ?? 0;
 
-if (rssItemCount !== defaultPosts.length) {
-  failures.push(
-    `RSS: expected ${defaultPosts.length} items, found ${rssItemCount}`,
-  );
+if (rssItemCount !== posts.length) {
+  failures.push(`RSS: expected ${posts.length} items, found ${rssItemCount}`);
 }
 
 rejectText(rootSitemap, "blog.andriishupta.dev", "root sitemap");
