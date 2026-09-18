@@ -55,7 +55,7 @@ The most crucial point with `@polkadot/extension-dapp` is that it needs a browse
 
 [🔗 source code](https://github.com/andriishupta/polkadot-extension-dapp-example/blob/main/pages/index.tsx)
 
-![Next.js dynamic import disabling server-side rendering for the Connect component](/images/blog/connect-polkadot-to-a-nextjs-website-with-polkadotextension-dapp/01-dynamic-import.png)
+![Next.js dynamic import disabling server-side rendering for the Connect component](https://andriishupta.dev/images/blog/connect-polkadot-to-a-nextjs-website-with-polkadotextension-dapp/01-dynamic-import.png)
 
 On the Home page, we load our `Connect` component dynamically. Connect components are where all magic happens.
 
@@ -63,7 +63,7 @@ On the Home page, we load our `Connect` component dynamically. Connect component
 
 Let's start with imports:
 
-![TypeScript imports from @polkadot/extension-dapp](/images/blog/connect-polkadot-to-a-nextjs-website-with-polkadotextension-dapp/02-polkadot-imports.png)
+![TypeScript imports from @polkadot/extension-dapp](https://andriishupta.dev/images/blog/connect-polkadot-to-a-nextjs-website-with-polkadotextension-dapp/02-polkadot-imports.png)
 
 `InjectedAccountWithMeta` is a type of account that we would get. I imported it for TypeScript.
 
@@ -75,13 +75,13 @@ _I have used promise chaining down below, but if you prefer_ `try-catch` _+_ `as
 
 ### `web3Enable`
 
-![Calling web3Enable and handling a missing wallet extension](/images/blog/connect-polkadot-to-a-nextjs-website-with-polkadotextension-dapp/03-web3enable.png)
+![Calling web3Enable and handling a missing wallet extension](https://andriishupta.dev/images/blog/connect-polkadot-to-a-nextjs-website-with-polkadotextension-dapp/03-web3enable.png)
 
 The initial function is to call even to check if our browser has any wallets to work with. In case we don't have anything to work with, the extension shows it in the console, and we also should throw an error to show the user that he should use the browser with a valid Wallet.
 
 ### `web3Accounts`
 
-![Loading the first account with web3Accounts](/images/blog/connect-polkadot-to-a-nextjs-website-with-polkadotextension-dapp/04-web3accounts.png)
+![Loading the first account with web3Accounts](https://andriishupta.dev/images/blog/connect-polkadot-to-a-nextjs-website-with-polkadotextension-dapp/04-web3accounts.png)
 
 Same with `web3Accounts` - it would load accounts connected or prompt you to connect to the website if you opened it for the first time - a very familiar experience for web3 users.
 
@@ -89,23 +89,23 @@ You could try out the flow on [polkadot-extension-dapp-example | Deployed on Ver
 
 _Disclaimer: I have tried only when I have 1 wallet, but for a simple example, it should be enough._
 
-![Connect wallet button in the example app](/images/blog/connect-polkadot-to-a-nextjs-website-with-polkadotextension-dapp/05-connect.png)
+![Connect wallet button in the example app](https://andriishupta.dev/images/blog/connect-polkadot-to-a-nextjs-website-with-polkadotextension-dapp/05-connect.png)
 
 ---
 
-![SubWallet connection approval dialog](/images/blog/connect-polkadot-to-a-nextjs-website-with-polkadotextension-dapp/06-connecting.png)
+![SubWallet connection approval dialog](https://andriishupta.dev/images/blog/connect-polkadot-to-a-nextjs-website-with-polkadotextension-dapp/06-connecting.png)
 
 ---
 
-![Connected wallet greeting with account address](/images/blog/connect-polkadot-to-a-nextjs-website-with-polkadotextension-dapp/07-hello.png)
+![Connected wallet greeting with account address](https://andriishupta.dev/images/blog/connect-polkadot-to-a-nextjs-website-with-polkadotextension-dapp/07-hello.png)
 
 ---
 
-![Missing wallet extension error message](/images/blog/connect-polkadot-to-a-nextjs-website-with-polkadotextension-dapp/08-error.png)
+![Missing wallet extension error message](https://andriishupta.dev/images/blog/connect-polkadot-to-a-nextjs-website-with-polkadotextension-dapp/08-error.png)
 
 ---
 
-![Browser console output from the Polkadot extension](/images/blog/connect-polkadot-to-a-nextjs-website-with-polkadotextension-dapp/09-logs.png)
+![Browser console output from the Polkadot extension](https://andriishupta.dev/images/blog/connect-polkadot-to-a-nextjs-website-with-polkadotextension-dapp/09-logs.png)
 
 ## 🧑‍🏫 Next steps and more examples
 

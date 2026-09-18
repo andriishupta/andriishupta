@@ -54,42 +54,42 @@ In the bootstrap function, we check for the development environment and decide i
 
 🔗[source code](https://github.com/andriishupta/strapi-generate-seed-data/blob/main/src/index.ts#L19)
 
-![Strapi bootstrap function that runs the data seed](/images/blog/generate-dummy-data-in-strapi/01-image.png)
+![Strapi bootstrap function that runs the data seed](https://andriishupta.dev/images/blog/generate-dummy-data-in-strapi/01-image.png)
 
 ### Collection Type
 To create a todo using Entity Service API, we need to call the `create` method with data that matches our entity. In the current example and during seeding, I have used "bulk promises" to run requests in parallel cause they are not dependent on each other.
 
 🔗 [source code](https://github.com/andriishupta/strapi-generate-seed-data/blob/main/src/_seed/todo.ts#L24)
 
-![Creating multiple Strapi todo entries with Promise.all](/images/blog/generate-dummy-data-in-strapi/02-image.png)
+![Creating multiple Strapi todo entries with Promise.all](https://andriishupta.dev/images/blog/generate-dummy-data-in-strapi/02-image.png)
 
 And using faker, we fill a todo like this:
 
-![Generating a todo with Faker](/images/blog/generate-dummy-data-in-strapi/03-image.png)
+![Generating a todo with Faker](https://andriishupta.dev/images/blog/generate-dummy-data-in-strapi/03-image.png)
 
 ### Single Type
 Fulfilling the "Todo List page" is the same as Collection, but keep in mind that it could be only one entry all the time. Also, it contains a Todo relation, so we get five todos to fill it.
 
 🔗 [source code](https://github.com/andriishupta/strapi-generate-seed-data/blob/main/src/_seed/todo-list-page.ts#L14)
 
-![Seeding the Todo List single type and relations](/images/blog/generate-dummy-data-in-strapi/04-image.png)
+![Seeding the Todo List single type and relations](https://andriishupta.dev/images/blog/generate-dummy-data-in-strapi/04-image.png)
 
 ### Media Upload
 To attach media on a todo, we first need to upload that media and then link its id to the entity. Code has been copied from [Strapi's source code](https://github.com/strapi/strapi/blob/master/packages/core/upload/server/controllers/admin-upload.js#L57), modified, and I just created a helper function.
 
 🔗 [source code](https://github.com/andriishupta/strapi-generate-seed-data/blob/main/src/_seed/helpers.ts#L52)
 
-![Helper that uploads media through Strapi](/images/blog/generate-dummy-data-in-strapi/05-image.png)
+![Helper that uploads media through Strapi](https://andriishupta.dev/images/blog/generate-dummy-data-in-strapi/05-image.png)
 
 Example in Todo:
-![Attaching uploaded media to a seeded todo](/images/blog/generate-dummy-data-in-strapi/06-image.png)
+![Attaching uploaded media to a seeded todo](https://andriishupta.dev/images/blog/generate-dummy-data-in-strapi/06-image.png)
 
 ## ✅ Results
 After opening the Admin panel, you will see generated data.
 
-![Generated todo entries in the Strapi admin panel](/images/blog/generate-dummy-data-in-strapi/07-image.png)
+![Generated todo entries in the Strapi admin panel](https://andriishupta.dev/images/blog/generate-dummy-data-in-strapi/07-image.png)
 
-![Generated Todo List page in the Strapi admin panel](/images/blog/generate-dummy-data-in-strapi/08-image.png)
+![Generated Todo List page in the Strapi admin panel](https://andriishupta.dev/images/blog/generate-dummy-data-in-strapi/08-image.png)
 
 ## ✨
 Initially, I implemented this for [Developer DAO](https://twitter.com/developer_dao)'s website [developerdao.com](https://developerdao.com/). Original code is located [here](https://github.com/Developer-DAO/cms)(archived and moved to monorepo).

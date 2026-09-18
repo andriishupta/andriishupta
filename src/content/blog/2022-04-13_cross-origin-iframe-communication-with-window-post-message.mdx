@@ -54,7 +54,7 @@ Also, I would use [Nrwl Nx's workspaces](https://nx.dev/) to have monorepo, keep
 
 It is a "special" app you could use for ***real-world testing*** to see how messaging works in your app.
 
-![Iframe Communicator test application](/images/blog/cross-origin-iframe-communication-with-window-post-message/01-iframe-communicator.png)
+![Iframe Communicator test application](https://andriishupta.dev/images/blog/cross-origin-iframe-communication-with-window-post-message/01-iframe-communicator.png)
 
 ### 🧑 Parent code
 
@@ -64,7 +64,7 @@ It is a "special" app you could use for ***real-world testing*** to see how mess
 
 As for the Parent app, we will surely have `iframe` rendered on our side. Let's start from it:
 
-![Parent React component rendering the child application in an iframe](/images/blog/cross-origin-iframe-communication-with-window-post-message/02-iframe3.png)
+![Parent React component rendering the child application in an iframe](https://andriishupta.dev/images/blog/cross-origin-iframe-communication-with-window-post-message/02-iframe3.png)
 
 - **iframeRef** is our [React.js reference](https://reactjs.org/docs/hooks-reference.html#useref) to the DOM element, so we can later use it
 - *onLoad* - this would send my initial token
@@ -75,7 +75,7 @@ Next: how we send the message is [Window.postMessage](https://developer.mozilla.
 
 > The window.postMessage() method safely enables cross-origin communication between Window objects; e.g., between a page and a pop-up that it spawned, or between a page and an iframe embedded within it.
 
-![Parent application postMessage helper](/images/blog/cross-origin-iframe-communication-with-window-post-message/03-post-message.png)
+![Parent application postMessage helper](https://andriishupta.dev/images/blog/cross-origin-iframe-communication-with-window-post-message/03-post-message.png)
 
 ```ts
 const postMessage = (message: Message) => {
@@ -98,7 +98,7 @@ I know my `targetOrigin`, so I am passing it and suggesting you not neglect [sec
 
 Last but not least, we want to listen to messages from the Child!
 
-![Parent application message event listener](/images/blog/cross-origin-iframe-communication-with-window-post-message/04-listener.png)
+![Parent application message event listener](https://andriishupta.dev/images/blog/cross-origin-iframe-communication-with-window-post-message/04-listener.png)
 
 Security and filtering: we accept only our messages that we are sure in
 ```
@@ -136,13 +136,13 @@ return () => window.removeEventListener('message', handler);
 
 The approach is the same for the Child app, with a twist of where to call *postMessage* - `window.parent`.
 
-![Child application sending a message through window.parent](/images/blog/cross-origin-iframe-communication-with-window-post-message/05-child-post-message.png)
+![Child application sending a message through window.parent](https://andriishupta.dev/images/blog/cross-origin-iframe-communication-with-window-post-message/05-child-post-message.png)
 
 ---
 
 And listening to the messages differs in `type`.
 
-![Child application message event listener](/images/blog/cross-origin-iframe-communication-with-window-post-message/06-child-listener.png)
+![Child application message event listener](https://andriishupta.dev/images/blog/cross-origin-iframe-communication-with-window-post-message/06-child-listener.png)
 
 ## 🔗 Links
 

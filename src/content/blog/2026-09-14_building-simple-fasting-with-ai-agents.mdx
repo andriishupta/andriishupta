@@ -27,7 +27,7 @@ draft: true
 - [Expo documentation](https://docs.expo.dev/)
 - [React Native documentation](https://reactnative.dev/docs/getting-started)
 
-## 🤓 I wanted a fasting tracker for myself
+## I wanted a fasting tracker for myself
 
 The idea behind Simple Fasting was very simple.
 
@@ -46,7 +46,7 @@ widgets, an optional iOS Live Activity, and a small website.
 But the product was never supposed to become large. The goal was still to make
 one simple action feel calm and reliable.
 
-![Simple Fasting ready and active fasting screens in light and dark themes](/images/blog/building-simple-fasting-with-ai-agents/01-fast-screens.png)
+![Simple Fasting ready and active fasting screens in light and dark themes](https://andriishupta.dev/images/blog/building-simple-fasting-with-ai-agents/01-fast-screens.png)
 
 I used AI agents for most parts of the work: product thinking, system design,
 React Native code, tests, UI iterations, documentation, and release setup.
@@ -56,7 +56,7 @@ cheap to produce, it becomes very easy to produce too much of it.
 This article is about that process: what worked, where I overdid it, and what I
 would do differently next time.
 
-## 🧭 I was doing spec-driven development before calling it that
+## I was doing spec-driven development before calling it that
 
 Before building many features, I started writing documents.
 
@@ -97,7 +97,7 @@ are common in similar products, but they were wrong for mine.
 A written product boundary made it easier to reject code before it became part
 of the architecture.
 
-## 🗂️ Documentation became the shared memory
+## Documentation became the shared memory
 
 Simple Fasting has several connected surfaces:
 
@@ -134,7 +134,7 @@ It records decisions that should survive between tasks.
 Code shows what exists now. Documentation explains what must remain true while
 the code changes.
 
-## 🤖 My AI workflow
+## My AI workflow
 
 I did not start by asking AI to build the complete application.
 
@@ -172,7 +172,7 @@ needs to say:
 That gives AI space to implement the feature without asking it to invent the
 product rules.
 
-## 🧠 I did not use the strongest model for everything
+## I did not use the strongest model for everything
 
 I often started with a simpler model for focused work. It was enough for small
 components, tests, direct refactors, and changes that followed an existing
@@ -201,7 +201,7 @@ Keeping stable decisions in the repository also reduced repeated context. I did
 not need to explain privacy, product scope, or storage ownership from zero in
 every prompt.
 
-## ⚠️ Where I overengineered the app
+## Where I overengineered the app
 
 AI can write another safety path in a few minutes. That makes every additional
 layer feel cheap.
@@ -242,7 +242,7 @@ If I started again, I would ask three questions before adding a safety system:
 
 That would have kept the first version smaller.
 
-## 🎨 My second mistake was delaying the design system
+## My second mistake was delaying the design system
 
 I did not create a proper design system early enough.
 
@@ -262,7 +262,7 @@ At some point, I stopped feature work for about two days and cleaned it up. I
 created reusable components, established clearer primitives, aligned the
 styles, and effectively built a small design system.
 
-![Simple Fasting settings screens showing shared controls and theme behavior](/images/blog/building-simple-fasting-with-ai-agents/02-settings-screens.png)
+![Simple Fasting settings screens showing shared controls and theme behavior](https://andriishupta.dev/images/blog/building-simple-fasting-with-ai-agents/02-settings-screens.png)
 
 That cleanup changed later work. Instead of describing every visual property, I
 could tell an agent to reuse the existing screen shell, section surface, button,
@@ -287,7 +287,7 @@ For an AI-built interface, I would now establish these things early:
 The goal is not to design every screen in advance. It is to give every screen
 the same visual grammar.
 
-## 📱 UI cannot be completed inside a specification
+## UI cannot be completed inside a specification
 
 Functional behavior can often be planned in detail before implementation.
 
@@ -333,7 +333,7 @@ general reactions.
 “the selected goal returns to the previous value after reopening the tab” gives
 the agent a state, an action, and a visible failure.
 
-## 🧪 The simulator is feedback, not proof of a release
+## The simulator is feedback, not proof of a release
 
 I also separated fast iteration from full verification.
 
@@ -363,7 +363,7 @@ The practical loop became:
 > implement → run a narrow check → use the UI → report the exact problem → fix
 > it → run the broader gate when the feature is stable
 
-## 🧱 Build features as complete slices
+## Build features as complete slices
 
 Another useful change was thinking in user outcomes instead of files or isolated
 screens.
@@ -385,7 +385,7 @@ If separate agents build the timer, History, and widget independently, they may
 create different models of the same fast. A vertical slice exposes those
 differences early.
 
-![Simple Fasting statistics and history screens using the same session data](/images/blog/building-simple-fasting-with-ai-agents/03-data-screens.png)
+![Simple Fasting statistics and history screens using the same session data](https://andriishupta.dev/images/blog/building-simple-fasting-with-ai-agents/03-data-screens.png)
 
 The same applies to documentation. Editing the Privacy Policy is only the first
 step. The complete slice includes synchronization, the local app screen, the
@@ -393,7 +393,7 @@ website route, and a check that catches stale content.
 
 The unit of work should be a verified outcome, not a file.
 
-## 🧩 What I would do next time
+## What I would do next time
 
 My process would be:
 
@@ -417,7 +417,7 @@ clear specifications.
 For UI, I would define the system early but discover the final screens through
 short feedback loops.
 
-## ✨ Conclusion
+## Conclusion
 
 Simple Fasting started as a small tool I wanted for myself. AI helped me build
 it much faster than I could have alone, including parts that required native

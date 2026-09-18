@@ -6,6 +6,7 @@ const repositoryRoot = fileURLToPath(new URL("../", import.meta.url));
 const contentDirectory = path.join(repositoryRoot, "src/content/blog");
 const imageRoot = path.join(repositoryRoot, "public/images/blog");
 const sourceOrigin = "https://blog.andriishupta.dev";
+const siteOrigin = "https://andriishupta.dev";
 const force = process.argv.includes("--force");
 const requestedSlugs = process.argv
   .slice(2)
@@ -247,7 +248,7 @@ const localizeImages = async (markdown, articleSlug) => {
         await writeFile(destination, Buffer.from(await response.arrayBuffer()));
         replacements.set(sourceUrl, {
           alt: imageAltOverrides[articleSlug]?.[number - 1] ?? alt,
-          path: `/images/blog/${articleSlug}/${fileName}`,
+          path: `${siteOrigin}/images/blog/${articleSlug}/${fileName}`,
         });
       },
     ),

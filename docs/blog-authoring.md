@@ -1,48 +1,21 @@
-# Blog authoring and migration
+# Blog authoring
 
-The canonical blog lives at `https://andriishupta.dev/blog`. Hashnode, DEV
-Community, and Medium are distribution channels; their URLs never replace the
-first-party canonical URL.
+The canonical blog lives at `https://andriishupta.dev/blog`. DEV Community,
+Medium, and Hashnode are distribution channels, never canonical sources.
 
-## Public release invariants
+## Create an article
 
-The first-party blog is public and has no temporary visibility flag:
+English articles live in `src/content/blog/`; Ukrainian translations live in
+`src/content/blog-ua/`.
 
-- Homepage, 404, blog chrome, canonicals, JSON-LD, RSS, sitemaps, and
-  `llms.txt` use `https://andriishupta.dev/blog`.
-- `/blog` and complete non-draft articles use the default
-  `index, follow, max-image-preview:large` robots directive.
-- Draft articles appear automatically during `astro dev` and remain excluded
-  from production pages, RSS, sitemaps, and `llms.txt`.
-- Empty migration stubs remain directly previewable but use `noindex, follow`
-  and stay out of RSS and sitemaps until their body exists.
-- The root sitemap contains the main site, blog index, and complete articles.
-  `/blog/sitemap.xml` remains available as a blog-only sitemap.
-- RSS autodiscovery is present on the blog and every article. The header and
-  footer link to `/blog/rss.xml`.
-- Old apex article paths redirect one-to-one to their canonical `/blog/[slug]`
-  path through `public/_redirects`.
-- `blog.andriishupta.dev` is a legacy hostname used only as the source of the
-  Cloudflare Bulk Redirect and temporary migration metadata.
-
-## Add or finish an article
-
-Create an `.md` or `.mdx` file in `src/content/blog/`. Name it
-`YYYY-MM-DD_slug.mdx`, for example
-`2026-07-22_migrating-blog-to-subpath.mdx`. The filename date is the publication
-date and is parsed as midnight UTC; do not add `publishedAt` to frontmatter.
-
-Ukrainian translations live in `src/content/blog-ua/`. A translated pair uses
-the same `slug` and `translationKey`, but the Ukrainian route adds `/ua/`:
+Name files `YYYY-MM-DD_slug.mdx`, for example:
 
 ```text
-/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow
-/blog/ua/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow
+2026-07-22_migrating-blog-to-subpath.mdx
 ```
 
-Use `lang: en` or `lang: uk` for the article language. When a translation pair
-has an English version, it represents the pair in the blog index. RSS,
-`llms.txt`, and sitemaps include every language version.
+The prefix is the publication date at midnight UTC. It is not part of the route
+and replaces `publishedAt` frontmatter.
 
 ```mdx
 ---
@@ -50,7 +23,7 @@ title: "How I migrated my blog"
 slug: "migrating-blog-to-subpath"
 lang: en
 translationKey: "migrating-blog-to-subpath"
-subtitle: "Optional line shown below the title"
+subtitle: "Optional line below the title"
 description: "A concise search and share description under 200 characters."
 updatedAt: 2026-07-22
 tags:
@@ -59,200 +32,95 @@ tags:
 topics:
   - UI Development
   - Software Design
-cover: "/images/blog/migrating-blog.png"
-coverAlt: "A useful description of the cover image"
+cover: "/images/blog/migrating-blog-to-subpath/cover.png"
+coverAlt: "A useful description of the cover"
 ogImage: "/blog/migrating-blog-to-subpath/og.png"
 featured: false
-draft: false
+draft: true
 distribution:
-  hashnode: "https://example.hashnode.dev/migrating-blog-to-subpath"
   devto: "https://dev.to/example/migrating-blog-to-subpath"
   medium: "https://medium.com/@example/migrating-blog-to-subpath"
+  hashnode: "https://example.hashnode.dev/migrating-blog-to-subpath"
 ---
 
 Article content starts here.
 ```
 
-Set `featured: true` for articles that should stay at the top of the blog
-regardless of publication date. Featured articles are ordered by the UTC date
-in their filename, newest first; non-featured articles follow with the same date
-ordering.
+### Field rules
 
-`updatedAt` means the first-party article body changed materially. Adding or
-changing a distribution URL does not count as an article update and must not
-change `updatedAt`.
+- `slug` matches the filename and remains stable.
+- `lang` is `en` or `uk`.
+- Translation pairs share `slug` and `translationKey`. Ukrainian routes use
+  `/blog/ua/[slug]`.
+- `updatedAt` changes only after a material first-party content edit.
+- `featured: true` moves an article above regular posts on the index; each
+  group remains ordered by filename date.
+- `draft: true` makes the article visible in development only.
+- `tags` are article-specific. `topics` come from
+  `src/lib/blog-topics.ts`.
+- Keep headings text-only except for `## 🔗 Links`.
+- Put cross-post URLs in `distribution`, not in the article body.
 
-`tags` are article-specific labels, shown with the article and used for feed and
-metadata keywords. `topics` are the broader blog-index filters: `AI`, `Web3`,
-`Software Design`, `UI Development`, `API Development`, and `Mobile
-Development`. Assign zero or more topics to each article; use multiple topics
-when the article spans those areas. Topic values are validated against this
-allowlist at build time. Add a new topic only when it is intentionally needed,
-by updating the shared list in `src/lib/blog-topics.ts` first.
+English represents a translated pair on the blog index. Every published
+language version appears in RSS, sitemaps, and `llms.txt`.
 
-Keep Hashnode, DEV Community, and Medium URLs in `distribution` frontmatter,
-not in the article body. When present, they render in the article metadata card
-below publication details in the order DEV Community, Medium, Hashnode; missing
-and legacy blog-subdomain URLs stay hidden.
+Reading time and word count are derived from prose at 220 words per minute.
+Code, image syntax, and link destinations are excluded.
 
-Reading time and word count are computed from the first-party body at build
-time. `originalReadingMinutes` is only a temporary fallback for an empty
-migration stub and should be removed after the content is imported.
+## Images
 
-The seven known Hashnode originals can be recovered with:
+- Put inline media in `public/images/blog/[slug]/`.
+- In MDX, use canonical URLs such as
+  `https://andriishupta.dev/images/blog/[slug]/image.png`. Development rewrites
+  these to local paths, so unpublished images still work locally.
+- Use `PhoneScreenshot.astro` for portrait phone captures.
+- Add useful alt text to informative images.
+- Put the 1200×630 share image in `public/blog/[slug]/og.png` and reference it
+  as `/blog/[slug]/og.png`.
+- The blog index uses `ogImage` as its card image. Without one, the site falls
+  back to `/blog/og.png`.
+
+## Import legacy Hashnode posts
 
 ```sh
 pnpm blog:import
 ```
 
-The importer preserves each file's existing frontmatter, removes the duplicate
-source H1 and old publication-profile block, downloads Hashnode-hosted images
-to `public/images/blog/[slug]/`, and rewrites the Markdown to local paths. It
-refuses to replace an article that already has body content; use
-`pnpm blog:import -- --force [slug]` only when intentionally restoring a known
-article from its source again.
+The importer preserves frontmatter, removes duplicated source metadata,
+localizes hosted media, and refuses to overwrite a populated body. Use
+`pnpm blog:import -- --force [slug]` only for an intentional restore.
 
-Run `pnpm blog:verify` after importing or editing migrated posts. It checks that
-all seven bodies remain populated, code fences are balanced, external links are
-present, Hashnode CDN references are gone, and every inline image is a valid,
-locally referenced PNG with useful alternative text.
+`originalReadingMinutes` is allowed only on an empty migration stub and should
+be removed once its body is imported.
 
-Empty stubs are intentionally `noindex` and excluded from RSS and sitemaps.
-Adding article body content makes a non-draft post indexable and adds it to
-both sitemaps, RSS, and `llms.txt`.
+## Publish
 
-## Images and sharing
+1. Finish the MDX and set `draft: false`.
+2. Add or verify the 1200×630 OG image.
+3. Run `pnpm blog:verify`.
+4. Run `pnpm blog:release-check`.
+5. Preview the affected routes when layout changed.
+6. Deploy `andriishupta.dev`.
+7. Cross-post with the first-party URL as canonical, then save returned URLs in
+   `distribution` without changing `updatedAt`.
 
-- Put article images in `public/images/blog/[slug]/` and reference them with
-  absolute paths such as `/images/blog/example/article-image.png`.
-- `cover` is optional and renders directly below the article heading.
-- Put each author-designed 1200×630 share image in `public/blog/[slug]/og.png`
-  and set the same absolute path in `ogImage`.
-- `ogImage` is optional only as a fallback: posts without it use the general
-  `/blog/og.png` image. There is no generated-OG build step.
-- The blog index uses `ogImage` as the article card thumbnail.
-- Always provide `coverAlt` when a cover conveys information.
+Complete published articles are discoverable through the blog, RSS, root and
+blog sitemaps, and `llms.txt`. Empty stubs remain `noindex` and excluded.
 
-## Publishing order
+## Legacy blog redirect
 
-1. Write or import every MDX file.
-2. Run `pnpm blog:verify`.
-3. Run `pnpm blog:release-check`. This rebuilds the static site and verifies
-   article bodies, OG dimensions, canonical and robots metadata, RSS entries,
-   root and blog sitemaps, `llms.txt`, and both redirect maps.
-4. Preview the index and article routes at desktop and mobile widths.
-5. Deploy `andriishupta.dev`.
-6. Publish or import copies on DEV Community, Hashnode, and Medium with the
-   first-party URL as canonical.
-7. Add the returned distribution URLs without changing `updatedAt`.
+`docs/cloudflare-blog-redirect.csv` defines the permanent Cloudflare Bulk
+Redirect from `blog.andriishupta.dev` to `andriishupta.dev/blog`, preserving
+paths and query strings.
 
-## Moving the old subdomain without a Worker
+Cloudflare setup:
 
-The site is deployed as a fully static Cloudflare Pages project. Its
-`wrangler.jsonc` uses `pages_build_output_dir` and deliberately has no Worker
-`main` entry. Astro uses `build.format: "file"` so Cloudflare Pages serves the
-no-trailing-slash canonicals directly instead of redirecting them to directory
-URLs.
+1. Deploy and verify the destination blog routes.
+2. Keep the legacy `blog` DNS record proxied.
+3. Import the CSV into a Bulk Redirect list and enable it with a rule.
+4. Test HTTP, HTTPS, an article path, and a query string.
+5. Keep the redirect indefinitely where practical.
 
-Cloudflare Pages `_redirects` supports path redirects but not domain-level
-redirects. The repository includes
-`docs/cloudflare-blog-redirect.csv`, which defines one Cloudflare **Bulk
-Redirect**:
-
-```text
-Source: blog.andriishupta.dev
-Target: https://andriishupta.dev/blog
-Status: 301
-Preserve query string: on
-Subpath matching: on
-Preserve path suffix: on
-Include subdomains: off
-```
-
-The source deliberately omits the scheme so the rule matches both HTTP and
-HTTPS. With subpath matching and path-suffix preservation:
-
-```text
-blog.andriishupta.dev
-→ andriishupta.dev/blog
-
-blog.andriishupta.dev/setup-supabase-with-nestjs?source=old
-→ andriishupta.dev/blog/setup-supabase-with-nestjs?source=old
-```
-
-### Safe Cloudflare cutover order
-
-1. Deploy the release and confirm that `/blog`, every article, RSS, and both
-   sitemaps return `200` on `andriishupta.dev`.
-2. Keep or create a `blog` DNS record with **Proxy status: Proxied**. A proxied
-   CNAME to `andriishupta.dev` is sufficient. Bulk Redirects only run when the
-   legacy hostname still reaches Cloudflare.
-3. In Cloudflare, open **Bulk redirects**, create a list, and import
-   `docs/cloudflare-blog-redirect.csv`. The CSV intentionally has no header.
-4. Create a Bulk Redirect Rule for that list and choose **Save and Deploy**.
-5. Test the legacy homepage, at least three article paths, HTTP and HTTPS, and a
-   URL with a query string.
-6. Remove obsolete Hashnode-specific DNS or verification records only after the
-   redirect tests pass. Do **not** remove the proxied `blog` traffic record while
-   the redirect must keep working.
-7. Keep the permanent redirect for at least 180 days; keeping it indefinitely
-   is safer for old bookmarks and backlinks.
-
-The temporary `distribution.hashnode` values that still use
-`blog.andriishupta.dev` are intentionally not rendered as cross-post links.
-Replace them with direct Hashnode publication URLs after the subdomain move.
-
-Cloudflare requires both the redirect list and a rule that enables that list.
-The hostname must remain proxied. See Cloudflare's
-[Bulk Redirect dashboard guide](https://developers.cloudflare.com/rules/url-forwarding/bulk-redirects/create-dashboard/),
-[redirect parameters](https://developers.cloudflare.com/rules/url-forwarding/bulk-redirects/reference/parameters/),
-and [Pages redirect limits](https://developers.cloudflare.com/pages/configuration/redirects/).
-
-### Verification commands
-
-```sh
-curl -I https://andriishupta.dev/blog
-curl -I https://andriishupta.dev/blog/setup-supabase-with-nestjs
-curl -I https://andriishupta.dev/blog/rss.xml
-curl -I https://andriishupta.dev/sitemap.xml
-curl -I https://andriishupta.dev/blog/sitemap.xml
-curl -I "https://blog.andriishupta.dev/setup-supabase-with-nestjs?source=old"
-```
-
-The first five must return `200`. The legacy URL must return one `301` whose
-`Location` is the matching `/blog/...` URL with the query string preserved.
-
-## Google Search Console re-indexing
-
-Do this after the production deploy and Cloudflare redirect are both live:
-
-1. Verify ownership of the `blog.andriishupta.dev` source property and the
-   `andriishupta.dev` destination property with the same Google account. Keep
-   the verification records in place during the move.
-2. In the destination property, submit
-   `https://andriishupta.dev/sitemap.xml`. It contains the blog index and every
-   complete article; `/blog/sitemap.xml` is optional because those URLs are
-   already present in the root sitemap.
-3. Use **URL Inspection** on `/blog` and all seven article URLs. Run **Test live
-   URL**, confirm indexing is allowed and the user-declared canonical matches,
-   then choose **Request indexing**.
-4. Open **Change of Address** in the verified
-   `blog.andriishupta.dev` property and select
-   `https://andriishupta.dev/blog/` as the destination. Google supports moving
-   a domain or subdomain to a path, but only after the permanent redirects are
-   live.
-5. Monitor Page indexing, crawl errors, canonical selection, impressions, and
-   clicks in both properties. Expect the old property to fall while the new
-   `/blog` URLs rise.
-6. Do not use the Removals tool for the old articles; permanent one-to-one
-   redirects transfer signals and let Google replace them naturally.
-
-Google recommends self-referencing canonicals, updated internal links, a new
-sitemap, and server-side permanent redirects for URL-changing moves. See the
-[site-move guide](https://developers.google.com/search/docs/crawling-indexing/site-move-with-url-changes),
-[Change of Address documentation](https://support.google.com/webmasters/answer/9370220),
-and [URL Inspection guide](https://support.google.com/webmasters/answer/12482179).
-
-Astro rebuilds the static route set during `astro build`; Cloudflare Pages then
-uploads the `dist` directory. The content model does not require SSR, Pages
-Functions, a Worker entry point, or a runtime database.
+`public/_redirects` handles path redirects on the Pages domain; it cannot
+replace the hostname-level Bulk Redirect. The static site does not need a
+Worker, Pages Function, server adapter, or runtime database.

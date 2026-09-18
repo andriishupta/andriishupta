@@ -61,20 +61,32 @@ export function stripMdxModuleLines(body: string | undefined) {
     .replace(/^export\s.+$/gm, "");
 }
 
+function getReadingText(body: string | undefined) {
+  return stripMdxModuleLines(body)
+    .replace(/^(?:`{3,}|~{3,})[^\n]*\n[\s\S]*?^(?:`{3,}|~{3,})[ \t]*$/gm, " ")
+    .replace(/<pre\b[^>]*>[\s\S]*?<\/pre>/gi, " ")
+    .replace(/<code\b[^>]*>[\s\S]*?<\/code>/gi, " ")
+    .replace(/(`+)[^`\n]*\1/g, " ")
+    .replace(/^(?: {4}|\t).+$/gm, " ")
+    .replace(/!\[[^\]]*\]\([^)]+\)/g, " ")
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+    .replace(/https?:\/\/\S+/g, " ")
+    .replace(/<[^>]+>/g, " ");
+}
+
 export function getReadingStats(
   body: string | undefined,
   originalReadingMinutes?: number,
 ) {
-  const text = stripMdxModuleLines(body)
-    .replace(/```[\s\S]*?```/g, " ")
-    .replace(/<[^>]+>/g, " ");
+  const source = stripMdxModuleLines(body).trim();
+  const text = getReadingText(body);
   const wordCount = text.match(wordPattern)?.length ?? 0;
   const readingMinutes =
     wordCount > 0
       ? Math.max(1, Math.ceil(wordCount / 220))
       : (originalReadingMinutes ?? 0);
 
-  return { wordCount, readingMinutes, isStub: wordCount === 0 };
+  return { wordCount, readingMinutes, isStub: source.length === 0 };
 }
 
 export function isBlogPostReady(post: BlogPost) {

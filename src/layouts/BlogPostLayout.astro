@@ -91,6 +91,7 @@ const labels = isUkrainian
       updated: "Оновлено",
       readingTime: "Час читання",
       originalReadingTime: "Початковий час читання",
+      minutes: "хв",
       words: "Слів",
       distribution: "Також опубліковано на",
       tags: "Теги статті",
@@ -109,6 +110,7 @@ const labels = isUkrainian
       updated: "Updated",
       readingTime: "Reading time",
       originalReadingTime: "Original read",
+      minutes: "min",
       words: "Words",
       distribution: "Also published on",
       tags: "Article tags",
@@ -188,15 +190,12 @@ const labels = isUkrainian
                       ? labels.originalReadingTime
                       : labels.readingTime}
                   </dt>
-                  <dd>{stats.readingMinutes} min</dd>
-                </div>
-              )
-            }
-            {
-              stats.wordCount > 0 && (
-                <div>
-                  <dt>{labels.words}</dt>
-                  <dd>{stats.wordCount.toLocaleString("en")}</dd>
+                  <dd>
+                    {stats.readingMinutes} {labels.minutes}
+                    {stats.wordCount > 0 && (
+                      <> / {stats.wordCount.toLocaleString(language === "uk" ? "uk-UA" : "en")} {labels.words.toLowerCase()}</>
+                    )}
+                  </dd>
                 </div>
               )
             }

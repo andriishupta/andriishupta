@@ -70,7 +70,7 @@ There are a few key points that I want to mention before the code.
 
 Enable it when you create tables
 
-![Enabling row-level security when creating a Supabase table](/images/blog/setup-supabase-with-nestjs/01-screenshot-2022-07-11-at-17-12-21.png)
+![Enabling row-level security when creating a Supabase table](https://andriishupta.dev/images/blog/setup-supabase-with-nestjs/01-screenshot-2022-07-11-at-17-12-21.png)
 
 I recommend creating two by default:
 
@@ -82,7 +82,7 @@ I recommend creating two by default:
 
 To make your application work with previous policies, don't forget to create the `user_id` column on each table that you use: it should be NOT null auto-generated `auth.uid()` field, so in this way, Supabase will always append the correct user to a row.
 
-![Configuring a user_id column with auth.uid() in Supabase](/images/blog/setup-supabase-with-nestjs/02-screenshot-2022-07-11-at-17-14-39.png)
+![Configuring a user_id column with auth.uid() in Supabase](https://andriishupta.dev/images/blog/setup-supabase-with-nestjs/02-screenshot-2022-07-11-at-17-14-39.png)
 
 You can bypass RLS with Service Keys if needed, but be careful.
 
@@ -126,7 +126,7 @@ _strange "extend"_ `PassportStrategy(Strategy)` is TypeScript Mixins
 
 🔗 [source-code](https://github.com/andriishupta/nestjs-supabase-setup/blob/main/src/common/supabase/supabase.strategy.ts)
 
-![Passport JWT strategy configured with the Supabase JWT secret](/images/blog/setup-supabase-with-nestjs/03-strategy-code.png)
+![Passport JWT strategy configured with the Supabase JWT secret](https://andriishupta.dev/images/blog/setup-supabase-with-nestjs/03-strategy-code.png)
 
 ### Guard
 
@@ -136,7 +136,7 @@ Here we extend AuthGuard with the `jwt` strategy(this is how passport-jwt named 
 
 🔗 [source-code](https://github.com/andriishupta/nestjs-supabase-setup/blob/main/src/common/supabase/supabase.guard.ts)
 
-![NestJS Supabase authentication guard](/images/blog/setup-supabase-with-nestjs/04-guard-code.png)
+![NestJS Supabase authentication guard](https://andriishupta.dev/images/blog/setup-supabase-with-nestjs/04-guard-code.png)
 
 ### Service: `Scope.REQUEST`
 
@@ -144,7 +144,7 @@ This service will `createClient` for every request and `setAuth`, so we will hav
 
 🔗 [source-code](https://github.com/andriishupta/nestjs-supabase-setup/blob/main/src/common/supabase/supabase.ts)
 
-![Request-scoped NestJS service that creates an authenticated Supabase client](/images/blog/setup-supabase-with-nestjs/05-service-code.png)
+![Request-scoped NestJS service that creates an authenticated Supabase client](https://andriishupta.dev/images/blog/setup-supabase-with-nestjs/05-service-code.png)
 
 Why?
 
@@ -156,7 +156,7 @@ That is why it is essential to use `@Injectable({ scope: Scope.REQUEST })` so ou
 
 Another example: [Next.js & SSR with react-query](https://react-query-v3.tanstack.com/guides/ssr#using-hydration)
 
-![Injecting the request-scoped Supabase service into another NestJS service](/images/blog/setup-supabase-with-nestjs/06-image.png)
+![Injecting the request-scoped Supabase service into another NestJS service](https://andriishupta.dev/images/blog/setup-supabase-with-nestjs/06-image.png)
 
 _Disclaimer: I haven't tested it for multiple users yet, but I am pretty sure about it._ I haven't found other ways to pass Auth with one Client in docs by appending `access_token` - only `setAuth` to Client directly.
 
@@ -166,19 +166,19 @@ _Possible solution_: Supabase could tweak auth flow, where with a unique setup, 
 
 After everything is finished - let's try to call our server.
 
-![Postman request rejected with a 401 response](/images/blog/setup-supabase-with-nestjs/07-screenshot-2022-07-11-at-17-43-46.png)
+![Postman request rejected with a 401 response](https://andriishupta.dev/images/blog/setup-supabase-with-nestjs/07-screenshot-2022-07-11-at-17-43-46.png)
 
 As expected, we get a 401 code - this is _passport.js_ does it check for JWT in our **SupabaseGuard**
 
 Let's now get a valid `access_token` and repeat the call:
 
-![Postman request authenticated with a Supabase access token](/images/blog/setup-supabase-with-nestjs/08-screenshot-2022-07-11-at-21-10-20.png)
+![Postman request authenticated with a Supabase access token](https://andriishupta.dev/images/blog/setup-supabase-with-nestjs/08-screenshot-2022-07-11-at-21-10-20.png)
 
 💪 💪 💪
 
 _access token available after you log in with a user. In my case, I have just sent "Magic Link" and got_ `acces_token` from the URL
 
-![Supabase magic-link callback URL containing the access token](/images/blog/setup-supabase-with-nestjs/09-screenshot-2022-07-11-at-21-08-01.png)
+![Supabase magic-link callback URL containing the access token](https://andriishupta.dev/images/blog/setup-supabase-with-nestjs/09-screenshot-2022-07-11-at-21-08-01.png)
 
 ## 📋 Summary - TL;DR;
 

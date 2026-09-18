@@ -2,8 +2,11 @@
 
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig } from "astro/config";
+import { remarkLocalImages } from "./src/lib/remark-local-images.mjs";
 
 import mdx from "@astrojs/mdx";
+
+const isDevelopment = process.argv.includes("dev");
 
 // https://astro.build/config
 export default defineConfig({
@@ -14,6 +17,9 @@ export default defineConfig({
   },
 
   integrations: [mdx()],
+  markdown: {
+    remarkPlugins: isDevelopment ? [remarkLocalImages] : [],
+  },
   devToolbar: {
     enabled: false,
   },

@@ -1,6 +1,7 @@
 ---
-title: "How I Built a Hono Wrapper in Gleam"
-slug: "how-to-write-wrappers-in-gleam"
+title: "Gono - an experimental Hono wrapper in Gleam"
+slug: "gono-an-experimental-hono-wrapper-in-gleam"
+ogImage: "/blog/gono-an-experimental-hono-wrapper-in-gleam/og.png"
 subtitle: "What a small library taught me about FFI, JavaScript interop, and package design"
 description: "How I built Gono, a small Hono wrapper, to learn Gleam and understand safe JavaScript FFI boundaries."
 tags:
@@ -25,7 +26,7 @@ draft: true
 - [Gleam pipelines](https://tour.gleam.run/functions/pipelines/)
 - [Gleam `use` expressions](https://tour.gleam.run/advanced-features/use/)
 
-## 🤓 Why I built Gono
+## Why I built Gono
 
 I wanted to learn Gleam by building something real.
 
@@ -60,7 +61,7 @@ Hono values and JavaScript failures
 
 This article shows the parts of Gono that helped me understand that flow. The project is still experimental, but the same lessons apply to many JavaScript wrappers.
 
-## 🔌 A binding is not yet a good wrapper
+## A binding is not yet a good wrapper
 
 A basic binding answers one question: how can Gleam call this JavaScript function?
 
@@ -75,7 +76,7 @@ A useful wrapper also decides what the JavaScript API should feel like in Gleam.
 
 Hono uses all of these patterns. Gono therefore needed more than direct bindings. It needed its own application type, handler and middleware results, runtime errors, and pipeline-friendly functions.
 
-## 🧱 Keep foreign values opaque
+## Keep foreign values opaque
 
 The first decision was how much Gleam should know about a Hono object.
 
@@ -108,7 +109,7 @@ The JavaScript side can document the real shape with JSDoc:
 
 JSDoc gives JavaScript tooling useful information, while the Gleam declaration protects callers on the Gleam side. Neither validates the runtime boundary by itself.
 
-## 🧩 Define small FFI functions
+## Define small FFI functions
 
 An external function has no Gleam body. `@external` tells Gleam which JavaScript function to call:
 
@@ -157,7 +158,7 @@ pub fn new(builder: GonoBuilder) -> Result(Gono, GonoError) {
 
 This gives callers a normal Gleam `Result` instead of exposing a JavaScript exception. The declaration describes the contract; the JavaScript code still has to keep it at runtime.
 
-## 🏗️ Keep the public API natural in Gleam
+## Keep the public API natural in Gleam
 
 I did not want users to configure Gono through a JavaScript-shaped object. The configuration is normal Gleam code:
 
@@ -199,7 +200,7 @@ pub opaque type Gono {
 
 The instance keeps configuration beside the Hono object without exposing its internal shape. It also separates building configuration from creating the foreign object.
 
-## 🔁 Wrap mutation in a pipeline-friendly API
+## Wrap mutation in a pipeline-friendly API
 
 Hono's registration methods mutate an application and return the same Hono instance:
 
@@ -253,7 +254,7 @@ let app =
 
 Gleam's pipe operator passes the value on the left as the first argument to the next function. Put the wrapper's main subject first so callers can compose operations naturally.
 
-## 🎭 Make handler results explicit
+## Make handler results explicit
 
 Hono handlers may return a response immediately or through a promise. Gono makes those two cases visible in the type:
 
@@ -300,7 +301,7 @@ fn unwrap_handler(
 
 The caller can see that a handler may finish now or later. The adapter converts both cases into the promise-based shape expected by Hono.
 
-## 🧠 Put policy in Gleam
+## Put policy in Gleam
 
 Most JavaScript functions in Gono are deliberately small:
 
@@ -351,7 +352,7 @@ This became an important rule for Gono:
 
 The JavaScript file stays focused on interop. The behavior that Gono owns remains visible and testable in Gleam.
 
-## 🧅 Model middleware flow instead of hiding it
+## Model middleware flow instead of hiding it
 
 Hono middleware has two useful outcomes:
 
@@ -466,7 +467,7 @@ export function context_next(context) {
 
 The symbol keeps this bridge private and reduces the chance of a property collision. Gleam users only see `context.next`, not the mutable value attached to the JavaScript context.
 
-## ⚠️ The main lesson: contain JavaScript failures
+## The main lesson: contain JavaScript failures
 
 This was the most important lesson from the project.
 
@@ -529,7 +530,7 @@ If the error needs to be handled at that point, use `promise.await` and match on
 
 For callback-based APIs, adapt the callback once with `promise.new`, then keep the rest of the flow in Gleam.
 
-## 🔄 Convert values once, at the edge
+## Convert values once, at the edge
 
 Gleam lists and JavaScript arrays are different runtime representations. Gono converts them in the FFI rather than making every public function expose JavaScript-specific details:
 
@@ -601,7 +602,7 @@ This code depends on Gleam's generated JavaScript representation, such as `$glea
 
 Convert values once, close to the FFI, and keep the rest of the wrapper idiomatic Gleam.
 
-## 🧭 Separate Node and Bun
+## Separate Node and Bun
 
 The Hono application is JavaScript-runtime agnostic, but starting a server is not. Gono keeps Node and Bun adapters in separate modules:
 
@@ -653,7 +654,7 @@ The `try/catch` only handles failures during setup. A Node server can emit an er
 
 This keeps Node-specific behavior out of the core wrapper. Gono uses the same structure for Bun.
 
-## 🧪 Use tests as documentation
+## Use tests as documentation
 
 The Gono tests show how I expect the wrapper to be used. They also verify the part the Gleam compiler cannot see: whether JavaScript really returns the promised representation.
 
@@ -710,7 +711,7 @@ The difficult part of a wrapper is often not the direct method call. It is prese
 
 Gleeunit exits the process when test execution finishes. A test that starts a real Node or Bun server should use a dedicated integration or end-to-end runner instead of relying on the unit-test process to stay alive.
 
-## ✅ What I would repeat
+## What I would repeat
 
 If I write another JavaScript wrapper in Gleam, I will follow the same rules:
 
@@ -726,7 +727,7 @@ If I write another JavaScript wrapper in Gleam, I will follow the same rules:
 10. Keep runtime-specific adapters separate from the core wrapper.
 11. Test the contract the compiler cannot see: foreign identity, callback order, promise behavior, value conversion, and error paths.
 
-## 🏁 What I got from the experiment
+## What I got from the experiment
 
 Gono is a small project. It was never meant to replace Hono or become a large framework.
 

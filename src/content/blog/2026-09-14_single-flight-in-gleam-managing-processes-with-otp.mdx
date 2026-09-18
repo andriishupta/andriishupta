@@ -30,7 +30,7 @@ draft: true
 - [Erlang/OTP design principles](https://www.erlang.org/doc/system/design_principles.html)
 - [Go singleflight package](https://pkg.go.dev/golang.org/x/sync/singleflight)
 
-## 🤓 The idea
+## The idea
 
 I wanted to build a single-flight mechanism in Gleam.
 
@@ -64,7 +64,7 @@ I built [SingleFlight](https://github.com/andriishupta/single_flight) as a typed
 
 Keep one example in mind while reading. An access token expires and 100 requests notice it together. The application needs one refresh attempt and one shared result. It also needs a timeout if the provider stalls and a clear failure path if the refresh process crashes. A mutex can stop parallel refreshes, but it does not explain what happens to waiting callers or failed work. In this implementation, one temporary actor owns that whole lifecycle.
 
-## 🎯 What I wanted to practise
+## What I wanted to practise
 
 This project was mainly a way to learn Gleam and OTP by building something real. I wanted to practise:
 
@@ -78,7 +78,7 @@ This project was mainly a way to learn Gleam and OTP by building something real.
 
 The implementation became larger than the original idea because concurrency code needs explicit answers to uncomfortable questions. What happens if the callback process dies? What if the timeout and result arrive almost together? Who owns the cached value? What restarts after a crash? The code became interesting when I stopped treating these as edge cases.
 
-## 🧠 The BEAM mental model
+## The BEAM mental model
 
 Erlang processes are small isolated units of concurrency. They do not share mutable state. Each process owns its data and receives messages through a mailbox.
 
@@ -93,7 +93,7 @@ Gleam exposes these BEAM concepts through typed APIs. A <code>process.Subject(Me
 
 The same design in Erlang would use pids, <code>receive</code>, monitors, and supervisors directly. In Elixir, it could use a <code>GenServer</code> and <code>Supervisor</code>. Gleam runs on the same BEAM, but its types make the messages and public API easier to follow.
 
-## 🏗️ A functional API instead of hidden global state
+## A functional API instead of hidden global state
 
 This project also made the difference between a functional Gleam API and a typical OO or JavaScript API much clearer to me.
 
@@ -156,7 +156,7 @@ let assert Ok(value) = get_user |> single_flight.call(7)
 
 The resulting <code>Operation(param, result)</code> keeps the operation identity, callbacks, process names, and settings together. Callers do not pass string operation names and do not cast results. <code>Result</code> also forces the caller to handle runtime failures instead of hiding them behind exceptions.
 
-## 🔑 The key is the equivalence relation
+## The key is the equivalence relation
 
 The key function is not merely a cache-key helper. It defines when two calls represent the same work.
 
@@ -191,7 +191,7 @@ type Operations {
 
 This is more than a naming detail. It lets one application keep a heterogeneous operation catalogue without forcing every operation to share one global key namespace.
 
-## 🧭 The process topology
+## The process topology
 
 The runtime has two long-lived OTP children and one temporary process per active or retained key:
 
@@ -278,7 +278,7 @@ The architecture is easier to reason about as four invariants:
 
 Most of the defensive code preserves these rules around races. The operation reference prevents cross-operation collisions. Sequential coordinator messages prevent duplicate ownership. Attempt ids reject stale completion and timer messages. Pid checks prevent old monitor or expiry events from deleting replacement flights.
 
-## ⚙️ How <code>call</code> and <code>send</code> differ
+## How <code>call</code> and <code>send</code> differ
 
 The synchronous API waits for an outcome:
 
@@ -343,7 +343,7 @@ This matters when the same runtime is copied into handles with different operati
 
 Each synchronous caller still computes its own receive deadline from its handle. Joining a longer-running flight therefore does not force every caller to wait for the same amount of time. A caller can return <code>Timeout</code> locally while the shared flight continues for its other waiters. Version 1 has no caller cancellation, so that timed-out caller's reply subject remains in the flight until it settles; the eventual message no longer has an active <code>call</code> waiting on it.
 
-## 🛫 One flight actor owns one key
+## One flight actor owns one key
 
 The internal <code>flight</code> module models a small state machine:
 
@@ -395,7 +395,7 @@ The lifecycle can be read as one compact state machine:
 
 The finalizing states are important. Waiters are notified only after the coordinator has either registered the retained entry or removed the dropped one. A new caller cannot slip into a gap where the old result has been published but key ownership is undecided.
 
-## 👀 Monitoring failure without coupling lifetimes
+## Monitoring failure without coupling lifetimes
 
 The callback worker is started with <code>process.spawn_unlinked</code>. It is not linked to the flight actor, so a callback crash does not automatically crash the actor that owns all waiters. The flight actor instead explicitly monitors the worker:
 
@@ -427,7 +427,7 @@ The flight receives <code>OperationTimedOut(id)</code>. It demonitor the worker,
 
 The worker is intentionally separate from the flight actor. The flight actor remains alive long enough to coordinate retries and fan out one final outcome to all accepted waiters. A monitor is one-way observation, unlike a link: the worker can fail without taking its owner down with it.
 
-## 🔁 Retries are coordinated at the flight level
+## Retries are coordinated at the flight level
 
 Retries are not implemented by each caller independently. That would destroy the single-flight property: five waiters could each retry the same failed request. Instead, one flight owns the retry policy and every accepted waiter observes the outcome of the same attempt sequence.
 
@@ -471,7 +471,7 @@ The tests exercise both classes of failure. One callback kills its own worker on
 
 Retries do not provide exactly-once execution. A VM crash, process failure after an external side effect, or timeout around a callback that continued outside the BEAM's control can produce repeated effects. Side-effecting callbacks should be idempotent or use an external idempotency key.
 
-## 🌲 The supervision tree and restart semantics
+## The supervision tree and restart semantics
 
 SingleFlight supports two startup modes. The simple mode starts its own tree:
 
@@ -526,7 +526,7 @@ let assert Ok(instance) = single_flight.connect(pending)
 
 This separation makes ownership explicit: the application supervises the runtime, while SingleFlight still owns the internal relationship between its coordinator and factory supervisor.
 
-## 🗃️ Caching splits ownership between two actors
+## Caching splits ownership between two actors
 
 Deduplication and caching are related, but they are not identical:
 
@@ -609,7 +609,7 @@ let retained =
 
 The returned handle shares the same supervised processes and typed operation collection. Timeout, retry, retention, and waiter policies come from the new handle; <code>max_active_flights</code>, <code>max_cached_items</code>, and <code>max_cached_bytes</code> remain fixed properties of the running runtime. This avoids one lightweight handle silently changing the resource contract for every other caller.
 
-## 🧱 Backpressure: bounds are part of correctness
+## Backpressure: bounds are part of correctness
 
 Concurrency collapsing can still create unbounded memory usage if thousands of callers wait for one slow operation. SingleFlight therefore exposes a waiter limit:
 
@@ -642,7 +642,7 @@ cache limits       → how much completed state can be retained
 
 The tests make both behaviors observable. With <code>max_waiters(1)</code>, a second caller for a slow key is rejected. With <code>max_flights(1)</code>, a second distinct key is rejected while the first callback is running, but it succeeds after the first flight completes.
 
-## 🧪 What the tests prove
+## What the tests prove
 
 The test suite is valuable because most bugs in this type of runtime are races rather than type errors. It checks the public behavior with real processes and timers:
 
@@ -682,7 +682,7 @@ The external-supervision test starts the returned child specification under a st
 
 These tests are not implementation snapshots. They describe the behavioral contract that makes the process topology useful.
 
-## 🧭 A practical decision guide
+## A practical decision guide
 
 Before wrapping an operation in SingleFlight, answer these questions:
 
@@ -695,7 +695,7 @@ Before wrapping an operation in SingleFlight, answer these questions:
 
 For the token-refresh example, the account or credential identity becomes the key, retries must respect the provider's refresh-token semantics, the success may be retained until shortly before token expiry, and failures should normally have a much shorter TTL—or no cache at all.
 
-## ⚠️ What SingleFlight does not promise
+## What SingleFlight does not promise
 
 The library is local to one BEAM node in its current v1 implementation. It does not coordinate ownership across distributed nodes. Two nodes can independently execute the same key.
 
@@ -710,7 +710,7 @@ For idempotent reads, this is usually straightforward. For writes, use an idempo
 
 The current v1 intentionally leaves out distributed ownership, caller cancellation, explicit cache invalidation, and metrics. Those are separate design problems, not small switches to add later.
 
-## 🧩 The whole design in one sentence
+## The whole design in one sentence
 
 SingleFlight turns a parameter into a scoped key, lets one coordinator claim that key, gives one temporary flight actor ownership of the work and its waiters, monitors the callback process, and uses supervision to restart only the infrastructure that can be rebuilt safely.
 
@@ -725,13 +725,13 @@ let assert Ok(user) =
 
 The call site is small because every piece of state has a clear owner. There is no shared mutable map hidden behind the API.
 
-## 🚀 When I would use it
+## When I would use it
 
 I would use SingleFlight when the same expensive operation can be requested concurrently and sharing one result is correct. Good examples are remote reads, token refreshes, cache rebuilds, report generation, and expensive pure computations.
 
 I would not use it when every request must run independently, when callers need cancellation, or when ownership must be coordinated across several BEAM nodes. A queue, distributed lock, durable workflow, or domain-level idempotency mechanism may fit those cases better.
 
-## 🤖 What AI helped with
+## What AI helped with
 
 AI helped me enter an unfamiliar language faster. It was useful for finding APIs, comparing approaches, generating small experiments, and explaining compiler errors.
 
@@ -739,7 +739,7 @@ But concurrency code is exactly where I do not want to accept generated code wit
 
 If the goal is only to produce working code, an agent can do a large part of the implementation. If the goal is to learn, giving the whole problem away removes the most valuable part: building the mental model yourself.
 
-## 💡 What I took away
+## What I took away
 
 The main lesson for me was not the single-flight algorithm itself. It was learning to design around ownership.
 

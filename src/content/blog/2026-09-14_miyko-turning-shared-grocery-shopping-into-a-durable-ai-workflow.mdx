@@ -28,7 +28,7 @@ import PhoneScreenshot from "../../components/PhoneScreenshot.astro";
 - [AI Factory by Silpo](https://ai-factory.silpo.ua/)
 - [MiyKo demo video](https://www.youtube.com/watch?v=vv08wWowRTE)
 
-## 🤓 The idea
+## The idea
 
 I built MiyKo for the AI Factory by Silpo hackathon.
 
@@ -58,7 +58,7 @@ At that point, it is no longer only a chat. It is a process with people, roles, 
 
 That was the main experiment behind MiyKo.
 
-## 🏠 Why household changes the product
+## Why household changes the product
 
 The household can be a family, one person or a temporary group. The same model can work for an office lunch, a party or a picnic.
 
@@ -77,7 +77,7 @@ In the MVP, an owner or admin can approve requests and perform provider actions.
 
 This is important because the AI does not decide who has authority. The API knows the authenticated member and their role. A prompt cannot turn a viewer into an owner.
 
-## 🧭 The complete MiyKo flow
+## The complete MiyKo flow
 
 The demo follows one shared order from the first request to the Silpo checkout.
 
@@ -85,7 +85,7 @@ The demo follows one shared order from the first request to the Silpo checkout.
 
 The MVP uses one workflow kind called `step-order`. LangGraph keeps the active state, pauses when a decision is needed and resumes the same workflow later.
 
-![MiyKo step-order workflow graph](/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/01-langgraph-step-order-graph.png)
+![MiyKo step-order workflow graph](https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/01-langgraph-step-order-graph.png)
 
 This graph is not only a chain of AI calls. It represents the real lifecycle of the order: planning, member changes, approvals, provider actions and completion.
 
@@ -93,11 +93,11 @@ This graph is not only a chain of AI calls. It represents the real lifecycle of 
 
 Each household member has a separate authenticated session. They do not share login credentials, but they can see the same active workflow.
 
-![MiyKo owner and viewer dashboards](/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/02-dual-user-empty-dashboard.png)
+![MiyKo owner and viewer dashboards](https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/02-dual-user-empty-dashboard.png)
 
 The household screen shows members, roles and the connected provider. The owner connects Silpo once for the whole household.
 
-![MiyKo household members and connected provider](/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/03-household-members-and-provider.png)
+![MiyKo household members and connected provider](https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/03-household-members-and-provider.png)
 
 Other members can use that connection through the workflow, but they never receive the provider token.
 
@@ -106,7 +106,7 @@ Other members can use that connection through the workflow, but they never recei
 The owner connects Silpo through OAuth 2.1 with PKCE. Authentication happens on the Silpo side, so MiyKo never asks for the owner’s store password.
 
 <PhoneScreenshot
-  src="/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/04-silpo-oauth-authorization.png"
+  src="https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/04-silpo-oauth-authorization.png"
   alt="Silpo OAuth authorization for MiyKo"
   width={892}
   height={1910}
@@ -118,11 +118,11 @@ The credentials remain encrypted on the backend. When the workflow needs to call
 
 Before starting the first order, the owner can import a summary of recent Silpo receipts.
 
-![Recent Silpo purchases stored as MiyKo memory](/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/05-mem0-order-history-memories.png)
+![Recent Silpo purchases stored as MiyKo memory](https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/05-mem0-order-history-memories.png)
 
 This gives MiyKo context such as products the household bought before or choices that may be useful again.
 
-![MiyKo household memory in Mem0](/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/13-mem0-memory-dashboard.png)
+![MiyKo household memory in Mem0](https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/13-mem0-memory-dashboard.png)
 
 Memory helps the agent make a better suggestion. It does not give permissions and it does not replace the current provider data.
 
@@ -131,7 +131,7 @@ Memory helps the agent make a better suggestion. It does not give permissions an
 The owner starts a dinner workflow in the React Native app.
 
 <PhoneScreenshot
-  src="/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/06-owner-order-dashboard.png"
+  src="https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/06-owner-order-dashboard.png"
   alt="Owner starting a dinner workflow in MiyKo"
   width={884}
   height={1914}
@@ -140,7 +140,7 @@ The owner starts a dinner workflow in the React Native app.
 MiyKo reads relevant memory and creates the initial shared plan. At this point, the Silpo basket is still untouched.
 
 <PhoneScreenshot
-  src="/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/07-step-order-initial-plan.png"
+  src="https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/07-step-order-initial-plan.png"
   alt="Initial shared dinner plan in MiyKo"
   width={880}
   height={1908}
@@ -152,7 +152,7 @@ I wanted planning and execution to be separate. During planning, people can spea
 
 When a viewer asks to add ice cream, the request remains in the same workflow and waits for an owner or admin.
 
-![Household request and owner approval in MiyKo](/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/10-household-approval-flow.png)
+![Household request and owner approval in MiyKo](https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/10-household-approval-flow.png)
 
 After approval, LangGraph resumes the same thread. The context is not copied into a new chat and the order is not recreated from scratch.
 
@@ -163,7 +163,7 @@ Only after the household agrees on the plan does an authorized member ask MiyKo 
 The workflow discovers the current Silpo MCP tools, resolves products and updates the real provider basket. Product names, images, prices and totals come from Silpo, not from a local MiyKo catalog.
 
 <PhoneScreenshot
-  src="/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/08-silpo-basket-ready.png"
+  src="https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/08-silpo-basket-ready.png"
   alt="Real Silpo basket prepared through MiyKo"
   width={880}
   height={1914}
@@ -171,14 +171,14 @@ The workflow discovers the current Silpo MCP tools, resolves products and update
 
 The workflow also writes structured logs for model calls, MCP discovery and provider actions. Credentials, prompts and raw sensitive arguments are not logged.
 
-![Silpo MCP actions in the MiyKo workflow logs](/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/09-silpo-mcp-workflow-logs.png)
+![Silpo MCP actions in the MiyKo workflow logs](https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/09-silpo-mcp-workflow-logs.png)
 
 ### 8. Checkout still belongs to Silpo
 
 Silpo MCP can work with the basket and return a checkout link, but it does not expose a final place-order tool. MiyKo prepares the basket; the owner finishes the purchase in Silpo.
 
 <PhoneScreenshot
-  src="/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/11-silpo-checkout-basket.png"
+  src="https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/11-silpo-checkout-basket.png"
   alt="Silpo checkout basket prepared by MiyKo"
   width={916}
   height={1766}
@@ -186,11 +186,11 @@ Silpo MCP can work with the basket and return a checkout link, but it does not e
 
 That boundary is intentional. MiyKo must not say that an order is complete when it only has a basket and a checkout URL.
 
-![Completed MiyKo workflow on two household dashboards](/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/12-completed-order-dashboard.png)
+![Completed MiyKo workflow on two household dashboards](https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/12-completed-order-dashboard.png)
 
 The screenshot shows a completed MiyKo workflow. The final provider confirmation still happens in Silpo.
 
-## 🧠 Memory, not chat history
+## Memory, not chat history
 
 I was not interested in storing a long chat transcript and calling it memory.
 
@@ -211,7 +211,7 @@ For example, “the household often buys food for two days” can be long-term m
 
 This separation also protects the permission model. Memory may say that a child likes ice cream, but it cannot approve the purchase. The API still checks the real member role.
 
-## 🔄 Durable workflows after experimenting with Temporal
+## Durable workflows after experimenting with Temporal
 
 In another project, Encois, I experimented with Temporal for durable workflows.
 
@@ -234,7 +234,7 @@ For reliable delivery, API actions go through an outbox worker. Temporary failur
 
 The local LangGraph Agent Server was enough for the hackathon demo. It keeps development checkpoints across ordinary local restarts while its storage is preserved. A production version would need stronger durability guarantees for machine loss and deployment replacement.
 
-## 🧩 Keeping the architecture small
+## Keeping the architecture small
 
 MiyKo has five main runtime boundaries:
 
@@ -263,7 +263,7 @@ This was an important decision. Creating tables for everything would make the sy
 
 The simpler answer is to leave provider data with the provider, workflow state with LangGraph and reusable memory with Mem0.
 
-## 🔌 Providers beyond Silpo
+## Providers beyond Silpo
 
 Silpo is the only implemented provider in the MVP, because this was a Silpo hackathon and I wanted one real end-to-end integration.
 
@@ -277,7 +277,7 @@ But the household workflow should not depend on one store forever. The longer-te
 
 That is why provider authentication and MCP integration sit behind a separate boundary. Adding a new store should not require rebuilding household membership, approvals or memory.
 
-## 📱 The UI lesson
+## The UI lesson
 
 I built the client as a React Native app.
 
@@ -293,7 +293,7 @@ For MiyKo, this mattered because the UI had to explain several states without ex
 
 Those details are difficult to solve in one prompt. They become clear through iteration.
 
-## 💸 Models and cost
+## Models and cost
 
 I do not try to run every task on the most expensive model.
 
@@ -308,7 +308,7 @@ This is especially important for UI work. Even an expensive agent can build the 
 
 Model choice does not replace good task decomposition. A strong model is most useful when the problem requires it, not when the prompt is still vague.
 
-## ⚖️ What belonged in the hackathon MVP
+## What belonged in the hackathon MVP
 
 I focused on one complete scenario:
 
@@ -324,7 +324,7 @@ Notifications, recurring orders, multi-store comparison and production deploymen
 
 For an AI prototype, one real end-to-end flow is more valuable than a large feature list built around mocked integrations.
 
-## 📚 What I learned
+## What I learned
 
 AI is very good at implementation when you already understand the system boundaries.
 

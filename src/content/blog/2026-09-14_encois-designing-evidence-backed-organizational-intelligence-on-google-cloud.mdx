@@ -29,7 +29,7 @@ draft: true
 - Temporal
 - Google Agent Development Kit
 
-## 🤓 The idea
+## The idea
 
 Encois is a small organizational intelligence system.
 
@@ -56,7 +56,7 @@ It is:
 
 That is the problem I wanted Encois to explore.
 
-## 🤔 Why I did not want to build another RAG chatbot
+## Why I did not want to build another RAG chatbot
 
 The most obvious implementation would be to collect company documents, put them into a vector database and add a chat interface.
 
@@ -81,7 +81,7 @@ In simple terms: less hallucination, more operational truth.
 
 RAG can still be one part of the system. It can help retrieve relevant semantic context. But retrieval should not decide who can access data, whether a workflow completed, or whether an external action is allowed.
 
-## 🔎 A simple example
+## A simple example
 
 Imagine a delivery manager asking:
 
@@ -99,7 +99,7 @@ The recommendation should not hide the evidence behind it. A user should be able
 
 This is a small difference in the UI, but a big difference in the architecture. The system needs provenance, freshness, identity, scope and durable execution—not only a prompt and an answer.
 
-## 🧠 I started with system design
+## I started with system design
 
 Encois was a hackathon project built around Google Cloud and enterprise agents.
 
@@ -136,7 +136,7 @@ Company systems and events
 
 The important decision was not the number of services. It was giving each part one clear responsibility.
 
-## 🧩 The main product concepts
+## The main product concepts
 
 I separated the product into a few concepts:
 
@@ -159,7 +159,7 @@ This may look like extra structure for a hackathon project. But it solves an imp
 
 If a Template changes tomorrow, an old Run still points to the immutable Blueprint used at the time. The system does not silently reinterpret its history using a new configuration.
 
-## 📡 Events, connectors and changing context
+## Events, connectors and changing context
 
 An organizational intelligence system cannot depend only on manual questions.
 
@@ -183,7 +183,7 @@ The ingestion workflow reads the artifact through the private Agent Gateway, nor
 
 This keeps the original Source separate from derived context. A generated memory is useful, but it is not stronger evidence than the event or document it came from.
 
-## 🔄 Temporal and durable execution
+## Temporal and durable execution
 
 One thing I specifically wanted to practice was durable workflows.
 
@@ -231,7 +231,7 @@ The current implementation runs one approved Google ADK Agent Definition as one 
 
 The trade-off is that internal agent turns have coarser visibility and retry behavior. A deeper Temporal/ADK integration could later make model calls and tool operations separate Activities, but that would need careful validation around determinism and dependency compatibility.
 
-## 🤖 AI was not one unrestricted agent
+## AI was not one unrestricted agent
 
 The system does not give one agent every tool and ask it to operate the company.
 
@@ -255,7 +255,7 @@ Tools are read-only by default. If Encois later writes to Jira, GitHub or anothe
 
 A recommendation is not an automatic action.
 
-## ☁️ What each Google Cloud service owns
+## What each Google Cloud service owns
 
 I did not want to use Google Cloud services only to make the architecture diagram look impressive. Each one needed a clear reason to exist.
 
@@ -307,7 +307,7 @@ Cloud Logging, Cloud Trace and OpenTelemetry-compatible instrumentation make the
 
 The system records events, timing, retries, evidence reads and error classes. It does not need to store hidden reasoning, full prompts, raw documents or tokens in logs.
 
-## 🔐 Permissions have to survive the whole workflow
+## Permissions have to survive the whole workflow
 
 Organization is the hard tenant boundary in Encois.
 
@@ -325,7 +325,7 @@ This matters because a workflow may continue long after the browser request has 
 
 The system also fails closed. Missing or unknown data is not converted into a convenient successful state. A missing onboarding record is an error. An unknown Run status is a contract mismatch. A provider authentication failure remains visible as degraded or requiring reauthorization.
 
-## 🧑‍💻 Using AI to build outside my main stack
+## Using AI to build outside my main stack
 
 There was another AI lesson inside this project.
 
@@ -349,7 +349,7 @@ This worked because the system already had clear boundaries. The API agent did n
 
 The same principle applied both to the product and to building it: specialized agents are more useful when their scope is clear.
 
-## 🖥️ The UI lesson
+## The UI lesson
 
 The Dashboard turned out well for a developer and hackathon demo.
 
@@ -372,7 +372,7 @@ That is a better product direction than ten pages of technically correct data.
 
 The underlying control plane is still necessary. Integrations, Sources, permissions and workflow definitions need somewhere to be managed. But they should support the intelligence experience rather than become the main experience.
 
-## 🧪 Local demo and current limits
+## Local demo and current limits
 
 The local environment keeps the same application topology using Docker Compose, PostgreSQL, Temporal, Auth and Storage emulators, the Dashboard, Gateway, Runtime and Agent Gateway.
 
@@ -392,7 +392,7 @@ The project is still a hackathon MVP. Some important work remains:
 
 I prefer keeping these limitations visible instead of describing planned architecture as a finished enterprise platform.
 
-## 🚀 Where Encois could go next
+## Where Encois could go next
 
 The next version should not start by adding more pages or giving the agent more tools.
 
@@ -404,7 +404,7 @@ Agents could also propose new Sources, Blueprints or workflow configurations bas
 
 External actions may eventually be useful, but only as explicit capabilities. An agent that can create a Jira issue or change a deployment needs a much stronger approval and recovery model than an agent that recommends the action.
 
-## 📚 Conclusion
+## Conclusion
 
 Encois started from a simple idea: company context is always changing, and useful organizational AI has to change with it.
 

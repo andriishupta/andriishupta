@@ -29,7 +29,7 @@ MiyKo, або «Мій кошик», — це проєкт, який я зроб
 
 Не просто чат із магазином, а спільне замовлення, яке живе достатньо довго, щоб у ньому встигли взяти участь кілька людей.
 
-## Links
+## 🔗 Links
 
 - [GitHub repository](https://github.com/andriishupta/miyko)
 - [Hackathon submission](https://ai-house-hackathon.devpost.com/)
@@ -48,7 +48,7 @@ MiyKo, або «Мій кошик», — це проєкт, який я зроб
 
 Саме це стало основною ідеєю MiyKo.
 
-![LangGraph order workflow із кроками планування, перегляду та підтвердження](/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/01-langgraph-step-order-graph.png)
+![LangGraph order workflow із кроками планування, перегляду та підтвердження](https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/01-langgraph-step-order-graph.png)
 
 ## Чому household змінює продукт
 
@@ -58,16 +58,16 @@ MiyKo, або «Мій кошик», — це проєкт, який я зроб
 
 Тому household у MiyKo — це не просто груповий чат. Це окрема boundary системи з учасниками, ролями, спільним контекстом і власним життєвим циклом замовлення.
 
-![Два користувачі бачать порожній dashboard спільного household](/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/02-dual-user-empty-dashboard.png)
+![Два користувачі бачать порожній dashboard спільного household](https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/02-dual-user-empty-dashboard.png)
 
-![Учасники household та підключений shopping provider](/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/03-household-members-and-provider.png)
+![Учасники household та підключений shopping provider](https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/03-household-members-and-provider.png)
 
 ## Повний workflow
 
 Перший реальний provider у проєкті — Silpo. Користувач підключає свій акаунт через OAuth, після чого MiyKo може працювати з реальним кошиком через Silpo MCP tools.
 
 <PhoneScreenshot
-  src="/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/04-silpo-oauth-authorization.png"
+  src="https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/04-silpo-oauth-authorization.png"
   alt="OAuth-авторизація Silpo"
   width={892}
   height={1910}
@@ -75,14 +75,14 @@ MiyKo, або «Мій кошик», — це проєкт, який я зроб
 
 Коли household готовий, будь-хто з учасників може описати свої потреби звичайною мовою. Agent перетворює їх на структурований план замовлення, враховуючи контекст household і попередні вподобання.
 
-![Mem0 збережена історія та вподобання household](/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/05-mem0-order-history-memories.png)
+![Mem0 збережена історія та вподобання household](https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/05-mem0-order-history-memories.png)
 
-![Dashboard керованої memory у Mem0](/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/13-mem0-memory-dashboard.png)
+![Dashboard керованої memory у Mem0](https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/13-mem0-memory-dashboard.png)
 
 Власник бачить активне замовлення та його поточний стан.
 
 <PhoneScreenshot
-  src="/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/06-owner-order-dashboard.png"
+  src="https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/06-owner-order-dashboard.png"
   alt="Dashboard власника з активним замовленням"
   width={884}
   height={1914}
@@ -91,7 +91,7 @@ MiyKo, або «Мій кошик», — це проєкт, який я зроб
 Далі agent створює перший план. Це не фінальний кошик, а пропозиція, яку ще можна змінити.
 
 <PhoneScreenshot
-  src="/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/07-step-order-initial-plan.png"
+  src="https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/07-step-order-initial-plan.png"
   alt="Початковий AI-generated план замовлення"
   width={880}
   height={1908}
@@ -99,23 +99,23 @@ MiyKo, або «Мій кошик», — це проєкт, який я зроб
 
 Учасники можуть додати свої побажання, а власник — переглянути та погодити зміни. Тут human approval є частиною workflow, а не винятком після помилки.
 
-![Погодження змін між учасниками household](/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/10-household-approval-flow.png)
+![Погодження змін між учасниками household](https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/10-household-approval-flow.png)
 
 Після підтвердження MiyKo викликає Silpo tools і формує реальний кошик.
 
 <PhoneScreenshot
-  src="/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/08-silpo-basket-ready.png"
+  src="https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/08-silpo-basket-ready.png"
   alt="Кошик Silpo готовий після виконання workflow"
   width={880}
   height={1914}
 />
 
-![Логи виконання Silpo MCP workflow](/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/09-silpo-mcp-workflow-logs.png)
+![Логи виконання Silpo MCP workflow](https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/09-silpo-mcp-workflow-logs.png)
 
 Checkout залишається в Silpo. MiyKo готує та координує замовлення, але не намагається замінити весь досвід магазину.
 
 <PhoneScreenshot
-  src="/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/11-silpo-checkout-basket.png"
+  src="https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/11-silpo-checkout-basket.png"
   alt="Фінальний кошик на checkout-сторінці Silpo"
   width={916}
   height={1766}
@@ -123,7 +123,7 @@ Checkout залишається в Silpo. MiyKo готує та координу
 
 Коли workflow завершений, household бачить підсумок. У цьому контексті “completed” означає завершення workflow у MiyKo, а не підтвердження доставки самим provider.
 
-![Завершене замовлення на dashboard MiyKo](/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/12-completed-order-dashboard.png)
+![Завершене замовлення на dashboard MiyKo](https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/12-completed-order-dashboard.png)
 
 ## Memory, а не просто chat history
 

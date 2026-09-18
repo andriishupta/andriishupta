@@ -10,6 +10,8 @@ const ukrainianContentDirectory = path.join(
 );
 const publicDirectory = path.join(repositoryRoot, "public");
 const articleImageDirectory = path.join(publicDirectory, "images/blog");
+const siteOrigin = "https://andriishupta.dev";
+const toPublicPath = (imageUrl) => imageUrl.replace(siteOrigin, "");
 const articles = [
   "connect-polkadot-to-a-nextjs-website-with-polkadotextension-dapp",
   "simplify-usage-of-lens-api-with-use-lens-and-graphql-codegen",
@@ -132,7 +134,9 @@ for (const slug of articles) {
     failures.push(`${slug}: still references remote Hashnode media`);
   }
 
-  const links = Array.from(body.matchAll(/\[[^\]]+\]\((https?:\/\/[^)]+)\)/g));
+  const links = Array.from(
+    body.matchAll(/(?<!!)\[[^\]]+\]\((https?:\/\/[^)]+)\)/g),
+  );
   linkCount += links.length;
 
   if (links.length === 0) {
@@ -148,18 +152,21 @@ for (const slug of articles) {
   codeBlockCount += fences / 2;
 
   const markdownImages = Array.from(
-    body.matchAll(/!\[([^\]]*)\]\((\/images\/blog\/[^)\s]+)\)/g),
+    body.matchAll(
+      /!\[([^\]]*)\]\((https:\/\/andriishupta\.dev\/images\/blog\/[^)\s]+)\)/g,
+    ),
   );
   const phoneScreenshots = Array.from(
     body.matchAll(
-      /<PhoneScreenshot[\s\S]*?src="(\/images\/blog\/[^"]+)"[\s\S]*?alt="([^"]+)"[\s\S]*?\/>/g,
+      /<PhoneScreenshot[\s\S]*?src="(https:\/\/andriishupta\.dev\/images\/blog\/[^"]+)"[\s\S]*?alt="([^"]+)"[\s\S]*?\/>/g,
     ),
     ([, publicPath, alt]) => [undefined, alt, publicPath],
   );
   const images = [...markdownImages, ...phoneScreenshots];
 
   for (const image of images) {
-    const [, alt, publicPath] = image;
+    const [, alt, imageUrl] = image;
+    const publicPath = toPublicPath(imageUrl);
     imageCount += 1;
     referencedImages.add(publicPath);
 
@@ -226,18 +233,21 @@ for (const article of localizedArticles) {
   }
 
   const markdownImages = Array.from(
-    body.matchAll(/!\[([^\]]*)\]\((\/images\/blog\/[^)\s]+)\)/g),
+    body.matchAll(
+      /!\[([^\]]*)\]\((https:\/\/andriishupta\.dev\/images\/blog\/[^)\s]+)\)/g,
+    ),
   );
   const phoneScreenshots = Array.from(
     body.matchAll(
-      /<PhoneScreenshot[\s\S]*?src="(\/images\/blog\/[^"]+)"[\s\S]*?alt="([^"]+)"[\s\S]*?\/>/g,
+      /<PhoneScreenshot[\s\S]*?src="(https:\/\/andriishupta\.dev\/images\/blog\/[^"]+)"[\s\S]*?alt="([^"]+)"[\s\S]*?\/>/g,
     ),
     ([, publicPath, alt]) => [undefined, alt, publicPath],
   );
   const images = [...markdownImages, ...phoneScreenshots];
 
   for (const image of images) {
-    const [, alt, publicPath] = image;
+    const [, alt, imageUrl] = image;
+    const publicPath = toPublicPath(imageUrl);
     imageCount += 1;
     referencedImages.add(publicPath);
 

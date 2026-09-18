@@ -62,7 +62,7 @@ This is the finished version of my subgraph.
 
 🔗 [source code](https://github.com/andriishupta/thegraph-hello-world/blob/main/subgraph.yaml)
 
-![Lens subgraph manifest in subgraph.yaml](/images/blog/create-lens-subgraph-on-the-graph-protocol/01-lens-subgraph-yaml.png)
+![Lens subgraph manifest in subgraph.yaml](https://andriishupta.dev/images/blog/create-lens-subgraph-on-the-graph-protocol/01-lens-subgraph-yaml.png)
 
 *You can read more on what is [subgraph manifest](https://thegraph.com/docs/en/developing/creating-a-subgraph/#the-subgraph-manifest)*
 
@@ -70,7 +70,7 @@ This is the finished version of my subgraph.
 Indicates from what address to index. Many contracts use [Proxy Upgrade Pattern](https://docs.openzeppelin.com/upgrades-plugins/1.x/proxies), which helps to fix crucial bugs or update implementation. That is why I have added LensHub ABI([Application Binary Interface](https://www.alchemy.com/overviews/what-is-an-abi-of-a-smart-contract-examples-and-usage)) as source ABI and then changed the address to [proxy](https://docs.lens.xyz/docs/deployed-contract-addresses)
 `startBlock` - I chose some random block for testing purposes, so it won't start indexing from the start - it takes more time. Usually, this value is omitted or equals the Contract creation's block.
 
-![LensHub proxy address and startBlock configuration](/images/blog/create-lens-subgraph-on-the-graph-protocol/02-image.png)
+![LensHub proxy address and startBlock configuration](https://andriishupta.dev/images/blog/create-lens-subgraph-on-the-graph-protocol/02-image.png)
 
 To get ABI, you can:
 - Copy from Etherscan/Polygonscan whole [Contract ABI](https://polygonscan.com/address/0xDb46d1Dc155634FbC732f92E853b10B288AD5a1d#code)
@@ -95,7 +95,7 @@ As we know - schema and how our data would be created is essential. Let's look a
 
 🔗 [source code](https://github.com/andriishupta/thegraph-hello-world/blob/main/schema.graphql)
 
-![GraphQL schema for Profile and Post entities](/images/blog/create-lens-subgraph-on-the-graph-protocol/03-lens-subgraph-schema.png)
+![GraphQL schema for Profile and Post entities](https://andriishupta.dev/images/blog/create-lens-subgraph-on-the-graph-protocol/03-lens-subgraph-schema.png)
 
 `Profile` is the `@entity`, including default fields that I took from [`ProfileCreated`](https://docs.lens.xyz/docs/events#profilecreated) event and the `posts` field, which is an [entity relationship](https://thegraph.com/docs/en/developing/creating-a-subgraph/#entity-relationships)
 
@@ -116,14 +116,14 @@ Example: I have created a Post, and the subgraph knows that Post should have a P
 
 🔗 [source code](https://github.com/andriishupta/thegraph-hello-world/blob/main/src/lens-hub.ts)
 
-![ProfileCreated event handler for the Lens subgraph](/images/blog/create-lens-subgraph-on-the-graph-protocol/04-lens-subgraph-profile-created.png)
+![ProfileCreated event handler for the Lens subgraph](https://andriishupta.dev/images/blog/create-lens-subgraph-on-the-graph-protocol/04-lens-subgraph-profile-created.png)
 
-![PostCreated event handler for the Lens subgraph](/images/blog/create-lens-subgraph-on-the-graph-protocol/05-lens-subgraph-post-created.png)
+![PostCreated event handler for the Lens subgraph](https://andriishupta.dev/images/blog/create-lens-subgraph-on-the-graph-protocol/05-lens-subgraph-post-created.png)
 
 ## ✅ Testing
 To check out how it works, you could visit my [subgraph: andriishupta/hello-world](https://thegraph.com/hosted-service/subgraph/andriishupta/hello-world). It has a pre-defined "Test" query that will give you info for both Profiles and Posts. You could modify it to get more or less information in the query window.
 
-![Graph Explorer query results for Lens profiles and posts](/images/blog/create-lens-subgraph-on-the-graph-protocol/06-lens-subgraph-example.png)
+![Graph Explorer query results for Lens profiles and posts](https://andriishupta.dev/images/blog/create-lens-subgraph-on-the-graph-protocol/06-lens-subgraph-example.png)
 
 ## 🙇
 Thanks for reading!
