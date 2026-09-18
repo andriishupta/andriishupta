@@ -18,8 +18,6 @@ export const blogTopicDefinitions = [
   { label: "Mobile Development", slug: "mobile-development" },
 ] as const;
 
-export type BlogTopicSlug = (typeof blogTopicDefinitions)[number]["slug"];
-
 export function getBlogTopicSlug(topic: string) {
   return topic
     .toLowerCase()

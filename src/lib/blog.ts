@@ -7,7 +7,7 @@ export {
 } from "./blog-topics";
 
 type BlogContentEntry = CollectionEntry<"blog">;
-export type BlogPost = Omit<BlogContentEntry, "data"> & {
+type BlogPost = Omit<BlogContentEntry, "data"> & {
   data: BlogContentEntry["data"] & { publishedAt: Date };
 };
 export type BlogLanguage = "en" | "uk";
@@ -89,11 +89,11 @@ export function getReadingStats(
   return { wordCount, readingMinutes, isStub: source.length === 0 };
 }
 
-export function isBlogPostReady(post: BlogPost) {
+function isBlogPostReady(post: BlogPost) {
   return !getReadingStats(post.body).isStub;
 }
 
-export function getTranslationKey(post: BlogPost) {
+function getTranslationKey(post: BlogPost) {
   return post.data.translationKey ?? post.data.slug;
 }
 
