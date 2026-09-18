@@ -63,9 +63,12 @@ This repository contains the source for the personal website at `andriishupta.de
   a specific restore is run with `--force`. Run `pnpm blog:verify` after an
   import or material content edit. Run `pnpm blog:release-check` before a public
   merge or deployment.
-- Keep blog slugs stable. Article order is derived from `publishedAt`; only the
-  blog index may move `featured: true` posts ahead of that chronological order.
-  `updatedAt` is reserved for material changes to first-party content.
+- Keep blog slugs stable. Article order is derived from the UTC date prefix in
+  the source filename; only the blog index may move `featured: true` posts ahead
+  of that chronological order. `updatedAt` is reserved for material changes.
+- Name blog source files `YYYY-MM-DD_slug.mdx`, matching the frontmatter slug.
+  Treat that date as midnight UTC and the sole publication date; do not add
+  duplicate `publishedAt` frontmatter. Filename dates must not affect routes.
 - Keep translated article pairs linked by the same `slug` and `translationKey`.
   English content lives in `src/content/blog/`, Ukrainian content lives in
   `src/content/blog-ua/`, and Ukrainian routes use `/blog/ua/[slug]`. Set

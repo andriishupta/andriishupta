@@ -21,13 +21,24 @@ const articles = [
 ];
 const miykoSlug =
   "miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow";
+const findArticlePath = async (directory, slug) => {
+  const file = (await readdir(directory)).find(
+    (entry) => entry === `${slug}.mdx` || entry.endsWith(`_${slug}.mdx`),
+  );
+
+  if (!file) {
+    throw new Error(`Missing article file for ${slug}`);
+  }
+
+  return path.join(directory, file);
+};
 const localizedArticles = [
   {
-    filePath: path.join(contentDirectory, `${miykoSlug}.mdx`),
+    filePath: await findArticlePath(contentDirectory, miykoSlug),
     lang: "en",
   },
   {
-    filePath: path.join(ukrainianContentDirectory, `${miykoSlug}.mdx`),
+    filePath: await findArticlePath(ukrainianContentDirectory, miykoSlug),
     lang: "uk",
   },
 ];
@@ -92,7 +103,7 @@ const validatePng = async (publicPath, slug, expectedDimensions) => {
 };
 
 for (const slug of articles) {
-  const filePath = path.join(contentDirectory, `${slug}.mdx`);
+  const filePath = await findArticlePath(contentDirectory, slug);
   const source = await readFile(filePath, "utf8");
   const { frontmatter, body } = splitMdx(source, filePath);
   const ogImage = frontmatter.match(/^ogImage:\s*["']([^"']+)["']/m)?.[1];

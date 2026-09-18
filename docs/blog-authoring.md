@@ -27,8 +27,10 @@ The first-party blog is public and has no temporary visibility flag:
 
 ## Add or finish an article
 
-Create an `.md` or `.mdx` file in `src/content/blog/`. The filename and `slug`
-should match. Keep the original slug when migrating an existing article.
+Create an `.md` or `.mdx` file in `src/content/blog/`. Name it
+`YYYY-MM-DD_slug.mdx`, for example
+`2026-07-22_migrating-blog-to-subpath.mdx`. The filename date is the publication
+date and is parsed as midnight UTC; do not add `publishedAt` to frontmatter.
 
 Ukrainian translations live in `src/content/blog-ua/`. A translated pair uses
 the same `slug` and `translationKey`, but the Ukrainian route adds `/ua/`:
@@ -50,7 +52,6 @@ lang: en
 translationKey: "migrating-blog-to-subpath"
 subtitle: "Optional line shown below the title"
 description: "A concise search and share description under 200 characters."
-publishedAt: 2026-07-22
 updatedAt: 2026-07-22
 tags:
   - astro
@@ -73,8 +74,8 @@ Article content starts here.
 ```
 
 Set `featured: true` for articles that should stay at the top of the blog
-regardless of publication date. Featured articles are ordered by
-`publishedAt`, newest first; non-featured articles follow with the same date
+regardless of publication date. Featured articles are ordered by the UTC date
+in their filename, newest first; non-featured articles follow with the same date
 ordering.
 
 `updatedAt` means the first-party article body changed materially. Adding or

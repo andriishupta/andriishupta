@@ -6,7 +6,10 @@ export {
   getBlogTopicSlug,
 } from "./blog-topics";
 
-export type BlogPost = CollectionEntry<"blog">;
+type BlogContentEntry = CollectionEntry<"blog">;
+export type BlogPost = Omit<BlogContentEntry, "data"> & {
+  data: BlogContentEntry["data"] & { publishedAt: Date };
+};
 export type BlogLanguage = "en" | "uk";
 
 interface BlogPostOptions {
@@ -25,6 +28,32 @@ export interface BlogPostPageProps {
 }
 
 const wordPattern = /[\p{L}\p{N}]+(?:['’.-][\p{L}\p{N}]+)*/gu;
+const filenameDatePattern = /(\d{4}-\d{2}-\d{2})_/;
+
+function getPublishedDate(post: BlogContentEntry) {
+  const dateString = post.id.match(filenameDatePattern)?.[1];
+
+  if (!dateString) {
+    throw new Error(
+      `${post.id}: blog filename must start with a valid YYYY-MM-DD date`,
+    );
+  }
+
+  const date = new Date(`${dateString}T00:00:00.000Z`);
+
+  if (Number.isNaN(date.getTime()) || toIsoDate(date) !== dateString) {
+    throw new Error(`${post.id}: invalid UTC publication date ${dateString}`);
+  }
+
+  return date;
+}
+
+function withPublishedDate(post: BlogContentEntry): BlogPost {
+  return {
+    ...post,
+    data: { ...post.data, publishedAt: getPublishedDate(post) },
+  };
+}
 
 export function stripMdxModuleLines(body: string | undefined) {
   return (body ?? "")
@@ -94,9 +123,11 @@ export async function getBlogPosts(options: BlogPostOptions = {}) {
     includeTranslations = false,
     featuredFirst = false,
   } = options;
-  let posts = await getCollection("blog", ({ data }) =>
-    includeDrafts ? true : !data.draft,
-  );
+  let posts = (
+    await getCollection("blog", ({ data }) =>
+      includeDrafts ? true : !data.draft,
+    )
+  ).map(withPublishedDate);
 
   if (lang) {
     posts = posts.filter((post) => post.data.lang === lang);

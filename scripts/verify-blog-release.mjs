@@ -51,6 +51,7 @@ for (const { directory, fallbackLang } of [
     const slug = frontmatter[1].match(
       /^slug:\s*["']?([^"'\s]+)["']?\s*$/m,
     )?.[1];
+    const filename = file.match(/^(\d{4}-\d{2}-\d{2})_(.+)\.(?:md|mdx)$/);
     const lang =
       frontmatter[1].match(/^lang:\s*([a-z]+)\s*$/m)?.[1] ?? fallbackLang;
     const draft = /^draft:\s*true\s*$/m.test(frontmatter[1]);
@@ -58,7 +59,31 @@ for (const { directory, fallbackLang } of [
 
     if (!slug) {
       failures.push(`${file}: missing slug`);
-    } else if (!draft && body.length > 0) {
+    }
+
+    if (!filename) {
+      failures.push(`${file}: expected YYYY-MM-DD_slug filename`);
+    } else {
+      const [, dateString, filenameSlug] = filename;
+      const date = new Date(`${dateString}T00:00:00.000Z`);
+
+      if (
+        Number.isNaN(date.getTime()) ||
+        date.toISOString().slice(0, 10) !== dateString
+      ) {
+        failures.push(`${file}: invalid UTC publication date ${dateString}`);
+      }
+
+      if (slug && filenameSlug !== slug) {
+        failures.push(`${file}: filename slug must match ${slug}`);
+      }
+    }
+
+    if (/^publishedAt:/m.test(frontmatter[1])) {
+      failures.push(`${file}: obsolete publishedAt frontmatter`);
+    }
+
+    if (slug && !draft && body.length > 0) {
       posts.push({ slug, lang });
     }
   }

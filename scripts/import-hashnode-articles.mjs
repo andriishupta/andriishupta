@@ -1,4 +1,4 @@
-import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -20,6 +20,18 @@ const articles = [
   "cross-origin-iframe-communication-with-window-post-message",
   "starting-my-web3-journey",
 ];
+
+const findArticlePath = async (slug) => {
+  const file = (await readdir(contentDirectory)).find(
+    (entry) => entry === `${slug}.mdx` || entry.endsWith(`_${slug}.mdx`),
+  );
+
+  if (!file) {
+    throw new Error(`Missing article file for ${slug}`);
+  }
+
+  return path.join(contentDirectory, file);
+};
 
 const imageAltOverrides = {
   "connect-polkadot-to-a-nextjs-website-with-polkadotextension-dapp": [
@@ -251,7 +263,7 @@ const localizeImages = async (markdown, articleSlug) => {
 };
 
 const importArticle = async (slug) => {
-  const filePath = path.join(contentDirectory, `${slug}.mdx`);
+  const filePath = await findArticlePath(slug);
   const existing = await readFile(filePath, "utf8");
   const { frontmatter, body } = splitMdx(existing, filePath);
 

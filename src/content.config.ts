@@ -27,7 +27,6 @@ const blog = defineCollection({
     translationKey: z.string().min(1).optional(),
     subtitle: z.string().optional(),
     description: z.string().min(1).max(200),
-    publishedAt: z.coerce.date(),
     updatedAt: z.coerce.date().optional(),
     tags: z.array(z.string()).default([]),
     topics: z.array(z.enum(blogTopics)).default([]),
