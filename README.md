@@ -9,15 +9,4 @@ third-party APIs, cloud infrastructure, performance layers, and applied AI.
 The approach stays simple: understand the real problem, make trade-offs clear,
 and choose technology that fits the product and team.
 
-## Citation
-
-If you discuss or quote my articles or other original material, please credit
-Andrii Shupta and link to the relevant page. Machine-readable metadata is in
-[CITATION.cff](CITATION.cff).
-
-## License
-
-My original content is available under
-[CC BY-NC-ND 4.0](LICENSE). Please cite the source and do not republish copied
-article text. Third-party code, assets, and trademarks keep their
-own licenses and owners. Thanks!
+License and attribution details are available in [NOTICE](NOTICE).
