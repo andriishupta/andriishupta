@@ -1,0 +1,39 @@
+:root {
+  --motion-enter-duration: 720ms;
+  --motion-enter-duration-fast: 600ms;
+  --motion-enter-stagger: 120ms;
+  --motion-enter-stagger-compact: 100ms;
+  --motion-enter-stagger-relaxed: 160ms;
+}
+
+@keyframes reveal-item-in {
+  from {
+    opacity: 0;
+    transform: translate3d(var(--reveal-x, 0), var(--reveal-y, 1rem), 0);
+  }
+}
+
+/*
+ * Scroll reveals are progressive enhancement. Unsupported browsers, reduced
+ * motion preferences, and pages without the observer keep content visible.
+ */
+@supports (--reveal-order: 0) and (animation-name: reveal-item-in) {
+  @media (prefers-reduced-motion: no-preference) {
+    [data-reveal-group][data-reveal-ready] [data-reveal-item] {
+      opacity: 0;
+      transform: translate3d(var(--reveal-x, 0), var(--reveal-y, 1rem), 0);
+    }
+
+    [data-reveal-group][data-reveal-active] [data-reveal-item] {
+      animation: reveal-item-in
+        var(--reveal-duration, var(--motion-enter-duration)) var(--ease-out)
+        both;
+      animation-delay: calc(
+        var(--reveal-order, 0) *
+        var(--reveal-stagger, var(--motion-enter-stagger))
+      );
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
