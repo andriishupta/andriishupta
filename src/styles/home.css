@@ -1068,7 +1068,8 @@
   [data-reveal-ready="true"] .service-block,
   [data-reveal-ready="true"] .proof-message,
   [data-reveal-ready="true"] .approach-step,
-  [data-reveal-ready="true"] .technology-pyramid__item,
+  [data-reveal-ready="true"] .technology-pyramid__level,
+  [data-reveal-ready="true"] .technology-pyramid__foundation,
   [data-reveal-ready="true"] .technology-pyramid__cta,
   [data-reveal-ready="true"] .use-case-block,
   [data-reveal-ready="true"] .open-source-item,
@@ -1082,14 +1083,15 @@
   [data-reveal-active="true"] .service-block,
   [data-reveal-active="true"] .proof-message,
   [data-reveal-active="true"] .approach-step,
-  [data-reveal-active="true"] .technology-pyramid__item,
+  [data-reveal-active="true"] .technology-pyramid__level,
+  [data-reveal-active="true"] .technology-pyramid__foundation,
   [data-reveal-active="true"] .technology-pyramid__cta,
   [data-reveal-active="true"] .use-case-block,
   [data-reveal-active="true"] .open-source-item,
   [data-reveal-active="true"] .experience__intro,
   [data-reveal-active="true"] .experience__toolbar,
   [data-reveal-active="true"] .experience__company {
-    animation: home-scroll-reveal 0.56s var(--ease-out) both;
+    animation: home-scroll-reveal 0.72s var(--ease-out) both;
     animation-delay: var(--reveal-delay, 0s);
     opacity: 1;
     transform: none;
@@ -1112,66 +1114,77 @@
 
   .service-block:nth-child(2),
   .proof-message:nth-child(2),
-  .technology-pyramid__item:nth-child(2),
   .use-case-block:nth-child(2),
   .open-source-item:nth-child(2) {
-    --reveal-delay: 0.08s;
+    --reveal-delay: 0.12s;
   }
 
   .service-block:nth-child(3),
   .proof-message:nth-child(3),
-  .technology-pyramid__item:nth-child(3),
   .use-case-block:nth-child(3),
   .open-source-item:nth-child(3) {
-    --reveal-delay: 0.16s;
+    --reveal-delay: 0.24s;
   }
 
   .proof-message:nth-child(4),
-  .technology-pyramid__item:nth-child(4),
   .use-case-block:nth-child(4),
   .open-source-item:nth-child(4) {
-    --reveal-delay: 0.24s;
-  }
-
-  .proof-message:nth-child(5),
-  .technology-pyramid__item:nth-child(5),
-  .use-case-block:nth-child(5),
-  .open-source-item:nth-child(5) {
-    --reveal-delay: 0.32s;
-  }
-
-  .proof-message:nth-child(6),
-  .technology-pyramid__item:nth-child(6),
-  .use-case-block:nth-child(6),
-  .open-source-item:nth-child(6) {
-    --reveal-delay: 0.4s;
-  }
-
-  .approach-step:nth-child(2) {
-    --reveal-delay: 0.12s;
-  }
-
-  .approach-step:nth-child(3) {
-    --reveal-delay: 0.24s;
-  }
-
-  .approach-step:nth-child(4) {
     --reveal-delay: 0.36s;
   }
 
+  .proof-message:nth-child(5),
+  .use-case-block:nth-child(5),
+  .open-source-item:nth-child(5) {
+    --reveal-delay: 0.48s;
+  }
+
+  .proof-message:nth-child(6),
+  .use-case-block:nth-child(6),
+  .open-source-item:nth-child(6) {
+    --reveal-delay: 0.6s;
+  }
+
+  .technology-pyramid__level:nth-of-type(2) {
+    --reveal-delay: 0.16s;
+  }
+
+  .technology-pyramid__level:nth-of-type(3) {
+    --reveal-delay: 0.32s;
+  }
+
+  .technology-pyramid__foundation {
+    --reveal-delay: 0.48s;
+  }
+
+  .technology-pyramid__cta {
+    --reveal-delay: 0.64s;
+  }
+
+  .approach-step:nth-child(2) {
+    --reveal-delay: 0.16s;
+  }
+
+  .approach-step:nth-child(3) {
+    --reveal-delay: 0.32s;
+  }
+
+  .approach-step:nth-child(4) {
+    --reveal-delay: 0.48s;
+  }
+
   .home-experience .experience__toolbar {
-    --reveal-delay: 0.06s;
+    --reveal-delay: 0.1s;
   }
 
   .experience__company:nth-child(1) {
-    --reveal-delay: 0.12s;
+    --reveal-delay: 0.2s;
   }
 
   .experience__company:nth-child(2) {
-    --reveal-delay: 0.18s;
+    --reveal-delay: 0.3s;
   }
 
   .experience__company:nth-child(3) {
-    --reveal-delay: 0.24s;
+    --reveal-delay: 0.4s;
   }
 }
