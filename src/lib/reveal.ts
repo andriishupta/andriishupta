@@ -1,26 +1,33 @@
 interface RevealOnceOptions {
   rootMargin?: string;
   threshold?: number;
-  triggerSelector: string;
 }
 
-export const revealOnce = (
-  selector: string,
-  { rootMargin = "0px", threshold = 0.5, triggerSelector }: RevealOnceOptions,
-) => {
-  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+const groupSelector = "[data-reveal-group]";
+const itemSelector = "[data-reveal-item]";
+
+export const revealOnce = ({
+  rootMargin = "0px",
+  threshold = 0.5,
+}: RevealOnceOptions = {}) => {
+  if (
+    typeof window.IntersectionObserver !== "function" ||
+    window.matchMedia?.("(prefers-reduced-motion: reduce)").matches
+  ) {
+    return;
+  }
 
   const pendingTriggers = new Map(
-    Array.from(document.querySelectorAll<HTMLElement>(selector)).flatMap(
+    Array.from(document.querySelectorAll<HTMLElement>(groupSelector)).flatMap(
       (group) => {
         if (
-          group.dataset.revealReady === "true" ||
-          group.dataset.revealActive === "true"
+          group.hasAttribute("data-reveal-ready") ||
+          group.hasAttribute("data-reveal-active")
         ) {
           return [];
         }
 
-        const trigger = group.querySelector<HTMLElement>(triggerSelector);
+        const trigger = group.querySelector<HTMLElement>(itemSelector);
         return trigger ? [[trigger, group] as const] : [];
       },
     ),
@@ -45,7 +52,7 @@ export const revealOnce = (
         const group = pendingTriggers.get(trigger);
         if (!group) return;
 
-        group.dataset.revealActive = "true";
+        group.setAttribute("data-reveal-active", "");
         observer.unobserve(trigger);
         pendingTriggers.delete(trigger);
       });
@@ -56,7 +63,7 @@ export const revealOnce = (
   );
 
   pendingTriggers.forEach((group, trigger) => {
-    group.dataset.revealReady = "true";
+    group.setAttribute("data-reveal-ready", "");
     observer.observe(trigger);
   });
   window.addEventListener("pagehide", disconnect, { once: true });

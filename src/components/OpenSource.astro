@@ -11,7 +11,7 @@ import SiteLink from "./SiteLink.astro";
 const { openSource } = copy.mainPage;
 ---
 
-<section class="open-source" data-open-source aria-labelledby="open-source-title">
+<section class="open-source" data-reveal-group aria-labelledby="open-source-title">
   <div class="open-source__inner site-container">
     <SectionHeading
       id="open-source-title"
@@ -20,8 +20,12 @@ const { openSource } = copy.mainPage;
     />
 
     <div class="open-source-list">
-      {openSource.items.map((item) => (
-        <article class="open-source-item">
+      {openSource.items.map((item, index) => (
+        <article
+          class="open-source-item"
+          data-reveal-item
+          style={`--reveal-order: ${index}`}
+        >
           <figure class="open-source-item__image">
             <img
               src={item.article.image}

@@ -1019,23 +1019,17 @@
   }
 }
 
-@keyframes home-scroll-reveal {
-  from {
-    opacity: 0;
-    transform: translate(var(--reveal-x, 0), var(--reveal-y, 16px));
-  }
-}
-
 @media (prefers-reduced-motion: no-preference) {
   .site-header[data-hero-identity],
   .consulting-hero__identity,
   .consulting-hero__rail {
-    animation: home-hero-reveal 0.72s var(--ease-out) both;
+    animation: home-hero-reveal var(--motion-enter-duration) var(--ease-out)
+      both;
   }
 
   .site-header[data-hero-identity] {
     --hero-reveal-y: 18px;
-    animation-duration: 0.6s;
+    animation-duration: var(--motion-enter-duration-fast);
   }
 
   .consulting-hero__identity {
@@ -1044,7 +1038,7 @@
   }
 
   .consulting-hero__rail {
-    animation-duration: 0.62s;
+    animation-duration: var(--motion-enter-duration-fast);
     animation-delay: 0.54s;
   }
 
@@ -1065,126 +1059,25 @@
     animation-duration: 26s;
   }
 
-  [data-reveal-ready="true"] .service-block,
-  [data-reveal-ready="true"] .proof-message,
-  [data-reveal-ready="true"] .approach-step,
-  [data-reveal-ready="true"] .technology-pyramid__level,
-  [data-reveal-ready="true"] .technology-pyramid__foundation,
-  [data-reveal-ready="true"] .technology-pyramid__cta,
-  [data-reveal-ready="true"] .use-case-block,
-  [data-reveal-ready="true"] .open-source-item,
-  [data-reveal-ready="true"] .experience__intro,
-  [data-reveal-ready="true"] .experience__toolbar,
-  [data-reveal-ready="true"] .experience__company {
-    opacity: 0;
-    transform: translate(var(--reveal-x, 0), var(--reveal-y, 16px));
-  }
-
-  [data-reveal-active="true"] .service-block,
-  [data-reveal-active="true"] .proof-message,
-  [data-reveal-active="true"] .approach-step,
-  [data-reveal-active="true"] .technology-pyramid__level,
-  [data-reveal-active="true"] .technology-pyramid__foundation,
-  [data-reveal-active="true"] .technology-pyramid__cta,
-  [data-reveal-active="true"] .use-case-block,
-  [data-reveal-active="true"] .open-source-item,
-  [data-reveal-active="true"] .experience__intro,
-  [data-reveal-active="true"] .experience__toolbar,
-  [data-reveal-active="true"] .experience__company {
-    animation: home-scroll-reveal 0.72s var(--ease-out) both;
-    animation-delay: var(--reveal-delay, 0s);
-    opacity: 1;
-    transform: none;
-  }
-
   .service-block {
-    --reveal-x: -20px;
+    --reveal-x: -1.25rem;
     --reveal-y: 0;
   }
 
-  [data-proof-kind="clients"] .proof-message {
-    --reveal-x: -12px;
+  .consulting-proof--clients .proof-message {
+    --reveal-x: -0.75rem;
   }
 
-  .home-experience .experience__intro,
-  .home-experience .experience__toolbar,
-  .home-experience .experience__company {
-    --reveal-y: 12px;
+  .consulting-approach,
+  .technology-pyramid {
+    --reveal-stagger: var(--motion-enter-stagger-relaxed);
   }
 
-  .service-block:nth-child(2),
-  .proof-message:nth-child(2),
-  .use-case-block:nth-child(2),
-  .open-source-item:nth-child(2) {
-    --reveal-delay: 0.12s;
+  .home-experience {
+    --reveal-stagger: var(--motion-enter-stagger-compact);
   }
 
-  .service-block:nth-child(3),
-  .proof-message:nth-child(3),
-  .use-case-block:nth-child(3),
-  .open-source-item:nth-child(3) {
-    --reveal-delay: 0.24s;
-  }
-
-  .proof-message:nth-child(4),
-  .use-case-block:nth-child(4),
-  .open-source-item:nth-child(4) {
-    --reveal-delay: 0.36s;
-  }
-
-  .proof-message:nth-child(5),
-  .use-case-block:nth-child(5),
-  .open-source-item:nth-child(5) {
-    --reveal-delay: 0.48s;
-  }
-
-  .proof-message:nth-child(6),
-  .use-case-block:nth-child(6),
-  .open-source-item:nth-child(6) {
-    --reveal-delay: 0.6s;
-  }
-
-  .technology-pyramid__level:nth-of-type(2) {
-    --reveal-delay: 0.16s;
-  }
-
-  .technology-pyramid__level:nth-of-type(3) {
-    --reveal-delay: 0.32s;
-  }
-
-  .technology-pyramid__foundation {
-    --reveal-delay: 0.48s;
-  }
-
-  .technology-pyramid__cta {
-    --reveal-delay: 0.64s;
-  }
-
-  .approach-step:nth-child(2) {
-    --reveal-delay: 0.16s;
-  }
-
-  .approach-step:nth-child(3) {
-    --reveal-delay: 0.32s;
-  }
-
-  .approach-step:nth-child(4) {
-    --reveal-delay: 0.48s;
-  }
-
-  .home-experience .experience__toolbar {
-    --reveal-delay: 0.1s;
-  }
-
-  .experience__company:nth-child(1) {
-    --reveal-delay: 0.2s;
-  }
-
-  .experience__company:nth-child(2) {
-    --reveal-delay: 0.3s;
-  }
-
-  .experience__company:nth-child(3) {
-    --reveal-delay: 0.4s;
+  .home-experience [data-reveal-item] {
+    --reveal-y: 0.75rem;
   }
 }

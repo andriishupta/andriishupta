@@ -5,7 +5,12 @@ import SectionHeading from "./SectionHeading.astro";
 const { approach } = copy.mainPage;
 ---
 
-<section class="consulting-approach" id="approach" data-approach aria-labelledby="approach-title">
+<section
+  class="consulting-approach"
+  id="approach"
+  data-reveal-group
+  aria-labelledby="approach-title"
+>
   <div class="consulting-approach__inner site-container">
     <SectionHeading
       id="approach-title"
@@ -14,8 +19,12 @@ const { approach } = copy.mainPage;
     />
 
     <ol class="approach-timeline">
-      {approach.steps.map((step) => (
-        <li class="approach-step">
+      {approach.steps.map((step, index) => (
+        <li
+          class="approach-step"
+          data-reveal-item
+          style={`--reveal-order: ${index}`}
+        >
           <span class="approach-step__index">{step.index}</span>
           <div class="approach-step__content">
             <h3>{step.title}</h3>

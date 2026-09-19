@@ -7,7 +7,12 @@ import SiteLink from "./SiteLink.astro";
 const { useCases } = copy.mainPage;
 ---
 
-<section class="consulting-use-cases" id="work" data-use-cases aria-labelledby="work-title">
+<section
+  class="consulting-use-cases"
+  id="work"
+  data-reveal-group
+  aria-labelledby="work-title"
+>
   <div class="consulting-use-cases__inner site-container">
     <SectionHeading
       id="work-title"
@@ -16,8 +21,12 @@ const { useCases } = copy.mainPage;
     />
 
     <div class="use-case-list">
-      {useCases.items.map((item) => (
-        <article class="use-case-block">
+      {useCases.items.map((item, index) => (
+        <article
+          class="use-case-block"
+          data-reveal-item
+          style={`--reveal-order: ${index}`}
+        >
           <div class="use-case-block__top">
             <span class="use-case-block__client">{item.client}</span>
             <span>{item.context}</span>

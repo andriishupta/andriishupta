@@ -135,7 +135,7 @@ const structuredData = {
       aria-label="Articles"
     >
       {
-        posts.map((post) => {
+        posts.map((post, index) => {
           const stats = getReadingStats(
             post.body,
             post.data.originalReadingMinutes,
@@ -147,6 +147,7 @@ const structuredData = {
               class="blog-entry"
               data-blog-entry
               data-topics={post.data.topics.map(getBlogTopicSlug).join(",")}
+              style={`--reveal-order: ${Math.min(index, 3)}`}
             >
               <a class="blog-entry__link" href={getPostPath(post)}>
                 <div class="blog-entry__content">
@@ -234,8 +235,17 @@ const structuredData = {
     entries.forEach((entry) => {
       const entryTopics = (entry.dataset.topics ?? "").split(",");
       const matches = topic === "all" || entryTopics.includes(topic);
-      entry.hidden = !matches;
-      if (matches) visibleCount += 1;
+
+      if (matches) {
+        entry.style.setProperty(
+          "--reveal-order",
+          String(Math.min(visibleCount, 3)),
+        );
+        visibleCount += 1;
+        entry.hidden = false;
+      } else {
+        entry.hidden = true;
+      }
     });
 
     filterButtons.forEach((button) => {

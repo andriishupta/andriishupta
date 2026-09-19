@@ -6,7 +6,12 @@ import SectionHeading from "./SectionHeading.astro";
 const { about } = copy.mainPage;
 ---
 
-<section class="consulting-services" id="services" data-services aria-labelledby="services-title">
+<section
+  class="consulting-services"
+  id="services"
+  data-reveal-group
+  aria-labelledby="services-title"
+>
   <div class="consulting-services__inner site-container">
     <SectionHeading
       id="services-title"
@@ -15,8 +20,12 @@ const { about } = copy.mainPage;
     />
 
     <div class="service-list">
-      {about.services.map((service) => (
-        <article class="service-block">
+      {about.services.map((service, index) => (
+        <article
+          class="service-block"
+          data-reveal-item
+          style={`--reveal-order: ${index}`}
+        >
           <header class="service-block__title">
             <h3>{service.title}</h3>
           </header>

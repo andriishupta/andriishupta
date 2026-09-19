@@ -20,7 +20,7 @@ const titleId = `${sectionId}-title`;
 <section
   class:list={["consulting-proof", `consulting-proof--${kind}`]}
   id={sectionId}
-  data-proof-kind={kind}
+  data-reveal-group
   aria-labelledby={titleId}
 >
   <div class="consulting-proof__inner site-container">
@@ -50,10 +50,11 @@ const titleId = `${sectionId}-title`;
           </header>
 
           <div class="proof-message-grid proof-message-grid--upwork">
-            {proof.upwork.map((message) => (
+            {proof.upwork.map((message, index) => (
               <FeedbackMessage
                 {...message}
                 source="Upwork · Client feedback"
+                revealOrder={index}
               />
             ))}
           </div>
@@ -77,10 +78,11 @@ const titleId = `${sectionId}-title`;
           </header>
 
           <div class="proof-message-grid proof-message-grid--linkedin">
-            {proof.linkedin.map((message) => (
+            {proof.linkedin.map((message, index) => (
               <FeedbackMessage
                 {...message}
                 source="LinkedIn · Teammate recommendation"
+                revealOrder={index}
               />
             ))}
           </div>
