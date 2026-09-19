@@ -84,9 +84,6 @@ const keywords = copy.seo.keywords.join(", ");
                         : "light";
                 document.documentElement.dataset.theme = mode;
                 document.documentElement.style.colorScheme = resolved;
-                if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-                    document.documentElement.dataset.heroIntro = "true";
-                }
                 const themeColor = document.querySelector("[data-theme-color]");
                 const resolvedColor = themeColor?.getAttribute(
                     resolved === "dark"

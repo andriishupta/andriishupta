@@ -83,15 +83,3 @@ const { pyramid } = technologies;
     </div>
   </div>
 </section>
-
-<script>
-  import { revealOnScroll } from "../lib/motion";
-
-  document.querySelectorAll<HTMLElement>("[data-technology-pyramid]").forEach((section) => {
-    revealOnScroll(section, {
-      selector: ".technology-pyramid__item, .technology-pyramid__cta",
-      y: 16,
-      stagger: 0.08,
-    });
-  });
-</script>

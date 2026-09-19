@@ -32,16 +32,3 @@ const { about } = copy.mainPage;
     </div>
   </div>
 </section>
-
-<script>
-  import { revealOnScroll } from "../lib/motion";
-
-  document.querySelectorAll<HTMLElement>("[data-services]").forEach((section) => {
-    revealOnScroll(section, {
-      selector: ".service-block",
-      x: -20,
-      y: 0,
-      stagger: 0.08,
-    });
-  });
-</script>

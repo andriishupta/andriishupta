@@ -115,15 +115,3 @@ const { experience } = copy.mainPage;
     </ol>
   </div>
 </section>
-
-<script>
-  import { revealOnScroll } from "../lib/motion";
-
-  document.querySelectorAll<HTMLElement>("[data-experience]").forEach((section) => {
-    revealOnScroll(section, {
-      selector: ".experience__intro, .experience__toolbar, .experience__company",
-      y: 12,
-      stagger: 0.06,
-    });
-  });
-</script>

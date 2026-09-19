@@ -19,6 +19,9 @@ export default defineConfig({
   integrations: [mdx()],
   markdown: {
     remarkPlugins: isDevelopment ? [remarkLocalImages] : [],
+    shikiConfig: {
+      theme: "github-dark-high-contrast",
+    },
   },
   devToolbar: {
     enabled: false,

@@ -72,11 +72,6 @@ const structuredData = {
   showThemeSwitcher={false}
   rss
 >
-  <script is:inline>
-    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      document.documentElement.dataset.blogIntro = "true";
-    }
-  </script>
   <SiteHeader context="blog" />
 
   <main class="blog-index">
@@ -225,8 +220,6 @@ const structuredData = {
 </Layout>
 
 <script>
-  import { gsap } from "gsap";
-
   const entries = Array.from(
     document.querySelectorAll<HTMLElement>("[data-blog-entry]"),
   );
@@ -235,29 +228,7 @@ const structuredData = {
   );
   const results = document.querySelector<HTMLElement>("[data-blog-results]");
   const emptyState = document.querySelector<HTMLElement>("[data-blog-empty]");
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-  const getVisibleEntries = () => entries.filter((entry) => !entry.hidden);
-
-  const animateEntries = () => {
-    if (reduceMotion) return;
-    const visibleEntries = getVisibleEntries();
-    gsap.killTweensOf(visibleEntries);
-    gsap.fromTo(
-      visibleEntries,
-      { autoAlpha: 0, y: 12 },
-      {
-        autoAlpha: 1,
-        y: 0,
-        duration: 0.4,
-        stagger: 0.05,
-        ease: "power2.out",
-        clearProps: "opacity,transform,visibility",
-      },
-    );
-  };
-
-  const setFilter = (topic: string, animate = true) => {
+  const setFilter = (topic: string) => {
     let visibleCount = 0;
 
     entries.forEach((entry) => {
@@ -287,7 +258,6 @@ const structuredData = {
       url.searchParams.set("topic", topic);
     }
     window.history.replaceState({}, "", `${url.pathname}${url.search}${url.hash}`);
-    if (animate) animateEntries();
   };
 
   filterButtons.forEach((button) => {
@@ -305,46 +275,5 @@ const structuredData = {
     url.searchParams.delete("topic");
     window.history.replaceState({}, "", `${url.pathname}${url.search}${url.hash}`);
   }
-  setFilter(availableTopic && requestedTopic ? requestedTopic : "all", false);
-
-  const introItems = [
-    document.querySelector(".blog-index__intro"),
-    document.querySelector("[data-blog-controls]"),
-    document.querySelector("[data-blog-results]"),
-  ].filter((item): item is Element => item instanceof Element);
-
-  if (reduceMotion) {
-    delete document.documentElement.dataset.blogIntro;
-  } else {
-    gsap.timeline({
-      defaults: { ease: "power3.out" },
-      onComplete: () => {
-        delete document.documentElement.dataset.blogIntro;
-        gsap.set([...introItems, ...getVisibleEntries()], {
-          clearProps: "opacity,transform,visibility",
-        });
-      },
-    })
-      .fromTo(
-        introItems,
-        { autoAlpha: 0, y: 16 },
-        {
-          autoAlpha: 1,
-          y: 0,
-          duration: 0.52,
-          stagger: 0.08,
-        },
-      )
-      .fromTo(
-        getVisibleEntries(),
-        { autoAlpha: 0, y: 16 },
-        {
-          autoAlpha: 1,
-          y: 0,
-          duration: 0.48,
-          stagger: 0.06,
-        },
-        "-=0.24",
-      );
-  }
+  setFilter(availableTopic && requestedTopic ? requestedTopic : "all");
 </script>

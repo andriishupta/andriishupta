@@ -26,15 +26,3 @@ const { approach } = copy.mainPage;
     </ol>
   </div>
 </section>
-
-<script>
-  import { revealOnScroll } from "../lib/motion";
-
-  document.querySelectorAll<HTMLElement>("[data-approach]").forEach((section) => {
-    revealOnScroll(section, {
-      selector: ".approach-step",
-      y: 16,
-      stagger: 0.12,
-    });
-  });
-</script>

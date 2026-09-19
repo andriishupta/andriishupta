@@ -89,17 +89,3 @@ const titleId = `${sectionId}-title`;
     }
   </div>
 </section>
-
-<script>
-  import { revealOnScroll } from "../lib/motion";
-
-  document.querySelectorAll<HTMLElement>("[data-proof-kind]").forEach((section) => {
-    const isClientProof = section.dataset.proofKind === "clients";
-    revealOnScroll(section, {
-      selector: ".proof-message",
-      x: isClientProof ? -12 : 0,
-      y: isClientProof ? 16 : 12,
-      stagger: 0.08,
-    });
-  });
-</script>

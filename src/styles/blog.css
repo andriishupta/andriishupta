@@ -815,10 +815,42 @@
   }
 }
 
-html[data-blog-intro="true"] .blog-index__intro,
-html[data-blog-intro="true"] .blog-controls,
-html[data-blog-intro="true"] .blog-results,
-html[data-blog-intro="true"] .blog-entry:not([hidden]) {
-  opacity: 0;
-  transform: translateY(16px);
+@keyframes blog-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .blog-index__intro,
+  .blog-controls,
+  .blog-results,
+  .blog-entry:not([hidden]) {
+    animation: blog-reveal 0.52s var(--ease-out) both;
+  }
+
+  .blog-controls {
+    animation-delay: 0.08s;
+  }
+
+  .blog-results {
+    animation-delay: 0.16s;
+  }
+
+  .blog-entry:not([hidden]) {
+    animation-duration: 0.48s;
+  }
+
+  .blog-entry:not([hidden]):nth-child(2) {
+    animation-delay: 0.06s;
+  }
+
+  .blog-entry:not([hidden]):nth-child(3) {
+    animation-delay: 0.12s;
+  }
+
+  .blog-entry:not([hidden]):nth-child(n + 4) {
+    animation-delay: 0.18s;
+  }
 }

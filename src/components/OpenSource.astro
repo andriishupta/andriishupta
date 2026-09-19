@@ -57,15 +57,3 @@ const { openSource } = copy.mainPage;
     </div>
   </div>
 </section>
-
-<script>
-  import { revealOnScroll } from "../lib/motion";
-
-  document.querySelectorAll<HTMLElement>("[data-open-source]").forEach((section) => {
-    revealOnScroll(section, {
-      selector: ".open-source-item",
-      y: 16,
-      stagger: 0.08,
-    });
-  });
-</script>

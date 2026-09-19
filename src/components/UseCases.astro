@@ -33,15 +33,3 @@ const { useCases } = copy.mainPage;
     </div>
   </div>
 </section>
-
-<script>
-  import { revealOnScroll } from "../lib/motion";
-
-  document.querySelectorAll<HTMLElement>("[data-use-cases]").forEach((section) => {
-    revealOnScroll(section, {
-      selector: ".use-case-block",
-      y: 16,
-      stagger: 0.08,
-    });
-  });
-</script>
