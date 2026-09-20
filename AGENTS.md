@@ -61,9 +61,32 @@ dependencies. Keep pre-commit checks read-only and fast.
   and link destinations.
 - Inline images use canonical `https://andriishupta.dev/images/blog/...` URLs.
   Development rewrites first-party URLs to local paths for unpublished assets.
-- OG images are author-supplied 1200×630 files and must not be overwritten.
+- OG images are author-supplied 1200×630 files and must not be overwritten
+  unless the user explicitly asks to replace them.
 - Use `PhoneScreenshot.astro` for portrait phone captures.
 - Mermaid diagrams render client-side with the `mermaid` package.
+
+### Blog OG image template
+
+- Save the final image as `public/blog/[slug]/og.png` and set frontmatter
+  `ogImage: "/blog/[slug]/og.png"`.
+- Use a 1200×630 white canvas. Put the exact article title at the top, centered
+  in the established monospace style, within approximately `x=96–1104` and
+  `y=36–160`; wrap to at most two lines and scale the type to fit.
+- Keep the main visual inside the middle area, approximately `x=250–900` and
+  `y=230–470`. Do not make it full-bleed. Use only the one to three supplied
+  article assets, normally at roughly 130–180 px high, with even spacing and
+  balanced visual weight.
+- Keep the author block fixed at the bottom right: crop the supplied portrait
+  to a 132×132 circle near `x=997, y=430`, then center `@andriishupta` below it
+  around `x=1063` with a baseline near `y=594` using bold 27 px type.
+- Preserve supplied portraits and brand assets. Render title, handle, and logos
+  deterministically from their source files; never rely on generated text,
+  generated logos, a regenerated face, or additional generated decoration
+  unless the user explicitly requests it.
+- Visually inspect the final PNG at 1200×630 for title wrapping, safe margins,
+  asset proportions, portrait crop, and handle readability before referencing
+  it from the article.
 
 ## Site behavior
 
