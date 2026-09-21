@@ -1,4 +1,4 @@
-import { getBlogPosts, getPostPath, toIsoDate } from "../lib/blog";
+import { getBlogPosts, getPostPath } from "../lib/blog";
 import { createSitemapResponse } from "../lib/sitemap";
 
 const staticPages = [
@@ -16,7 +16,6 @@ export async function GET() {
     ...staticPages,
     ...posts.map((post) => ({
       path: getPostPath(post),
-      lastmod: toIsoDate(post.data.updatedAt ?? post.data.publishedAt),
     })),
   ];
   return createSitemapResponse(pages);

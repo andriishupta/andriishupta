@@ -19,7 +19,6 @@ interface Props {
   showThemeSwitcher?: boolean;
   rss?: boolean;
   publishedTime?: string;
-  modifiedTime?: string;
   tags?: string[];
   lang?: BlogLanguage;
   alternateLanguages?: ReadonlyArray<{
@@ -41,7 +40,6 @@ const {
   showThemeSwitcher = true,
   rss = false,
   publishedTime,
-  modifiedTime,
   tags = [],
   lang = "en",
   alternateLanguages = [],
@@ -143,11 +141,6 @@ const keywords = copy.seo.keywords.join(", ");
         {
             ogType === "article" && publishedTime && (
                 <meta property="article:published_time" content={publishedTime} />
-            )
-        }
-        {
-            ogType === "article" && modifiedTime && (
-                <meta property="article:modified_time" content={modifiedTime} />
             )
         }
         {

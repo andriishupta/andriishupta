@@ -55,8 +55,6 @@ dependencies. Keep pre-commit checks read-only and fast.
   `llms.txt` include every published language version.
 - `featured: true` affects only blog-index ordering. Featured and regular groups
   are each sorted newest first.
-- `updatedAt` means a material first-party content change, not a distribution
-  URL update.
 - Keep `tags` article-specific and `topics` limited to the shared allowlist.
 - All links in article bodies open in a new tab, including links to this site.
   Preserve `rel="noopener noreferrer"`; keep the surrounding site navigation in

@@ -190,10 +190,3 @@ export function getPostPath(post: BlogPost) {
     ? `/blog/ua/${post.data.slug}`
     : `/blog/${post.data.slug}`;
 }
-
-export function hasMeaningfulUpdate(post: BlogPost) {
-  return Boolean(
-    post.data.updatedAt &&
-      toIsoDate(post.data.updatedAt) !== toIsoDate(post.data.publishedAt),
-  );
-}

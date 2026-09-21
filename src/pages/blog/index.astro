@@ -10,7 +10,6 @@ import {
   getBlogPosts,
   getPostPath,
   getReadingStats,
-  hasMeaningfulUpdate,
   toIsoDate,
 } from "../../lib/blog";
 import Layout from "../../layouts/Layout.astro";
@@ -47,7 +46,6 @@ const structuredData = {
         headline: post.data.title,
         url: new URL(getPostPath(post), "https://andriishupta.dev").toString(),
         datePublished: toIsoDate(post.data.publishedAt),
-        dateModified: toIsoDate(post.data.updatedAt ?? post.data.publishedAt),
       })),
     },
     {
@@ -157,11 +155,6 @@ const structuredData = {
                     {stats.readingMinutes > 0 && (
                       <span>
                         {stats.readingMinutes} min {stats.isStub ? "original " : ""}read
-                      </span>
-                    )}
-                    {hasMeaningfulUpdate(post) && post.data.updatedAt && (
-                      <span>
-                        Updated {formatBlogDate(post.data.updatedAt)}
                       </span>
                     )}
                   </div>

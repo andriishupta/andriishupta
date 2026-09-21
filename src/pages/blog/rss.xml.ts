@@ -30,7 +30,6 @@ export async function GET(context: { site?: URL }) {
       content: (
         marked.parse(stripMdxModuleLines(post.body).trim()) as string
       ).replace(/\b(href|src)="\/(?!\/)/g, `$1="${siteOrigin}/`),
-      customData: `<atom:updated>${(post.data.updatedAt ?? post.data.publishedAt).toISOString()}</atom:updated>`,
     })),
     customData: [
       "<language>en-us</language>",

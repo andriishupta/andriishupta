@@ -13,7 +13,6 @@ import {
   formatBlogDate,
   getPostPath,
   getReadingStats,
-  hasMeaningfulUpdate,
   toIsoDate,
   type BlogPostPageProps,
 } from "../lib/blog";
@@ -34,7 +33,6 @@ const path = getPostPath(post);
 const alternatePath = alternatePost ? getPostPath(alternatePost) : undefined;
 const canonicalUrl = new URL(path, "https://andriishupta.dev").toString();
 const ogImage = data.ogImage ?? "/blog/og.png";
-const dateModified = data.updatedAt ?? data.publishedAt;
 const isLegacyBlogUrl = (href: string | undefined) =>
   href ? new URL(href).hostname === "blog.andriishupta.dev" : false;
 const directHashnodeUrl =
@@ -59,7 +57,6 @@ const articleStructuredData = {
   headline: data.title,
   description: data.description,
   datePublished: toIsoDate(data.publishedAt),
-  dateModified: toIsoDate(dateModified),
   inLanguage: isUkrainian ? "uk-UA" : "en-US",
   mainEntityOfPage: canonicalUrl,
   image: new URL(ogImage, canonicalUrl).toString(),
@@ -91,7 +88,6 @@ const labels = isUkrainian
   ? {
       back: "Назад до блогу",
       published: "Опубліковано",
-      updated: "Оновлено",
       readingTime: "Час читання",
       originalReadingTime: "Початковий час читання",
       minutes: "хв",
@@ -110,7 +106,6 @@ const labels = isUkrainian
   : {
       back: "Back to blog",
       published: "Published",
-      updated: "Updated",
       readingTime: "Reading time",
       originalReadingTime: "Original read",
       minutes: "min",
@@ -140,7 +135,6 @@ const labels = isUkrainian
   showThemeSwitcher={false}
   rss
   publishedTime={data.publishedAt.toISOString()}
-  modifiedTime={dateModified.toISOString()}
   tags={data.tags}
   lang={language}
   alternateLanguages={
@@ -173,18 +167,6 @@ const labels = isUkrainian
                 </time>
               </dd>
             </div>
-            {
-              hasMeaningfulUpdate(post) && data.updatedAt && (
-                <div>
-                  <dt>{labels.updated}</dt>
-                  <dd>
-                    <time datetime={toIsoDate(data.updatedAt)}>
-                      {formatBlogDate(data.updatedAt, language)}
-                    </time>
-                  </dd>
-                </div>
-              )
-            }
             {
               stats.readingMinutes > 0 && (
                 <div>

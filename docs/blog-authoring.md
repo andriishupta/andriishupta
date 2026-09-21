@@ -25,7 +25,6 @@ lang: en
 translationKey: "migrating-blog-to-subpath"
 subtitle: "Optional line below the title"
 description: "A concise search and share description under 200 characters."
-updatedAt: 2026-07-22
 tags:
   - astro
   - seo
@@ -52,7 +51,6 @@ Article content starts here.
 - `lang` is `en` or `uk`.
 - Translation pairs share `slug` and `translationKey`. Ukrainian routes use
   `/blog/ua/[slug]`.
-- `updatedAt` changes only after a material first-party content edit.
 - `featured: true` moves an article above regular posts on the index; each
   group remains ordered by filename date.
 - `draft: true` makes the article visible in development only.
@@ -102,7 +100,7 @@ be removed once its body is imported.
 5. Preview the affected routes when layout changed.
 6. Deploy `andriishupta.dev`.
 7. Cross-post with the first-party URL as canonical, then save returned URLs in
-   `distribution` without changing `updatedAt`.
+   `distribution`.
 
 Complete published articles are discoverable through the blog, RSS, root and
 blog sitemaps, and `llms.txt`. Empty stubs remain `noindex` and excluded.

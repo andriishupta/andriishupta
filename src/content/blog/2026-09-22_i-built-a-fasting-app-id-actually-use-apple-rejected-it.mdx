@@ -5,7 +5,6 @@ lang: en
 translationKey: "i-built-a-fasting-app-id-actually-use-apple-rejected-it"
 subtitle: "Why I built Simple Fasting, how I made it, and what App Review said"
 description: "I wanted a private fasting tracker without a paywall blocking the timer. I built one, polished it for weeks, and Apple rejected it under Guideline 4.3(a)."
-updatedAt: 2026-09-21
 tags:
   - simple-fasting
   - ai-agents
@@ -16,8 +15,15 @@ topics:
   - ai
   - software-design
   - mobile
+ogImage: "/blog/i-built-a-fasting-app-id-actually-use-apple-rejected-it/og.png"
 draft: true
 ---
+
+## 🔗 Links
+
+- [Simple Fasting source code](https://github.com/andriishupta/simple-fasting)
+- [Simple Fasting website](https://simplefasting.app/)
+- [App Store Review Guidelines](https://developer.apple.com/app-store/review/guidelines/)
 
 Apple rejected Simple Fasting under Guideline 4.3(a), “Design – Spam.” I had spent roughly two to three weeks building and polishing the app, perhaps closer to a month in total. Then I waited about a month for the first review. I replied to explain the app, but the rejection stood.
 
@@ -26,6 +32,8 @@ Apple rejected Simple Fasting under Guideline 4.3(a), “Design – Spam.” I h
 The message said the app shared a similar “binary, metadata, and/or concept” with apps from other developers, with only minor differences. It did not say which of those was decisive.
 
 ![App Review message citing Guideline 4.3(a), Design – Spam, and similarity in binary, metadata, and/or concept](https://andriishupta.dev/images/blog/i-built-a-fasting-app-id-actually-use-apple-rejected-it/05-design-spam-message.png)
+
+I still use Simple Fasting. It is installed on my phone through TestFlight, and I am happy with the app I made. Of course, I would rather have it publicly available in the App Store. For now, I can use it myself even though the release was rejected.
 
 I built it myself with Expo and React Native; I did not repackage someone else's app. But I cannot pretend that a fasting tracker is a new concept. What felt different to me was the experience I wanted to use every day. That is where this story starts.
 
@@ -89,19 +97,14 @@ That is also why I did not treat a simulator screenshot as a release check. I co
 
 ![Simple Fasting statistics and history screens using the same session data](https://andriishupta.dev/images/blog/i-built-a-fasting-app-id-actually-use-apple-rejected-it/03-data-screens.png)
 
-## What the rejection changed
+## What I take from this
 
 The rejection did not tell me that the code was copied or that Expo was the problem. Apple's wording included binary, metadata, **and/or** concept. I know how I built the app; I do not know which similarity mattered most to the reviewer.
 
-I can see the harder product question. Privacy, a clean UI, and no paywall in the core flow are meaningful differences for me. They may still be too subtle to distinguish another fasting tracker during App Review. I should have tested and explained that value earlier, before spending weeks polishing the implementation.
+My best guess is that the concept mattered most: Simple Fasting is another tracker in a crowded category. I knew other fasting apps existed. I just thought that if I wanted a version without an obstructive paywall, I could build and submit my own. I did not expect an established idea itself to be a reason for rejection, especially when many similar apps are already in the store.
 
-I had focused most of my energy on whether the app worked and felt good. The review forced me to consider how that experience looks from outside: one more fasting tracker in an established category. The hidden details I cared about, such as local data and the absence of an obstructive paywall, do not automatically show up in a brief first impression. I could have made the difference clearer in the product description and review notes. I cannot know whether that would have changed the decision.
+Privacy, a clean UI, and no paywall in the core flow are meaningful differences for me. They may be too subtle to distinguish the app during review. I wonder whether clearer positioning, or a more visible feature of my own, would have helped. I cannot know that, or whether marketing or the developer's size played any role. Next time, I would find a distinctive product behavior early, even if the idea first sounds a little odd, and make its value obvious before spending weeks polishing the implementation.
 
 After the rejection, I made the previously private repository public so people could inspect the work behind Simple Fasting. I still like the app I built, and I would still use it. The experience taught me two things at once: AI is useful when I keep the product decisions and verify the result, and good engineering does not guarantee a place in the App Store.
 
 I have not turned this into a story about beating App Review. For now, the honest ending is that I made something useful to me, learned a great deal from building it, and could not publish it there. Showing the work publicly feels more useful than pretending the rejection did not happen.
-
-## 🔗 Links
-
-- [Simple Fasting website](https://simplefasting.app/)
-- [App Store Review Guidelines](https://developer.apple.com/app-store/review/guidelines/)

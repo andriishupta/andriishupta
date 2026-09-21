@@ -461,6 +461,7 @@
 }
 .article-grid .article-content {
   min-width: 0;
+  color: color-mix(in srgb, var(--ink) 82%, var(--page));
   font-size: var(--text-base);
   font-weight: normal;
   line-height: 1.75;
@@ -475,6 +476,7 @@
 .article-content h3,
 .article-content h4 {
   scroll-margin-top: 2rem;
+  color: var(--ink);
   font-variation-settings: "wdth" 106;
   font-weight: 700;
   letter-spacing: -0.03em;
