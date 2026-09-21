@@ -1,0 +1,107 @@
+---
+title: "I Built a Fasting App I'd Actually Use. Apple Rejected It."
+slug: "i-built-a-fasting-app-id-actually-use-apple-rejected-it"
+lang: en
+translationKey: "i-built-a-fasting-app-id-actually-use-apple-rejected-it"
+subtitle: "Why I built Simple Fasting, how I made it, and what App Review said"
+description: "I wanted a private fasting tracker without a paywall blocking the timer. I built one, polished it for weeks, and Apple rejected it under Guideline 4.3(a)."
+updatedAt: 2026-09-21
+tags:
+  - simple-fasting
+  - ai-agents
+  - react-native
+  - expo
+  - design-systems
+topics:
+  - ai
+  - software-design
+  - mobile
+draft: true
+---
+
+Apple rejected Simple Fasting under Guideline 4.3(a), “Design – Spam.” I had spent roughly two to three weeks building and polishing the app, perhaps closer to a month in total. Then I waited about a month for the first review. I replied to explain the app, but the rejection stood.
+
+![App Store Connect showing Simple Fasting for iOS 1.0.0 as rejected](https://andriishupta.dev/images/blog/i-built-a-fasting-app-id-actually-use-apple-rejected-it/04-app-store-rejection.png)
+
+The message said the app shared a similar “binary, metadata, and/or concept” with apps from other developers, with only minor differences. It did not say which of those was decisive.
+
+![App Review message citing Guideline 4.3(a), Design – Spam, and similarity in binary, metadata, and/or concept](https://andriishupta.dev/images/blog/i-built-a-fasting-app-id-actually-use-apple-rejected-it/05-design-spam-message.png)
+
+I built it myself with Expo and React Native; I did not repackage someone else's app. But I cannot pretend that a fasting tracker is a new concept. What felt different to me was the experience I wanted to use every day. That is where this story starts.
+
+## The app I wanted to use
+
+I used fasting apps that began simply and grew into something more demanding. With Zero, what frustrated me most was opening the app to start or stop a fast and running into a paywall. Sometimes I had to wait for a close button to appear. At times I could not dismiss it and ended up closing the app entirely. I do not know whether that was a bug or an intended flow, but I knew I did not want that experience in my own tracker.
+
+My idea was small: open the app, start or stop a fast, and close it. No account, analytics, or subscription popup interrupting that action. Fasting history, goals, notes, and reminders would stay on the device unless the user chose to export them. Privacy was part of the product, not a feature to add later.
+
+Simple Fasting grew beyond a timer. It has local history and statistics, reusable goals, reminders, import and export, iOS and Android widgets, an optional iOS Live Activity, and a small website. But the main interaction still needed to feel calm and immediate.
+
+That constraint helped me decide what belonged in the first screen. The timer and its main action needed to be obvious. History and statistics could be there when I wanted them, without asking for attention every time I opened the app. I was willing to build more behind the scenes if it made the everyday interaction feel smaller.
+
+![Simple Fasting ready and active fasting screens in light and dark themes](https://andriishupta.dev/images/blog/i-built-a-fasting-app-id-actually-use-apple-rejected-it/01-fast-screens.png)
+
+## Building it with AI, without giving up the decisions
+
+I am a software engineer, and I used AI agents across product planning, architecture, React Native code, tests, UI iterations, documentation, and release work. That made implementation faster. It did not decide what the product should be or whether a screen felt right to use.
+
+Before building many features, I wrote down the product goal, privacy boundary, data behavior, and non-goals. This gave each new AI task the same starting point. If I asked for “a modern fasting app” without those boundaries, an agent might reasonably add authentication, cloud sync, or subscriptions. Those are common choices, but they were wrong for this app.
+
+I did not call it spec-driven development at first. I just wanted decisions to survive beyond one chat. An agent could complete a task well and still lose context before the next one. Written rules made it easier to catch a feature that worked technically but moved the product away from what I wanted.
+
+The repository contains the Expo app, a static Astro website, and shared help and legal content. The app's local history is the source of truth for statistics. Widgets and the Live Activity need to reflect the same active fast as the app. When several agents work on connected surfaces, clear ownership matters more than another long prompt.
+
+My usual loop was simple:
+
+> describe one outcome → implement it → run the app → use it → explain what feels wrong → adjust it
+
+For example, “add an end-of-fast reminder” was not enough. The task needed to specify that the reminder is local, belongs to the active fast, changes when that fast changes, and never blocks the timer if notification permission is denied. AI could help build it once those product rules were clear.
+
+I also changed the amount of reasoning I used for different tasks. A narrow component or test did not need the same effort as a decision about storage or native behavior. What mattered was giving the task enough context and checking the result. A model's confident explanation was never evidence that the feature worked on a device.
+
+## Where faster coding made the app heavier
+
+AI makes another safety path feel cheap. I added retries, reset flows, and recovery behavior while the core product still needed real use. Some safeguards were justified: local data has no backend copy, and import and export give people control over it. Other paths created more states, warnings, tests, and maintenance than the first version needed.
+
+I learned to ask which real failure a feature handles before adding it. The cost of generating code is small; the cost of living with every extra state is not.
+
+This was especially tempting because the app kept expanding. A timer led to goals; goals led to reminders; sessions led to History and statistics. Each feature sounded modest on its own. Together they changed the number of ways the app could behave. If I were starting again, I would finish and use the central fasting flow longer before building so much recovery logic around it.
+
+I also delayed the design system. Early screens looked fine individually, but spacing, controls, and screen structure began to drift. I paused feature work for about two days to make shared components, theme tokens, and clearer visual rules. After that, I could ask an agent to reuse an existing section or button instead of describing its appearance from scratch.
+
+![Simple Fasting settings screens showing shared controls and theme behavior](https://andriishupta.dev/images/blog/i-built-a-fasting-app-id-actually-use-apple-rejected-it/02-settings-screens.png)
+
+A design system gave the app consistency. It also made the AI work more precise. But it could not replace opening the product and seeing what happened on a real screen.
+
+The cleanup was not an attempt to make every screen identical. It gave repeated elements a common shape and let the differences serve the task. I still adjusted screens after seeing them in context, especially where native navigation and safe areas affected the layout.
+
+## The screen had the final say
+
+Wireframes and specifications helped me choose a direction, but I made the final UI decisions by using the app. The iOS Simulator and Android emulator exposed content hidden by navigation, awkward scrolling, keyboard overlap, picker behavior, and differences between light and dark themes. A screenshot could show spacing; it could not show whether a selected goal survived reopening a tab.
+
+Specific feedback worked best. “This screen feels wrong” gave an agent little to act on. “The Start button is hidden behind the tab bar on a small iPhone” described a state, an action, and a visible failure.
+
+I did focused checks during iteration, then ran broader tests and builds once a feature was stable. Physical-device checks still mattered for notifications, widgets, and Live Activity. A successful build proved that the project built; it did not prove that the interaction was good.
+
+The most useful unit of work was a complete user flow. Choosing a goal, starting a fast, updating the widget, ending the session, and seeing it in History all depend on the same data. Building each screen in isolation could leave several incompatible versions of one fast.
+
+That is also why I did not treat a simulator screenshot as a release check. I could inspect the layout quickly there, while a native build and a physical device answered different questions. Notifications and widgets needed those later checks. The faster UI loop helped me make decisions sooner, but the broader checks still had to happen before submission.
+
+![Simple Fasting statistics and history screens using the same session data](https://andriishupta.dev/images/blog/i-built-a-fasting-app-id-actually-use-apple-rejected-it/03-data-screens.png)
+
+## What the rejection changed
+
+The rejection did not tell me that the code was copied or that Expo was the problem. Apple's wording included binary, metadata, **and/or** concept. I know how I built the app; I do not know which similarity mattered most to the reviewer.
+
+I can see the harder product question. Privacy, a clean UI, and no paywall in the core flow are meaningful differences for me. They may still be too subtle to distinguish another fasting tracker during App Review. I should have tested and explained that value earlier, before spending weeks polishing the implementation.
+
+I had focused most of my energy on whether the app worked and felt good. The review forced me to consider how that experience looks from outside: one more fasting tracker in an established category. The hidden details I cared about, such as local data and the absence of an obstructive paywall, do not automatically show up in a brief first impression. I could have made the difference clearer in the product description and review notes. I cannot know whether that would have changed the decision.
+
+After the rejection, I made the previously private repository public so people could inspect the work behind Simple Fasting. I still like the app I built, and I would still use it. The experience taught me two things at once: AI is useful when I keep the product decisions and verify the result, and good engineering does not guarantee a place in the App Store.
+
+I have not turned this into a story about beating App Review. For now, the honest ending is that I made something useful to me, learned a great deal from building it, and could not publish it there. Showing the work publicly feels more useful than pretending the rejection did not happen.
+
+## 🔗 Links
+
+- [Simple Fasting website](https://simplefasting.app/)
+- [App Store Review Guidelines](https://developer.apple.com/app-store/review/guidelines/)
