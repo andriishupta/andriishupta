@@ -1,0 +1,12 @@
+---
+import SiteLink from "./SiteLink.astro";
+
+interface Props {
+  href: string;
+  title?: string;
+}
+
+const { href, title } = Astro.props;
+---
+
+<SiteLink href={href} title={title} external><slot /></SiteLink>

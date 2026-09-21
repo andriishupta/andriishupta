@@ -2,6 +2,7 @@
 import ArrowLeft from "@lucide/astro/icons/arrow-left";
 import ArrowRight from "@lucide/astro/icons/arrow-right";
 import { render } from "astro:content";
+import ArticleLink from "../components/ArticleLink.astro";
 import ArticleToc from "../components/ArticleToc.astro";
 import PlatformLinks from "../components/PlatformLinks.astro";
 import SiteFooter from "../components/SiteFooter.astro";
@@ -24,6 +25,8 @@ type Props = BlogPostPageProps;
 const { post, newerPost, olderPost, alternatePost } = Astro.props;
 const { Content, headings } = await render(post);
 const { data } = post;
+const articleLinkComponents =
+  data.publishedAt.getUTCFullYear() >= 2026 ? { a: ArticleLink } : undefined;
 const language = data.lang;
 const isUkrainian = language === "uk";
 const stats = getReadingStats(post.body, data.originalReadingMinutes);
@@ -296,7 +299,7 @@ const labels = isUkrainian
               )}
             </div>
           ) : (
-            <Content />
+            <Content components={articleLinkComponents} />
           )
         }
       </article>

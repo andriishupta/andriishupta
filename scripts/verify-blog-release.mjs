@@ -100,16 +100,6 @@ const blogSitemap = await readFile(
 );
 const rss = await readFile(path.join(distDirectory, "blog/rss.xml"), "utf8");
 const llms = await readFile(path.join(distDirectory, "llms.txt"), "utf8");
-const redirects = await readFile(
-  path.join(repositoryRoot, "public/_redirects"),
-  "utf8",
-);
-const bulkRedirectCsv = (
-  await readFile(
-    path.join(repositoryRoot, "docs/cloudflare-blog-redirect.csv"),
-    "utf8",
-  )
-).trim();
 
 requireText(
   blogIndex,
@@ -152,9 +142,6 @@ for (const post of posts) {
   requireText(blogSitemap, `<loc>${canonicalUrl}</loc>`, "blog sitemap");
   requireText(rss, `<link>${canonicalUrl}</link>`, "RSS");
   requireText(llms, `](${canonicalUrl})`, "llms.txt");
-  if (lang === "en") {
-    requireText(redirects, `/${slug} /blog/${slug} 301`, "Pages redirects");
-  }
   rejectText(articleHtml, "blog.andriishupta.dev", slug);
 }
 
@@ -168,14 +155,6 @@ rejectText(rootSitemap, "blog.andriishupta.dev", "root sitemap");
 rejectText(blogSitemap, "blog.andriishupta.dev", "blog sitemap");
 rejectText(rss, "blog.andriishupta.dev", "RSS");
 rejectText(llms, "blog.andriishupta.dev", "llms.txt");
-rejectText(redirects, "blog.andriishupta.dev", "Pages redirects");
-
-if (
-  bulkRedirectCsv !==
-  "blog.andriishupta.dev,https://andriishupta.dev/blog,301,true,false,true,true"
-) {
-  failures.push("Cloudflare Bulk Redirect CSV does not match the cutover map");
-}
 
 try {
   await access(path.join(repositoryRoot, "public/_headers"));
@@ -189,6 +168,6 @@ if (failures.length > 0) {
   process.exitCode = 1;
 } else {
   console.log(
-    `Public blog release verified: ${posts.length} articles, canonical metadata, RSS, sitemaps, llms.txt, and redirect maps`,
+    `Public blog release verified: ${posts.length} articles, canonical metadata, RSS, sitemaps, and llms.txt`,
   );
 }

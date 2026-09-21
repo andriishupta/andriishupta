@@ -49,6 +49,8 @@ dependencies. Keep pre-commit checks read-only and fast.
 - Slugs are stable and match filenames. Filename dates never affect routes.
 - Drafts appear in development and stay out of production pages, feeds,
   sitemaps, and `llms.txt`.
+- Only the site owner may change an article from `draft: true` to `draft: false`.
+  Agents can prepare and verify drafts, but must leave publication to the owner.
 - English represents a translation pair on the blog index. RSS, sitemaps, and
   `llms.txt` include every published language version.
 - `featured: true` affects only blog-index ordering. Featured and regular groups
@@ -56,6 +58,9 @@ dependencies. Keep pre-commit checks read-only and fast.
 - `updatedAt` means a material first-party content change, not a distribution
   URL update.
 - Keep `tags` article-specific and `topics` limited to the shared allowlist.
+- All links in article bodies open in a new tab, including links to this site.
+  Preserve `rel="noopener noreferrer"`; keep the surrounding site navigation in
+  the current tab. Apply this to new articles and existing 2026 articles.
 - Keep new headings free of decorative emoji; use `## 🔗 Links` for links.
 - Reading time uses prose at 220 words per minute and excludes code, images,
   and link destinations.
@@ -125,7 +130,9 @@ dependencies. Keep pre-commit checks read-only and fast.
 ## Deployment and licensing
 
 - Keep Astro output static with `build.format: "file"`.
-- Use `public/_redirects` for Pages path redirects.
+- Keep the existing `public/_redirects` entries for legacy paths. Do not modify
+  this file or add redirects for newly published articles; new articles have only
+  their canonical `/blog/[slug]` route.
 - Use the Cloudflare Bulk Redirect in
   `docs/cloudflare-blog-redirect.csv` for the legacy blog hostname and keep its
   DNS record proxied while the redirect is active.
