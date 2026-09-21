@@ -8,7 +8,6 @@ import {
   blogTopicDefinitions,
   formatBlogDate,
   getBlogPosts,
-  getBlogTopicSlug,
   getPostPath,
   getReadingStats,
   hasMeaningfulUpdate,
@@ -27,7 +26,7 @@ for (const post of posts) {
 }
 
 const topicFilters = blogTopicDefinitions
-  .map(({ label, slug }) => [label, slug, topicCounts.get(label) ?? 0] as const)
+  .map(({ label, slug }) => [label, slug, topicCounts.get(slug) ?? 0] as const)
   .filter(([, , count]) => count > 0);
 const title = `Software Engineering Blog | ${copy.identity.fullName}`;
 const description =
@@ -146,7 +145,7 @@ const structuredData = {
             <article
               class="blog-entry"
               data-blog-entry
-              data-topics={post.data.topics.map(getBlogTopicSlug).join(",")}
+              data-topics={post.data.topics.join(",")}
               style={`--reveal-order: ${Math.min(index, 3)}`}
             >
               <a class="blog-entry__link" href={getPostPath(post)}>

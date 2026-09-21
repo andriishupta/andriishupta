@@ -30,8 +30,8 @@ tags:
   - astro
   - seo
 topics:
-  - UI Development
-  - Software Design
+  - ui
+  - software-design
 cover: "/images/blog/migrating-blog-to-subpath/cover.png"
 coverAlt: "A useful description of the cover"
 ogImage: "/blog/migrating-blog-to-subpath/og.png"
@@ -56,8 +56,8 @@ Article content starts here.
 - `featured: true` moves an article above regular posts on the index; each
   group remains ordered by filename date.
 - `draft: true` makes the article visible in development only.
-- `tags` are article-specific. `topics` come from
-  `src/lib/blog-topics.ts`.
+- `tags` are article-specific. `topics` use the slugs defined in
+  `src/lib/blog-topics.ts`; labels are for display only.
 - Keep headings text-only except for `## 🔗 Links`.
 - Put cross-post URLs in `distribution`, not in the article body.
 
