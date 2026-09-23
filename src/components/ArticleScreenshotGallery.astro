@@ -1,0 +1,68 @@
+---
+interface Screenshot {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+  caption: string;
+}
+
+interface Props {
+  screenshots: Screenshot[];
+}
+
+const { screenshots } = Astro.props;
+---
+
+<div class="article-screenshot-gallery">
+  {screenshots.map((screenshot) => (
+    <figure>
+      <a href={screenshot.src} target="_blank" rel="noopener noreferrer" aria-label={`Open full-size image: ${screenshot.alt}`}>
+        <img src={screenshot.src} alt={screenshot.alt} width={screenshot.width} height={screenshot.height} loading="lazy" decoding="async" />
+      </a>
+      <figcaption>{screenshot.caption}</figcaption>
+    </figure>
+  ))}
+</div>
+
+<style>
+  .article-screenshot-gallery {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-block: 2rem;
+  }
+
+  .article-screenshot-gallery figure {
+    min-width: 0;
+    margin: 0;
+  }
+
+  .article-screenshot-gallery a {
+    display: block;
+  }
+
+  .article-screenshot-gallery img {
+    width: 100%;
+    height: auto;
+    max-height: none;
+    margin: 0;
+    object-fit: contain;
+    object-position: top;
+  }
+
+  .article-screenshot-gallery figcaption {
+    margin-top: 0.5rem;
+    color: var(--ink);
+    font-size: 0.875rem;
+    line-height: 1.4;
+    text-align: center;
+  }
+
+  @media (min-width: 48rem) {
+    .article-screenshot-gallery {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      align-items: start;
+    }
+  }
+</style>

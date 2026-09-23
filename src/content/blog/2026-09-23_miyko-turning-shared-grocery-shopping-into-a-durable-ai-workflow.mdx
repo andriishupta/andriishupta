@@ -1,0 +1,208 @@
+---
+title: "MiyKo: A Durable AI Workflow for Shared Shopping"
+slug: "miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow"
+lang: en
+translationKey: "miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow"
+subtitle: "Designing a shared order across people, memory, approvals and a real grocery provider"
+description: "How MiyKo combines group shopping, durable workflows, managed memory, approvals and a real Silpo basket."
+tags:
+  - miyko
+  - ai
+  - langgraph
+  - mem0
+  - react-native
+  - architecture
+topics:
+  - ai
+  - software-design
+  - mobile
+draft: true
+ogImage: "/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/og.png"
+---
+
+import MiykoArchitecture from "../../components/MiykoArchitecture.astro";
+import PhoneScreenshot from "../../components/PhoneScreenshot.astro";
+import ArticleScreenshotGallery from "../../components/ArticleScreenshotGallery.astro";
+
+## 🔗 Links
+
+- [AI Factory by Silpo](https://ai-factory.silpo.ua/)
+- [MiyKo GitHub repository](https://github.com/andriishupta/miyko)
+- [LangGraph documentation](https://docs.langchain.com/oss/javascript/langgraph/overview)
+- [Mem0 documentation](https://docs.mem0.ai/introduction)
+
+I built MiyKo for the AI Factory by Silpo hackathon to test a harder version of AI shopping: one order shared by several people over time. The result connects a React Native app, a role-aware API, a durable LangGraph workflow, Mem0 memory and Silpo’s real basket. This article explains the system boundaries that made the shared order work, where human approval stays in control, and what would need to change before production.
+
+## The idea
+
+Silpo already has an AI assistant that can find products and help with a basket. I wanted to see what changes when the unit of work is a **shared order**, rather than one prompt from one person.
+
+A shared order can outlive the first chat: one person starts dinner planning, another adds drinks, a child requests ice cream, an owner approves it, and the basket is prepared hours later. That makes identity, permissions, durable state and current provider data first-class parts of the design.
+
+## Why a shared order changes the product
+
+A group can be a family, flatmates, coworkers planning lunch or friends organizing a picnic. The same flow also works for one person.
+
+Imagine a simple dinner:
+
+1. Mom starts the order.
+2. Dad adds drinks.
+3. A child asks for ice cream.
+4. The child’s request waits for approval.
+5. The family confirms the plan.
+6. MiyKo prepares the real store basket.
+
+Everyone works with the same workflow, but not everyone has the same permissions.
+
+In the MVP, an owner or admin can approve requests and perform provider actions. An editor can add to the shared plan. A viewer can make a request, but it must be approved before it affects the real basket.
+
+This is important because the AI does not decide who has authority. The API knows the authenticated member and their role. A prompt cannot turn a viewer into an owner.
+
+## Keeping the architecture small
+
+Silpo was the real provider used for the hackathon. The provider boundary keeps the shared-order design independent of that particular store.
+
+MiyKo has five main runtime boundaries:
+
+- **Expo / React Native** for the mobile experience;
+- **Hono API** for authentication, group roles and provider connections;
+- **LangGraph** for the active workflow and pause/resume state;
+- **Mem0** for long-term group and member memory;
+- **Silpo MCP** for current products, basket operations, fulfillment and checkout.
+
+The complete request path looks like this:
+
+<MiykoArchitecture />
+
+The API is the security boundary. LangGraph owns the order state and pause/resume transitions. LangChain provides the model and tool integration inside that graph; Mem0 supplies long-term context when needed. The model proposes a next step, while the API checks the authenticated actor and permissions before protected actions. When that step needs store data or a basket change, it calls Silpo through MCP. The result returns to LangGraph, is saved in the workflow state and becomes the next status shown in the app.
+
+PostgreSQL is a small control plane and records the outbox events that bridge API commands to the workflow. It stores users, groups, roles, provider bindings, workflow references, approval decisions, audit records and outbox state. Each order has one workflow UUID, reused as its LangGraph thread ID, so later actions resume the same process. The outbox worker retries temporary delivery failures with an idempotency key; an owner’s decision to decline a request remains final.
+
+It does not store a second product catalog, a second basket or a copy of LangGraph checkpoints. This keeps a single source of truth for each kind of data.
+
+This was an important decision. Creating tables for everything would make the system look complete, but it would also create difficult questions:
+
+- Which price is correct when Silpo changes it?
+- What happens when a locally stored product becomes unavailable?
+- Which copy of the basket is the source of truth?
+- How do two workflow states stay synchronized?
+
+The simpler answer is to leave provider data with the provider, workflow state with LangGraph and reusable memory with Mem0.
+
+## The complete MiyKo flow
+
+The demo follows one shared order from the first request to the Silpo checkout.
+
+### 1. One workflow keeps the process together
+
+The MVP uses one workflow kind called `step-order`. LangGraph keeps the active state, pauses when a decision is needed and resumes the same workflow later.
+
+![MiyKo step-order workflow graph](https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/01-langgraph-step-order-graph.png)
+
+This graph is not only a chain of AI calls. It represents the order lifecycle: planning, member changes, approvals, provider actions and completion. The screenshot shows the graph in Studio. LangGraph runs the workflow; LangSmith provides development and tracing tools around it.
+
+### 2. Different people see the same order
+
+Each group member has a separate authenticated session. They do not share login credentials, but they can see the same active workflow.
+
+The group view shows members, roles and the connected provider. The owner connects Silpo once for the group through OAuth 2.1 with PKCE; MiyKo never asks for the store password.
+
+<ArticleScreenshotGallery screenshots={[
+  { src: "https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/02-dual-user-empty-dashboard.png", alt: "Separate owner and viewer dashboards for the same shared order", width: 1800, height: 1922, caption: "Separate member sessions" },
+  { src: "https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/03-household-members-and-provider.png", alt: "Group members, roles and Silpo provider connection", width: 1766, height: 1930, caption: "Group and provider settings" },
+  { src: "https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/04-silpo-oauth-authorization.png", alt: "Silpo OAuth authorization screen for MiyKo", width: 892, height: 1910, caption: "Silpo authorization" },
+]} />
+
+Other members can use that connection through the workflow, but they never receive the provider token.
+
+### 3. Silpo stays a separate trusted system
+
+The credentials remain encrypted on the backend. When the workflow calls Silpo MCP, the API supplies the access token as runtime-only context. The mobile app, LangGraph state and Mem0 do not hold that token.
+
+### 4. Previous purchases become useful memory
+
+Before starting the first order, the owner can import a summary of recent Silpo receipts.
+
+![Recent Silpo purchases stored as MiyKo memory](https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/05-mem0-order-history-memories.png)
+
+This gives MiyKo context such as products the group bought before or choices that may be useful again.
+
+![MiyKo group memory in Mem0](https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/13-mem0-memory-dashboard.png)
+
+Memory helps the agent make a better suggestion. It does not give permissions and it does not replace the current provider data.
+
+### 5. The plan exists before the real basket
+
+The owner starts a dinner workflow in the React Native app. MiyKo reads relevant memory and creates the initial shared plan. At this point, the Silpo basket is still untouched. The screens below show the progression from an initial plan to a prepared basket; the provider action happens only after the group confirms the plan.
+
+I wanted planning and execution to be separate. During planning, people can speak naturally, add ideas and change their minds. Before execution, the system must check the actor, permissions and current provider state.
+
+### 6. The workflow pauses for approval
+
+When a viewer asks to add ice cream, the request remains in the same workflow and waits for an owner or admin.
+
+![Group request and owner approval in MiyKo](https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/10-household-approval-flow.png)
+
+After approval, LangGraph resumes the same thread. The context is not copied into a new chat and the order is not recreated from scratch.
+
+### 7. The agent prepares a real basket
+
+Only after the group agrees on the plan does an authorized member ask MiyKo to prepare the basket.
+
+The workflow discovers the current Silpo MCP tools, resolves products and updates the real provider basket. Product names, images, prices and totals come from Silpo, not from a local MiyKo catalog.
+
+<ArticleScreenshotGallery screenshots={[
+  { src: "https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/06-owner-order-dashboard.png", alt: "Owner starting a dinner order in MiyKo", width: 884, height: 1914, caption: "Start the order" },
+  { src: "https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/07-step-order-initial-plan.png", alt: "Initial shared dinner plan before provider actions", width: 880, height: 1908, caption: "Review the shared plan" },
+  { src: "https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/08-silpo-basket-ready.png", alt: "Real Silpo basket prepared after approval", width: 880, height: 1914, caption: "Prepare the real basket" },
+]} />
+
+### 8. Checkout still belongs to Silpo
+
+Silpo MCP can work with the basket and return a checkout link, but it does not expose a final place-order tool. MiyKo prepares the basket; the owner finishes the purchase in Silpo.
+
+<PhoneScreenshot
+  src="https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/11-silpo-checkout-basket.png"
+  alt="Silpo checkout basket prepared by MiyKo"
+  width={916}
+  height={1766}
+/>
+
+That boundary is intentional. MiyKo must not say that an order is complete when it only has a basket and a checkout URL.
+
+![Completed MiyKo workflow on two group dashboards](https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/12-completed-order-dashboard.png)
+
+The screenshot shows a completed MiyKo workflow. The final provider confirmation still happens in Silpo.
+
+## Memory, not chat history
+
+I was not interested in storing a long chat transcript and calling it memory.
+
+I wanted memory to be managed:
+
+- add useful memories;
+- update them when preferences change;
+- remove them when they are wrong or no longer relevant;
+- keep shared group memory;
+- keep personal member context;
+- keep order-specific state inside the active workflow.
+
+These are different things.
+
+Mem0 stores long-term group and member memory. LangGraph keeps the transient context for the current order. PostgreSQL does not duplicate either one.
+
+For example, “the group often buys food for two days” can be long-term memory. “Add ice cream to tonight’s order” belongs to the active workflow. The current ice cream price still belongs to Silpo.
+
+This separation also protects the permission model. Memory may say that a child likes ice cream, but it cannot approve the purchase. The API still checks the real member role.
+
+## Reworking the app UI
+
+The first version of the React Native UI came from a simpler model. It worked, but the screens were confusing. I opened the app, walked through the order flow, and tested where the experience broke down before redesigning it.
+
+That gave me specific problems to fix: which person is acting, which request is waiting for approval, whether the basket is still a plan or already prepared, and what the next action should be. Once the flow made sense, I rebuilt the screens around those states. Seeing and testing the real interface was more useful than asking a model for a polished screen in one prompt.
+
+## Summary
+
+MiyKo’s design starts with a shared order that can continue across people and time. The API verifies identity and permissions; LangGraph keeps the order resumable; Mem0 supplies reusable context; and the provider remains the source of truth for products, prices and checkout. Keeping these responsibilities separate prevents a remembered preference or a model suggestion from becoming an unauthorized action.
+
+The same separation shaped the app: people need to see whether they are planning, waiting for approval or acting on a real basket. Testing the first interface exposed those gaps before the redesign. Silpo supplied the concrete integration for this project, but the useful result is the architecture and interaction model for coordinating a group around an external action.

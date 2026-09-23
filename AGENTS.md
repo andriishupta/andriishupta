@@ -59,6 +59,7 @@ dependencies. Keep pre-commit checks read-only and fast.
 - All links in article bodies open in a new tab, including links to this site.
   Preserve `rel="noopener noreferrer"`; keep the surrounding site navigation in
   the current tab. Apply this to new articles and existing 2026 articles.
+- Open new articles with a paragraph that states what was built, why, and what the reader gains. End with a general `Summary` or a concrete improvements section; avoid generic "What I learned" endings.
 - Keep new headings free of decorative emoji; use `## 🔗 Links` for links.
 - Reading time uses prose at 220 words per minute and excludes code, images,
   and link destinations.
@@ -67,7 +68,7 @@ dependencies. Keep pre-commit checks read-only and fast.
 - OG images are author-supplied 1200×630 files and must not be overwritten
   unless the user explicitly asks to replace them.
 - Use `PhoneScreenshot.astro` for portrait phone captures.
-- Mermaid diagrams render client-side with the `mermaid` package.
+- Write architecture and flow diagrams as Mermaid source, not exported images. Mermaid diagrams render client-side with the `mermaid` package; verify their syntax in the installed version and their contrast in both themes.
 
 ### Blog OG image template
 

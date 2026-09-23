@@ -1,42 +1,45 @@
 ---
 const diagram = `flowchart TD
-    household[Household members]
-    app[Expo / React Native app]
-    api[Hono API<br/>Authentication, roles and permissions]
-    db[(PostgreSQL<br/>Control plane and outbox)]
-    graph[LangGraph<br/>Workflow state and pause / resume]
-    memory[(Mem0<br/>Household and member memory)]
-    model[LLM through LangChain<br/>Chooses the next safe step]
-    mcp[Silpo MCP tools<br/>Products, basket and fulfillment]
-    silpo[Silpo<br/>Provider source of truth and checkout]
+    members["Group members"]
+    mobile["Expo / React Native app"]
+    api["Hono API: identity and permissions"]
+    database[("PostgreSQL: roles, references and outbox")]
+    workflow["LangGraph: order state and pause / resume"]
+    memory[("Mem0: long-term group and member memory")]
+    llm["LLM through LangChain"]
+    tools["Silpo MCP tools"]
+    provider["Silpo: products, basket and checkout"]
 
-    household -->|Requests and approvals| app
-    app -->|Commands and status| api
-    api <-->|Users, roles and workflow references| db
-    api -->|Authorized event| graph
-    graph <-->|Read and update long-term context| memory
-    graph <-->|Reason about the next step| model
-    graph -->|Execute provider action| mcp
-    mcp <-->|Current catalog and basket| silpo
-    mcp -->|Tool result| graph
-    graph -->|Updated workflow status| api
-    api --> app`;
+    members -->|Requests and approvals| mobile
+    mobile <-->|Commands and status| api
+    api <-->|Control data| database
+    api -->|Authorized event| workflow
+    workflow <-->|Relevant memory| memory
+    workflow <-->|Next step| llm
+    workflow <-->|Provider action and result| tools
+    tools <-->|Current products and basket| provider
+    workflow -->|Updated status| api`;
 ---
 
-<div class="miyko-architecture" role="img" aria-label="MiyKo application architecture flowchart">
+<div class="miyko-architecture" role="img" aria-label="MiyKo architecture: group members, mobile app, API, LangGraph workflow, Mem0 memory, language model, and Silpo provider">
   <pre class="mermaid">{diagram}</pre>
 </div>
 
 <script>
-  const renderMermaid = async (node: HTMLElement) => {
-    const { default: mermaid } = await import("mermaid");
+  const renderPageDiagrams = async () => {
+    const nodes = document.querySelectorAll<HTMLElement>(
+      ".miyko-architecture .mermaid:not([data-processed='true'])",
+    );
 
+    if (nodes.length === 0) return;
+
+    const { default: mermaid } = await import("mermaid");
     mermaid.initialize({
       startOnLoad: false,
       securityLevel: "strict",
       theme: "base",
       themeVariables: {
-        background: "transparent",
+        background: "#ffffff",
         primaryColor: "#ffffff",
         primaryTextColor: "#000000",
         primaryBorderColor: "#000000",
@@ -44,36 +47,33 @@ const diagram = `flowchart TD
         secondaryColor: "#ffffff",
         tertiaryColor: "#ffffff",
       },
+      flowchart: { htmlLabels: false },
     });
 
-    await mermaid.run({ nodes: [node] });
+    await mermaid.run({ nodes });
   };
 
-  const renderPageDiagrams = () => {
-    const nodes = document.querySelectorAll<HTMLElement>(
-      ".mermaid:not([data-processed='true'])",
-    );
-
-    for (const node of nodes) {
-      void renderMermaid(node);
-    }
-  };
-
-  renderPageDiagrams();
-  document.addEventListener("astro:page-load", renderPageDiagrams);
+  void renderPageDiagrams();
+  document.addEventListener("astro:page-load", () => void renderPageDiagrams());
 </script>
 
 <style>
   .miyko-architecture {
     margin-block: 2rem;
+    padding: 1.5rem;
     overflow-x: auto;
+    background: #fff;
+    color: #000;
+    border: 1px solid #d8d8d8;
   }
 
   .miyko-architecture :global(.mermaid) {
     display: flex;
     min-width: 42rem;
     justify-content: center;
-    background: transparent;
+    margin: 0;
+    background: #fff;
+    color: #000;
   }
 
   .miyko-architecture :global(svg) {

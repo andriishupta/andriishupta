@@ -56,6 +56,7 @@ Article content starts here.
 - `draft: true` makes the article visible in development only.
 - `tags` are article-specific. `topics` use the slugs defined in
   `src/lib/blog-topics.ts`; labels are for display only.
+- Open with what was built, why, and what the reader gains. Close with a general summary or concrete improvements, not a generic "What I learned" section.
 - Keep headings text-only except for `## 🔗 Links`.
 - Put cross-post URLs in `distribution`, not in the article body.
 

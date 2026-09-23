@@ -65,6 +65,34 @@ const splitMdx = (source, filePath) => {
   };
 };
 
+const collectArticleImages = (body) => {
+  const markdownImages = Array.from(
+    body.matchAll(
+      /!\[([^\]]*)\]\((https:\/\/andriishupta\.dev\/images\/blog\/[^)\s]+)\)/g,
+    ),
+  );
+  const phoneScreenshots = Array.from(
+    body.matchAll(
+      /<PhoneScreenshot[\s\S]*?src="(https:\/\/andriishupta\.dev\/images\/blog\/[^"]+)"[\s\S]*?alt="([^"]+)"[\s\S]*?\/>/g,
+    ),
+    ([, imageUrl, alt]) => [undefined, alt, imageUrl],
+  );
+  const galleryScreenshots = Array.from(
+    body.matchAll(
+      /<ArticleScreenshotGallery\s+screenshots=\{\[([\s\S]*?)\]\}\s*\/>/g,
+    ),
+  ).flatMap(([, screenshots]) =>
+    Array.from(
+      screenshots.matchAll(
+        /\{\s*src:\s*"(https:\/\/andriishupta\.dev\/images\/blog\/[^"]+)"\s*,\s*alt:\s*"([^"]+)"/g,
+      ),
+      ([, imageUrl, alt]) => [undefined, alt, imageUrl],
+    ),
+  );
+
+  return [...markdownImages, ...phoneScreenshots, ...galleryScreenshots];
+};
+
 const validatePng = async (publicPath, slug, expectedDimensions) => {
   const absolutePath = path.join(
     publicDirectory,
@@ -151,18 +179,7 @@ for (const slug of articles) {
 
   codeBlockCount += fences / 2;
 
-  const markdownImages = Array.from(
-    body.matchAll(
-      /!\[([^\]]*)\]\((https:\/\/andriishupta\.dev\/images\/blog\/[^)\s]+)\)/g,
-    ),
-  );
-  const phoneScreenshots = Array.from(
-    body.matchAll(
-      /<PhoneScreenshot[\s\S]*?src="(https:\/\/andriishupta\.dev\/images\/blog\/[^"]+)"[\s\S]*?alt="([^"]+)"[\s\S]*?\/>/g,
-    ),
-    ([, publicPath, alt]) => [undefined, alt, publicPath],
-  );
-  const images = [...markdownImages, ...phoneScreenshots];
+  const images = collectArticleImages(body);
 
   for (const image of images) {
     const [, alt, imageUrl] = image;
@@ -232,18 +249,7 @@ for (const article of localizedArticles) {
     );
   }
 
-  const markdownImages = Array.from(
-    body.matchAll(
-      /!\[([^\]]*)\]\((https:\/\/andriishupta\.dev\/images\/blog\/[^)\s]+)\)/g,
-    ),
-  );
-  const phoneScreenshots = Array.from(
-    body.matchAll(
-      /<PhoneScreenshot[\s\S]*?src="(https:\/\/andriishupta\.dev\/images\/blog\/[^"]+)"[\s\S]*?alt="([^"]+)"[\s\S]*?\/>/g,
-    ),
-    ([, publicPath, alt]) => [undefined, alt, publicPath],
-  );
-  const images = [...markdownImages, ...phoneScreenshots];
+  const images = collectArticleImages(body);
 
   for (const image of images) {
     const [, alt, imageUrl] = image;
