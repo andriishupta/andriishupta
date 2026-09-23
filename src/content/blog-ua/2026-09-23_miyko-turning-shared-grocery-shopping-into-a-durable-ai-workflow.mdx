@@ -16,7 +16,6 @@ topics:
   - ai
   - software-design
   - mobile
-draft: true
 ogImage: "/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/og.png"
 ---
 
@@ -107,11 +106,31 @@ PostgreSQL не зберігає другу копію каталогу това
 
 Екран групи показує учасників, ролі та підключеного провайдера. Власник один раз підключає Silpo для всієї групи через OAuth 2.1 із PKCE; MiyKo ніколи не запитує пароль від магазину.
 
-<ArticleScreenshotGallery screenshots={[
-  { src: "https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/02-dual-user-empty-dashboard.png", alt: "Окремі екрани власника й учасника з роллю перегляду для спільного замовлення", width: 1800, height: 1922, caption: "Окремі сесії учасників" },
-  { src: "https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/03-household-members-and-provider.png", alt: "Учасники групи, їхні ролі та підключення Silpo", width: 1766, height: 1930, caption: "Група й налаштування провайдера" },
-  { src: "https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/04-silpo-oauth-authorization.png", alt: "Екран авторизації Silpo через OAuth для MiyKo", width: 892, height: 1910, caption: "Авторизація Silpo" },
-]} />
+<ArticleScreenshotGallery
+  screenshots={[
+    {
+      src: "https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/02-dual-user-empty-dashboard.png",
+      alt: "Окремі екрани власника й учасника з роллю перегляду для спільного замовлення",
+      width: 1800,
+      height: 1922,
+      caption: "Окремі сесії учасників",
+    },
+    {
+      src: "https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/03-household-members-and-provider.png",
+      alt: "Учасники групи, їхні ролі та підключення Silpo",
+      width: 1766,
+      height: 1930,
+      caption: "Група й налаштування провайдера",
+    },
+    {
+      src: "https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/04-silpo-oauth-authorization.png",
+      alt: "Екран авторизації Silpo через OAuth для MiyKo",
+      width: 892,
+      height: 1910,
+      caption: "Авторизація Silpo",
+    },
+  ]}
+/>
 
 Інші учасники можуть використовувати це підключення через воркфлоу, але ніколи не отримують токен провайдера.
 
@@ -151,11 +170,31 @@ PostgreSQL не зберігає другу копію каталогу това
 
 Воркфлоу знаходить актуальні інструменти Silpo MCP, підбирає товари й оновлює реальний кошик провайдера. Назви, зображення, ціни товарів і підсумкова сума надходять від Silpo, а не з локального каталогу MiyKo.
 
-<ArticleScreenshotGallery screenshots={[
-  { src: "https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/06-owner-order-dashboard.png", alt: "Власник починає замовлення для вечері в MiyKo", width: 884, height: 1914, caption: "Початок замовлення" },
-  { src: "https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/07-step-order-initial-plan.png", alt: "Початковий спільний план вечері до дій із провайдером", width: 880, height: 1908, caption: "Перегляд спільного плану" },
-  { src: "https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/08-silpo-basket-ready.png", alt: "Реальний кошик Silpo, підготовлений після погодження", width: 880, height: 1914, caption: "Підготовка реального кошика" },
-]} />
+<ArticleScreenshotGallery
+  screenshots={[
+    {
+      src: "https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/06-owner-order-dashboard.png",
+      alt: "Власник починає замовлення для вечері в MiyKo",
+      width: 884,
+      height: 1914,
+      caption: "Початок замовлення",
+    },
+    {
+      src: "https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/07-step-order-initial-plan.png",
+      alt: "Початковий спільний план вечері до дій із провайдером",
+      width: 880,
+      height: 1908,
+      caption: "Перегляд спільного плану",
+    },
+    {
+      src: "https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/08-silpo-basket-ready.png",
+      alt: "Реальний кошик Silpo, підготовлений після погодження",
+      width: 880,
+      height: 1914,
+      caption: "Підготовка реального кошика",
+    },
+  ]}
+/>
 
 ### 8. Оформлення покупки залишається в Silpo
 

@@ -16,7 +16,6 @@ topics:
   - ai
   - software-design
   - mobile
-draft: true
 ogImage: "/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/og.png"
 ---
 
@@ -107,11 +106,31 @@ Each group member has a separate authenticated session. They do not share login 
 
 The group view shows members, roles and the connected provider. The owner connects Silpo once for the group through OAuth 2.1 with PKCE; MiyKo never asks for the store password.
 
-<ArticleScreenshotGallery screenshots={[
-  { src: "https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/02-dual-user-empty-dashboard.png", alt: "Separate owner and viewer dashboards for the same shared order", width: 1800, height: 1922, caption: "Separate member sessions" },
-  { src: "https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/03-household-members-and-provider.png", alt: "Group members, roles and Silpo provider connection", width: 1766, height: 1930, caption: "Group and provider settings" },
-  { src: "https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/04-silpo-oauth-authorization.png", alt: "Silpo OAuth authorization screen for MiyKo", width: 892, height: 1910, caption: "Silpo authorization" },
-]} />
+<ArticleScreenshotGallery
+  screenshots={[
+    {
+      src: "https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/02-dual-user-empty-dashboard.png",
+      alt: "Separate owner and viewer dashboards for the same shared order",
+      width: 1800,
+      height: 1922,
+      caption: "Separate member sessions",
+    },
+    {
+      src: "https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/03-household-members-and-provider.png",
+      alt: "Group members, roles and Silpo provider connection",
+      width: 1766,
+      height: 1930,
+      caption: "Group and provider settings",
+    },
+    {
+      src: "https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/04-silpo-oauth-authorization.png",
+      alt: "Silpo OAuth authorization screen for MiyKo",
+      width: 892,
+      height: 1910,
+      caption: "Silpo authorization",
+    },
+  ]}
+/>
 
 Other members can use that connection through the workflow, but they never receive the provider token.
 
@@ -151,11 +170,31 @@ Only after the group agrees on the plan does an authorized member ask MiyKo to p
 
 The workflow discovers the current Silpo MCP tools, resolves products and updates the real provider basket. Product names, images, prices and totals come from Silpo, not from a local MiyKo catalog.
 
-<ArticleScreenshotGallery screenshots={[
-  { src: "https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/06-owner-order-dashboard.png", alt: "Owner starting a dinner order in MiyKo", width: 884, height: 1914, caption: "Start the order" },
-  { src: "https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/07-step-order-initial-plan.png", alt: "Initial shared dinner plan before provider actions", width: 880, height: 1908, caption: "Review the shared plan" },
-  { src: "https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/08-silpo-basket-ready.png", alt: "Real Silpo basket prepared after approval", width: 880, height: 1914, caption: "Prepare the real basket" },
-]} />
+<ArticleScreenshotGallery
+  screenshots={[
+    {
+      src: "https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/06-owner-order-dashboard.png",
+      alt: "Owner starting a dinner order in MiyKo",
+      width: 884,
+      height: 1914,
+      caption: "Start the order",
+    },
+    {
+      src: "https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/07-step-order-initial-plan.png",
+      alt: "Initial shared dinner plan before provider actions",
+      width: 880,
+      height: 1908,
+      caption: "Review the shared plan",
+    },
+    {
+      src: "https://andriishupta.dev/images/blog/miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow/08-silpo-basket-ready.png",
+      alt: "Real Silpo basket prepared after approval",
+      width: 880,
+      height: 1914,
+      caption: "Prepare the real basket",
+    },
+  ]}
+/>
 
 ### 8. Checkout still belongs to Silpo
 
