@@ -28,7 +28,7 @@ const articleLinkComponents =
   data.publishedAt.getUTCFullYear() >= 2026 ? { a: ArticleLink } : undefined;
 const language = data.lang;
 const isUkrainian = language === "uk";
-const stats = getReadingStats(post.body, data.originalReadingMinutes);
+const stats = getReadingStats(post.body);
 const path = getPostPath(post);
 const alternatePath = alternatePost ? getPostPath(alternatePost) : undefined;
 const canonicalUrl = new URL(path, "https://andriishupta.dev").toString();
@@ -55,7 +55,7 @@ const articleStructuredData = {
   "@type": "BlogPosting",
   "@id": `${canonicalUrl}#article`,
   headline: data.title,
-  description: data.description,
+  description: data.subtitle,
   datePublished: toIsoDate(data.publishedAt),
   inLanguage: isUkrainian ? "uk-UA" : "en-US",
   mainEntityOfPage: canonicalUrl,
@@ -89,7 +89,6 @@ const labels = isUkrainian
       back: "Назад до блогу",
       published: "Опубліковано",
       readingTime: "Час читання",
-      originalReadingTime: "Початковий час читання",
       minutes: "хв",
       words: "Слів",
       distribution: "Також опубліковано на",
@@ -107,7 +106,6 @@ const labels = isUkrainian
       back: "Back to blog",
       published: "Published",
       readingTime: "Reading time",
-      originalReadingTime: "Original read",
       minutes: "min",
       words: "Words",
       distribution: "Also published on",
@@ -125,10 +123,10 @@ const labels = isUkrainian
 
 <Layout
   title={`${data.title} | ${copy.identity.fullName}`}
-  description={data.description}
+  description={data.subtitle}
   pathname={path}
   image={ogImage}
-  imageAlt={`${data.title} — ${copy.identity.fullName}`}
+  imageAlt={data.title}
   ogType="article"
   structuredData={structuredData}
   robots={stats.isStub ? "noindex, follow" : undefined}
@@ -152,7 +150,7 @@ const labels = isUkrainian
         <span>{labels.back}</span>
       </a>
       <h1 class="heading-display">{data.title}</h1>
-      {data.subtitle && <p class="article-hero__subtitle">{data.subtitle}</p>}
+      <p class="article-hero__subtitle">{data.subtitle}</p>
     </header>
 
     <div class="article-page">
@@ -170,11 +168,7 @@ const labels = isUkrainian
             {
               stats.readingMinutes > 0 && (
                 <div>
-                  <dt>
-                    {stats.isStub
-                      ? labels.originalReadingTime
-                      : labels.readingTime}
-                  </dt>
+                  <dt>{labels.readingTime}</dt>
                   <dd>
                     {stats.readingMinutes} {labels.minutes}
                     {stats.wordCount > 0 && (
@@ -240,21 +234,6 @@ const labels = isUkrainian
       </div>
 
       <ArticleToc headings={headings} mobile lang={language} />
-
-    {
-      data.cover && (
-        <figure class="article-cover">
-          <img
-            src={data.cover}
-            alt={data.coverAlt ?? ""}
-            width="1200"
-            height="630"
-            loading="eager"
-            fetchpriority="high"
-          />
-        </figure>
-      )
-    }
 
     <div
       class:list={[

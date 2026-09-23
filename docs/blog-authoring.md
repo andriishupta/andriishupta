@@ -19,23 +19,19 @@ and replaces `publishedAt` frontmatter.
 
 ```mdx
 ---
-title: "How I migrated my blog"
-slug: "migrating-blog-to-subpath"
+draft: true
+featured: false
 lang: en
-translationKey: "migrating-blog-to-subpath"
-subtitle: "Optional line below the title"
-description: "A concise search and share description under 200 characters."
-tags:
-  - astro
-  - seo
+slug: "migrating-blog-to-subpath"
+title: "How I migrated my blog"
+subtitle: "A concise subtitle used for article summaries and SEO metadata"
+ogImage: "/blog/migrating-blog-to-subpath/og.png"
 topics:
   - ui
   - software-design
-cover: "/images/blog/migrating-blog-to-subpath/cover.png"
-coverAlt: "A useful description of the cover"
-ogImage: "/blog/migrating-blog-to-subpath/og.png"
-featured: false
-draft: true
+tags:
+  - astro
+  - seo
 distribution:
   devto: "https://dev.to/example/migrating-blog-to-subpath"
   medium: "https://medium.com/@example/migrating-blog-to-subpath"
@@ -47,10 +43,18 @@ Article content starts here.
 
 ### Field rules
 
+- Keep frontmatter in this order: `draft`, `featured`, `lang`, `slug`, `title`,
+  `subtitle`, `ogImage`, `topics`, `tags`, then optional `distribution`.
+- Always write `draft` and `featured` explicitly. New articles start with
+  `draft: true`; only the site owner changes them to `draft: false`.
 - `slug` matches the filename and remains stable.
 - `lang` is `en` or `uk`.
-- Translation pairs share `slug` and `translationKey`. Ukrainian routes use
-  `/blog/ua/[slug]`.
+- Translation pairs share the same `slug`. Ukrainian routes use
+  `/blog/ua/[slug]`; no separate translation key is stored.
+- `subtitle` is required, stays under 200 characters, and provides the article
+  summary for the hero, cards, SEO metadata, RSS, and `llms.txt`.
+- `ogImage` is required, is also the blog-card image, and uses `title` as its
+  alternative text.
 - `featured: true` moves an article above regular posts on the index; each
   group remains ordered by filename date.
 - `draft: true` makes the article visible in development only.
@@ -89,8 +93,8 @@ The importer preserves frontmatter, removes duplicated source metadata,
 localizes hosted media, and refuses to overwrite a populated body. Use
 `pnpm blog:import -- --force [slug]` only for an intentional restore.
 
-`originalReadingMinutes` is allowed only on an empty migration stub and should
-be removed once its body is imported.
+Reading time and word count are always calculated from article prose during the
+build. They are never stored in frontmatter.
 
 ## Publish
 

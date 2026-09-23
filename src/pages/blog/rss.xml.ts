@@ -23,7 +23,7 @@ export async function GET(context: { site?: URL }) {
     },
     items: posts.map((post) => ({
       title: post.data.title,
-      description: post.data.description,
+      description: post.data.subtitle,
       link: getPostPath(post),
       pubDate: post.data.publishedAt,
       categories: post.data.tags,

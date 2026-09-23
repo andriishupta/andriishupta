@@ -1,0 +1,98 @@
+---
+interface Props {
+  type: "lifecycle" | "ingestion" | "run" | "scope";
+}
+
+const diagrams = {
+  lifecycle: {
+    caption: "From a reviewed pattern to durable execution",
+    ariaLabel:
+      "Encois workflow lifecycle: a Template becomes an approved Blueprint, then a reusable Workflow, an individual Run, and finally a Temporal execution",
+    source: `flowchart LR
+      template[Template] --> blueprint["Approved Blueprint"]
+      blueprint --> workflow["Reusable Workflow"]
+      workflow --> run[Run]
+      run --> temporal["Temporal execution"]`,
+  },
+  ingestion: {
+    caption: "Source ingestion and context projection",
+    ariaLabel:
+      "Encois Source ingestion: an authorized Integration registers a scoped Source and immutable revision, Temporal runs ingestion, facts retain provenance, and derived context is projected into Organization Memory and Workflow Memory",
+    source: `flowchart LR
+      integration["Authorized Integration"] --> source["Scoped Source<br/>immutable revision"]
+      source --> temporal["Temporal ingestion"]
+      temporal --> facts["Facts and provenance"]
+      facts --> organization["Organization Memory"]
+      facts --> workflow["Workflow Memory"]`,
+  },
+  run: {
+    caption: "A start request becomes a durable Run",
+    ariaLabel:
+      "Encois durable Run path: the Gateway stores a queued Run and outbox event, the dispatcher signals the Temporal Coordinator, the Gateway starts a stable Blueprint Workflow, the Go Runtime executes Activities, and the Gateway projects status and evidence",
+    source: `flowchart LR
+      request["Start request"] --> transaction["Gateway transaction<br/>queued Run · event · outbox"]
+      transaction -->|lease · retry| coordinator["Temporal Coordinator<br/>deduplicate event"]
+      coordinator -->|private callback| start["Gateway start boundary"]
+      start -->|stable Workflow ID| temporal["Blueprint Workflow"]
+      temporal -->|Activities| runtime["Go Runtime"]
+      runtime -->|typed result · evidence| projection["Gateway projection"]
+      temporal -. status · history .-> projection`,
+  },
+  scope: {
+    caption: "Scope narrows inside one organization",
+    ariaLabel:
+      "Encois authorization hierarchy: Organization, Department, Team, Project, and finally a Person or System",
+    source: `flowchart LR
+      organization[Organization] --> department[Department]
+      department --> team[Team]
+      team --> project[Project]
+      project --> actor["Person or System"]`,
+  },
+} as const;
+
+const diagram = diagrams[Astro.props.type];
+---
+
+<figure class="encois-flow article-mermaid">
+  <figcaption>{diagram.caption}</figcaption>
+  <div class="diagram" role="img" aria-label={diagram.ariaLabel}>
+    <pre class="mermaid">{diagram.source}</pre>
+  </div>
+</figure>
+
+<style>
+  .encois-flow {
+    margin-block: 2rem;
+  }
+
+  figcaption {
+    padding: 0.75rem 1rem;
+    background: #fff;
+    color: #000;
+    border: 1px solid #d8d8d8;
+    border-bottom: 0;
+    font-weight: 700;
+  }
+
+  .diagram {
+    padding: 1rem;
+    overflow-x: auto;
+    background: #fff;
+    color: #000;
+    border: 1px solid #d8d8d8;
+  }
+
+  .diagram :global(.mermaid) {
+    display: flex;
+    min-width: 34rem;
+    justify-content: center;
+    margin: 0;
+    background: #fff;
+    color: #000;
+  }
+
+  .diagram :global(svg) {
+    max-width: 100%;
+    height: auto;
+  }
+</style>

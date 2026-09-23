@@ -1,10 +1,15 @@
 ---
-title: "Encois: Building Organizational Intelligence on Google Cloud"
-slug: "encois-designing-evidence-backed-organizational-intelligence-on-google-cloud"
+draft: true
+featured: false
 lang: en
-translationKey: "encois-designing-evidence-backed-organizational-intelligence-on-google-cloud"
-subtitle: "What I learned from building a small, event-driven intelligence system for companies"
-description: "How I built Encois with Temporal, Google ADK, Gemini and GCP—and why organizational AI needs events, permissions and evidence, not only RAG."
+slug: "encois-designing-evidence-backed-organizational-intelligence-on-google-cloud"
+title: "Encois: Building Organizational Intelligence on Google Cloud"
+subtitle: "An event-driven architecture for scoped, evidence-backed organizational intelligence"
+ogImage: "/blog/encois-designing-evidence-backed-organizational-intelligence-on-google-cloud/og.png"
+topics:
+  - ai
+  - software-design
+  - api
 tags:
   - encois
   - ai
@@ -12,414 +17,281 @@ tags:
   - temporal
   - system-design
   - architecture
-topics:
-  - ai
-  - software-design
-  - api
-draft: true
 ---
+
+import EncoisArchitecture from "../../components/EncoisArchitecture.astro";
+import EncoisFlow from "../../components/EncoisFlow.astro";
+import ArticleScreenshotGallery from "../../components/ArticleScreenshotGallery.astro";
+
+I built Encois for the All Things Agentic Hackathon to explore how an AI system can follow changing company context without becoming an unrestricted chatbot. This article explains the system design behind its event-driven control plane, durable Temporal workflows, scoped agents and evidence model, including why PostgreSQL, raw artifacts, Organization Memory and Workflow Memory have separate responsibilities.
 
 ## 🔗 Links
 
 - [Encois repository](https://github.com/andriishupta/encois)
+- [All Things Agentic Hackathon](https://allthingsagentichackathon.devpost.com/)
 - [Encois architecture documentation](https://github.com/andriishupta/encois/blob/main/docs/architecture.md)
+- [Encois contracts documentation](https://github.com/andriishupta/encois/blob/main/docs/contracts.md)
+- [Encois security model](https://github.com/andriishupta/encois/blob/main/docs/security.md)
 - [Encois demo guide](https://github.com/andriishupta/encois/blob/main/docs/demo.md)
-- Google Cloud
-- Temporal
-- Google Agent Development Kit
+- [Google Cloud documentation](https://docs.cloud.google.com/)
+- [Temporal documentation](https://docs.temporal.io/)
+- [Google Agent Development Kit](https://google.github.io/adk-docs/)
 
 ## The idea
 
-Encois is a small organizational intelligence system.
+Encois is a small organizational intelligence system. The easiest way to describe the idea is a mini-Palantir for companies: it connects information from different parts of a business and helps people understand what is changing. Its read-oriented product loop is deliberately narrow: **observe → correlate → explain → recommend**.
 
-The easiest way to describe the idea is a mini-Palantir for companies: a system that connects information from different parts of a business and helps people understand what is happening.
+A company with 50–100 people continuously produces new context. A Jira issue becomes blocked, a pull request fails its checks, a deployment goes wrong, a customer sends an important email or an internal decision changes a release plan.
 
-Think about a company with 50–100 people. Its context changes all the time:
+Each event means little in isolation. The useful context appears when a failed check belongs to a pull request, the pull request blocks a Jira issue, the issue belongs to Friday's release and the release affects a customer commitment.
 
-- a Jira issue becomes blocked;
-- a pull request fails its checks;
-- a deployment goes wrong;
-- a customer sends an important email;
-- a billing event changes;
-- an internal decision affects a release.
-
-None of these events means much in isolation. The useful context appears when they are connected.
-
-A failed check may be related to a pull request. The pull request may block a Jira issue. The issue may belong to a release planned for Friday. The release may affect a customer commitment.
-
-The question is not only, “What does this document say?”
-
-It is:
+The question is:
 
 > “What changed, why does it matter, and what needs attention now?”
 
-That is the problem I wanted Encois to explore.
+## Why this is more than a RAG chatbot
 
-## Why I did not want to build another RAG chatbot
+The obvious implementation would collect company documents, put them into a vector database and add chat. Retrieval can help find relevant semantic context, but a company is a changing system rather than a static collection of documents.
 
-The most obvious implementation would be to collect company documents, put them into a vector database and add a chat interface.
+Encois is therefore designed around Integrations, scoped Sources, webhooks, immutable revisions and durable Workflows. Every useful result should remain connected to real events, authorized data, user permissions, workflow history and inspectable evidence.
 
-That can be useful, but it is not enough for this problem.
+RAG may support retrieval, but it must not decide who can access data, whether a Workflow completed or whether an external action is allowed. Those decisions belong to deterministic application boundaries.
 
-A company is not a static collection of documents. It is a changing system. Jira, GitHub, email, billing, deployments and internal tools continuously produce new events. The system needs to update its understanding when those events arrive.
-
-Instead of importing everything into RAG once, Encois is designed around connectors, webhooks, source revisions and workflows.
-
-I also did not want an AI that could simply invent a plausible story about the company.
-
-The goal was to make every useful answer connected to:
-
-- real events;
-- authorized integrations;
-- user permissions;
-- known source data;
-- workflow history;
-- inspectable evidence.
-
-In simple terms: less hallucination, more operational truth.
-
-RAG can still be one part of the system. It can help retrieve relevant semantic context. But retrieval should not decide who can access data, whether a workflow completed, or whether an external action is allowed.
-
-## A simple example
+## A release-safety example
 
 Imagine a delivery manager asking:
 
 > “Is this release still safe to ship on Friday?”
 
-The answer may depend on open Jira work, GitHub pull requests, failed checks, deployment events and a document describing the release requirements.
+The answer may depend on open Jira work, GitHub pull requests, failed checks, deployment events and a document containing the release requirements. An Encois Workflow can collect those signals and return three layers:
 
-An Encois workflow can collect those signals and produce three layers of output:
-
-1. **Observed facts** — what Jira, GitHub and other Sources actually returned.
-2. **Interpretation** — which blockers or dependencies the agent found across those facts.
+1. **Observed facts** — what Jira, GitHub and other Sources returned.
+2. **Interpretation** — which blockers or dependencies were found across those facts.
 3. **Recommendation** — what a person should review or decide next.
 
-The recommendation should not hide the evidence behind it. A user should be able to see which issue is open, which check failed, where the information came from and when it was observed.
+The recommendation does not hide its evidence. The user can inspect the issue, failed check, source and observation time behind it. That product requirement drives the need for provenance, freshness, identity, scope and durable execution.
 
-This is a small difference in the UI, but a big difference in the architecture. The system needs provenance, freshness, identity, scope and durable execution—not only a prompt and an answer.
+<ArticleScreenshotGallery
+  screenshots={[
+    {
+      src: "https://andriishupta.dev/images/blog/encois-designing-evidence-backed-organizational-intelligence-on-google-cloud/dashboard-overview.webp",
+      alt: "Encois dashboard showing the morning brief, workspace assistant and operational summaries for Sun Inc",
+      width: 2000,
+      height: 1009,
+      caption: "The main Dashboard brings briefings, questions and recent operational changes into one workspace view.",
+    },
+  ]}
+/>
 
-## I started with system design
+## Starting with system design
 
-Encois was a hackathon project built around Google Cloud and enterprise agents.
+Encois was a hackathon project built around Google Cloud and enterprise agents. Before building most of the application, I defined where state should live, how events should enter the system, how permissions should survive a long-running Workflow and how agents should access tools. The goal was one demonstrable vertical slice without collapsing the control plane, execution engine, agent runtime and data plane into one service.
 
-Before writing most of the application code, I spent several days thinking about the architecture.
+The submission also needed to demonstrate autonomous behavior beyond a chat loop. I used Source ingestion and a multi-step release investigation as that vertical slice: an event enters through a typed boundary, Temporal keeps the work durable, bounded agents collect and interpret evidence, and the Dashboard presents a reviewable result.
 
-I wanted to understand:
+At article scale, the architecture is easier to read as two connected views:
 
-- which state belongs in PostgreSQL;
-- which state belongs in Temporal;
-- how Spanner Graph and Memory Bank should differ;
-- where provider credentials should live;
-- how company events should enter the system;
-- how permissions should travel through long-running workflows;
-- how agents should access tools;
-- what should run on Cloud Run;
-- how to make the whole path observable.
+<EncoisArchitecture />
 
-This was the most interesting part of the project for me.
+The [architecture documentation](https://github.com/andriishupta/encois/blob/main/docs/architecture.md) contains the complete deployment view with service identities, secrets, telemetry and local adapters.
 
-The main architecture became:
+The important decision was giving each part one clear responsibility rather than adding services for the sake of the diagram.
 
-```text
-Company systems and events
-  → Integrations and scoped Sources
-  → TypeScript Gateway API
-  → PostgreSQL control plane and transactional outbox
-  → Temporal Coordinator and durable Workflows
-  → Go Agent Runtime
-  → private Agent Gateway
-  → provider tools, Graph, Memory and artifacts
-  → Google ADK and Gemini
-  → evidence-linked result in the Dashboard
-```
+## Product concepts and immutable execution
 
-The important decision was not the number of services. It was giving each part one clear responsibility.
+Encois separates the product into a few explicit concepts:
 
-## The main product concepts
-
-I separated the product into a few concepts:
-
-- **Integration** — a company-level connection to GitHub, Jira or another provider.
-- **Source** — a specific repository, project, document or other scoped resource.
-- **Source Revision** — an immutable version of the Source data.
-- **Template** — a reviewed starting point for a workflow.
-- **Blueprint** — the resolved and approved workflow definition.
-- **Workflow** — a named process the company can run again.
-- **Run** — one durable execution of that Workflow.
+- **Integration** — an organization-level connection to GitHub, Jira or another provider.
+- **Source** — a repository, project, document or other scoped provider resource.
+- **Source Revision** — an immutable version of Source data.
+- **Template** — a reviewed starting pattern for a Workflow.
+- **Blueprint** — the resolved and approved definition of its steps.
+- **Workflow** — a named process the organization can run again.
+- **Run** — one durable execution of a Workflow.
 - **Evidence** — a reference supporting a fact or conclusion.
 
-The path from an idea to execution looks like this:
+<EncoisFlow type="lifecycle" />
 
-```text
-Template → Blueprint → Workflow → Run → Temporal execution
-```
+This structure makes execution inspectable. If a Template changes tomorrow, an old Run still points to the approved Blueprint used at the time instead of silently reinterpreting history through new configuration.
 
-This may look like extra structure for a hackathon project. But it solves an important problem: a user can know exactly what was approved and executed.
+<ArticleScreenshotGallery
+  screenshots={[
+    {
+      src: "https://andriishupta.dev/images/blog/encois-designing-evidence-backed-organizational-intelligence-on-google-cloud/workflow-run-canvas.webp",
+      alt: "Encois Workflow canvas showing Blueprint resolution and the running, completed and pending steps of one Run",
+      width: 2000,
+      height: 1001,
+      caption: "A Run exposes the resolved Blueprint and the current state of every Workflow step.",
+    },
+    {
+      src: "https://andriishupta.dev/images/blog/encois-designing-evidence-backed-organizational-intelligence-on-google-cloud/source-revision-provenance.webp",
+      alt: "Encois Source details showing freshness, immutable revision, scope, provenance and ingestion status",
+      width: 2000,
+      height: 1121,
+      caption: "A Source keeps freshness, access scope, immutable revisions and ingestion history together.",
+    },
+  ]}
+/>
 
-If a Template changes tomorrow, an old Run still points to the immutable Blueprint used at the time. The system does not silently reinterpret its history using a new configuration.
+## Events, Sources and changing context
 
-## Events, connectors and changing context
+An organizational intelligence system cannot depend only on manual questions. Integrations connect Encois to company systems, while Sources narrow those connections to resources a team is allowed to use. Webhooks and ingestion Workflows bring new events and revisions into the platform.
 
-An organizational intelligence system cannot depend only on manual questions.
+<EncoisFlow type="ingestion" />
 
-Integrations connect Encois to company systems. Sources narrow those integrations to the resources a team is allowed to use. Webhooks and ingestion workflows bring new events and revisions into the platform.
+Provider credentials remain references resolved through Secret Manager. Large raw artifacts belong in Cloud Storage, while PostgreSQL stores the Source, its authorized scope, immutable revision and artifact reference. Temporal receives references and execution context rather than raw documents or credentials.
 
-The Source ingestion path is:
+The private Agent Gateway reads the artifact, normalizes it and extracts facts with provenance. Evidence preserves the provider record, observed and ingestion times, freshness, transformation version and visibility scope where available. Hosted adapters can project structured facts into Spanner Graph and distill relevant semantic context into Memory Bank. Derived memory remains useful context, but it is never stronger evidence than the event or document it came from.
 
-```text
-authorize Integration
-  → store a credential reference
-  → register a scoped Source
-  → create an immutable Source Revision
-  → run ingestion in Temporal
-  → extract facts and provenance
-  → project organization context and agent memory
-```
+## Temporal as the execution source of truth
 
-The raw artifact does not go into PostgreSQL or Temporal history. It belongs in Cloud Storage. PostgreSQL stores the Source, its scope, its revision and the reference to the artifact.
+Agent work often lasts longer than one HTTP request. It can include several tools, temporary failures, retries, external events, human approval or a pause while waiting for more information.
 
-The ingestion workflow reads the artifact through the private Agent Gateway, normalizes it, extracts facts and keeps provenance. When the hosted data-plane adapters are enabled, those facts can be projected into Spanner Graph and relevant semantic context can be distilled into Agent Platform Memory Bank.
+Temporal owns the durable execution state: Workflow history, retries, timers, Signals, cancellation, recovery and state between steps. PostgreSQL stores the product-facing Run projection, evidence, actor, scope and audit data without trying to reproduce Temporal's state machine.
 
-This keeps the original Source separate from derived context. A generated memory is useful, but it is not stronger evidence than the event or document it came from.
+### One Coordinator per organization
 
-## Temporal and durable execution
+Each organization has one long-lived Coordinator Workflow. It receives versioned lifecycle events such as an Integration being connected, a Source becoming ready, a Workflow start being requested or a Run completing. Temporal Signals and Continue-As-New let it preserve coordination without growing one unbounded Workflow history.
 
-One thing I specifically wanted to practice was durable workflows.
+The Gateway writes product state and an outbox event in the same PostgreSQL transaction. A dispatcher leases the row and delivers the versioned event to the Coordinator with retries. Delivery is at least once, so duplicate events are expected and deduplicated by stable event and Workflow identities. This avoids saving a Run while losing the request before Temporal receives it.
 
-I think durable execution will be very important for agent systems.
+For the hackathon version, the dispatcher stays inside the Gateway API. It can later move behind Pub/Sub or Kafka without changing the event contract or creating a second workflow engine.
 
-Agent work is often longer than one HTTP request. It may involve several tools, temporary failures, retries, external events, human approval or a pause until more information arrives.
+This also defines the consistency model shown to the user. A queued PostgreSQL Run appears as `preparing` before Temporal exposes the execution. After the start, Temporal owns execution status and history, while PostgreSQL stores the query-friendly projection, evidence, actor, scope and audit metadata. If either side is unavailable, the API reports stale or unavailable state instead of manufacturing agreement.
 
-For Encois, Temporal owns:
-
-- long-running Workflows;
-- retries and timeouts;
-- pause and resume behavior;
-- Signals from external events or people;
-- state between execution steps;
-- cancellation and recovery;
-- durable execution history.
-
-PostgreSQL does not try to reproduce this state machine. It stores the product-facing Run projection, evidence, actor, scope and audit data. Temporal remains the source of truth for execution.
-
-### The organization Coordinator
-
-Each organization has one long-lived Coordinator Workflow.
-
-It receives versioned events such as:
-
-- an Integration was connected;
-- a provider changed;
-- a Source became ready;
-- a Workflow start was requested;
-- a Workflow completed.
-
-The Gateway writes the product state and an outbox event in the same PostgreSQL transaction. A dispatcher then delivers that event to the Coordinator with retries.
-
-This avoids a common failure case: saving a Run in the database but losing the request before Temporal receives it.
-
-For the hackathon version, the dispatcher runs inside the Gateway API. That keeps the first implementation small. Later it could move behind Pub/Sub or Kafka without changing the event contract or adding a second workflow engine.
+<EncoisFlow type="run" />
 
 ### Generic Blueprint execution
 
-The Go Runtime executes approved Blueprints through a generic Temporal Workflow.
+The Go Runtime executes approved Blueprints through a generic Temporal Workflow. A Blueprint can contain tool steps, agent steps, deterministic transforms, dependencies, conditions, timers and approval Signals. Independent ready steps can run in parallel.
 
-A Blueprint can contain tool steps, agent steps, deterministic transforms, conditions, dependencies, timers and approval Signals. Independent ready steps can run in parallel.
+The current implementation runs one approved Google ADK Agent Definition as one Temporal Activity. Temporal can retry that bounded unit while model and tool calls remain outside deterministic Workflow code. This gives internal agent turns coarser visibility and retry behavior, a trade-off that a deeper Temporal and ADK integration could address later. A `waiting` Run remains durable while it waits for a timer, external condition or approval Signal; `paused` is a separate versioned product command.
 
-The current implementation runs one approved Google ADK Agent Definition as one Temporal Activity. Temporal can retry that bounded unit, while model and tool calls stay outside deterministic Workflow code.
+<ArticleScreenshotGallery
+  screenshots={[
+    {
+      src: "https://andriishupta.dev/images/blog/encois-designing-evidence-backed-organizational-intelligence-on-google-cloud/temporal-workflows.webp",
+      alt: "Temporal Web showing Encois Workflows in running, completed and failed states",
+      width: 2000,
+      height: 1072,
+      caption: "Temporal remains the execution source of truth for active, completed and failed Workflows.",
+    },
+  ]}
+/>
 
-The trade-off is that internal agent turns have coarser visibility and retry behavior. A deeper Temporal/ADK integration could later make model calls and tool operations separate Activities, but that would need careful validation around determinism and dependency compatibility.
+## Bounded agents and deterministic boundaries
 
-## AI was not one unrestricted agent
+Encois does not give one agent every tool and ask it to operate the organization. Each agent has a narrow role, typed input and output, an allowlist of tools, a timeout, retry limit, budget and organization scope.
 
-The system does not give one agent every tool and ask it to operate the company.
+Authentication, permissions, scope calculation, Workflow transitions, schema validation, deduplication and approval rules remain deterministic code. Google ADK and Gemini handle bounded reasoning and synthesis. The model can interpret evidence, but it cannot decide that a user belongs to another organization or that a failed Run succeeded.
 
-An agent has a narrow role, typed input and output, an allowlist of tools, a timeout, a retry limit, a budget and an organization scope.
-
-The deterministic parts stay in normal code:
-
-- authentication;
-- permissions;
-- scope calculation;
-- workflow transitions;
-- schema validation;
-- deduplication;
-- approval rules.
-
-Google ADK and Gemini are used for bounded reasoning and synthesis. The model can interpret evidence, but it cannot decide that a user belongs to another organization or that a failed workflow actually succeeded.
-
-The Agent Gateway is the private boundary between the Runtime and company systems. It checks the service identity, signed execution capability, organization scope, policy version and requested tool. Provider credentials are resolved through Secret Manager and never returned to the browser, model or Temporal history.
-
-Tools are read-only by default. If Encois later writes to Jira, GitHub or another external system, that action needs a separate permission, approval, audit, idempotency and recovery path.
+The private Agent Gateway checks service identity, a short-lived signed execution capability, organization scope, actor, policy version and the requested tool. Provider credentials never enter the browser, model or Temporal history. Tool names, arguments and provider content remain untrusted until they pass registry, schema and policy checks. Tools are read-only by default; any future write to Jira, GitHub or another provider needs separate permission, approval, audit, idempotency and recovery boundaries.
 
 A recommendation is not an automatic action.
 
-## What each Google Cloud service owns
+### Contracts are part of the architecture
 
-I did not want to use Google Cloud services only to make the architecture diagram look impressive. Each one needed a clear reason to exist.
+The public Gateway is TypeScript, while the Runtime and Agent Gateway are Go. Their boundaries use versioned OpenAPI and JSON Schema contracts rather than shared source files or database models. Coordinator events, Workflow inputs, tool manifests, evidence and private service payloads are validated on both sides; unknown versions and invalid states fail closed.
 
-### Cloud Run
+The Runtime never queries the control-plane database to reconstruct missing application state. An approved Blueprint snapshot and execution context enter through Temporal, while provider-specific payloads stop at the Agent Gateway and become small typed evidence records. This keeps language and provider choices behind explicit adapters instead of turning PostgreSQL into an integration bus.
 
-The hosted deployment target uses Cloud Run for the Dashboard, Gateway API, Agent Runtime and private Agent Gateway.
+## Clear ownership across Google Cloud
 
-This keeps the services independently deployable without introducing Kubernetes for the first version. Cloud Run IAM can protect service-to-service calls, while Encois still applies its own application-level capability and scope checks.
+Each Google Cloud service has a specific responsibility:
 
-Cloud Run Jobs are intended for explicit operations such as database migrations, retention and demo seeding. Restarting an application service should never recreate or modify product data automatically.
+- **Runtime — Cloud Run.** Hosts the Dashboard, Gateway API, Agent Runtime and private Agent Gateway as independently deployable services.
+- **Control and artifacts — Cloud SQL for PostgreSQL and Cloud Storage.** PostgreSQL owns product state, permissions, Runs, outbox rows and projections; Storage owns large raw Source artifacts.
+- **Organizational context — Spanner Graph.** Stores structured company facts and relationships with provenance.
+- **Agent context — Agent Platform Memory Bank.** Stores agent-specific semantic context between Workflows without becoming the source of truth.
+- **Reasoning — Vertex AI and Gemini.** Receives validated, scoped inputs for reasoning and synthesis.
+- **Trust and operations — Secret Manager, Cloud Logging and Cloud Trace.** Protects provider credentials and records timing, retries, evidence reads and error classes.
 
-### Cloud SQL for PostgreSQL
+The source-of-truth split is easier to see as state ownership:
 
-PostgreSQL is the control plane.
+| State | Source of truth | Consumer-facing role |
+| --- | --- | --- |
+| Identity, permissions, configuration, Runs and outbox | PostgreSQL | Gateway authorization and Dashboard projections |
+| Workflow history, retries, waits and cancellation | Temporal | Durable execution and live Run status |
+| Original Source payloads and large artifacts | Cloud Storage | Scoped reads through the Agent Gateway |
+| Structured facts and relationships | Spanner Graph | Evidence-linked organizational queries |
+| Agent-specific semantic context | Memory Bank | Scoped retrieval across related Workflows |
 
-It stores users, memberships, organization units, permissions, Integrations, Sources, Blueprints, Runs, outbox rows and audit-friendly projections.
+The separation between PostgreSQL, Spanner Graph and Memory Bank is deliberate. PostgreSQL is the control plane, Spanner Graph models durable organizational facts and relationships, and Memory Bank supports agent retrieval. None of them replaces Temporal's execution history or the original Source artifact.
 
-The API runtime uses a restricted connection. Database migrations use a separate operator connection. The Go Runtime and Agent Gateway do not connect directly to the control-plane database.
+The current Graph integration projects scoped fact nodes with provenance. Rich entity normalization and relationship edges remain future work, which is why the article treats them as a direction rather than a finished enterprise knowledge graph.
 
-### Cloud Storage
+Go was outside my main stack, but it was a practical fit for the Temporal worker and Google ADK runtime. AI helped me build the first small implementation, although learning Go properly still requires more time with the language and SDK documentation.
 
-Cloud Storage owns large raw Source artifacts. Temporal receives only references and scope information, not full documents or provider credentials.
+Observability follows the same boundaries. Request and trace IDs, organization scope, Workflow identity and Run identity travel across the Gateway, outbox, Temporal Activities and private tool requests. Structured telemetry records duration, retry count, provider, model and error class without storing raw credentials, unrestricted documents or hidden model reasoning.
 
-### Spanner Graph
+## Permissions must survive the Workflow
 
-Spanner Graph is the target Organization Memory store for structured company facts and relationships.
+Organization is the hard tenant boundary in Encois. Inside it, access narrows through organizational units:
 
-This is different from putting text chunks into a vector database. The long-term idea is to connect projects, teams, people, systems and operational events while keeping provenance.
+<EncoisFlow type="scope" />
 
-The current implementation is still early. It projects scoped fact nodes with provenance, but rich entity normalization and relationship edges are future work.
+<ArticleScreenshotGallery
+  screenshots={[
+    {
+      src: "https://andriishupta.dev/images/blog/encois-designing-evidence-backed-organizational-intelligence-on-google-cloud/organization-scope.webp",
+      alt: "Encois organization hierarchy showing inherited membership across departments, teams and projects",
+      width: 2000,
+      height: 1240,
+      caption: "The organization tree makes direct and inherited scope visible before a Workflow starts.",
+    },
+  ]}
+/>
 
-### Agent Platform Memory Bank
+The Gateway calculates effective scope from the authenticated membership and selected unit. Checking permission only during the first HTTP request would be insufficient because a Workflow can continue long after that request ends.
 
-Memory Bank stores agent-specific semantic context. It can help retrieve or distill useful information between workflows.
+The same organization, actor, authorized unit IDs and capability travel through the outbox, Temporal Workflow and private tool requests. The Runtime and Agent Gateway verify them again at their own boundaries. A model-generated organization ID never becomes authorization simply because it appeared in a payload.
 
-It is not the company source of truth, the permission system or the durable workflow state. Those boundaries stay separate.
+The system also fails closed. Missing onboarding data is an error, an unknown Run status is a contract mismatch and provider authentication failure remains visible as degraded or requiring reauthorization.
 
-### Vertex AI and Gemini
+## Turning the dashboard into an operational view
 
-The Go Runtime uses Google ADK and Gemini for reasoning and synthesis. The repository currently defaults to `gemini-3.7-flash`, while the deployed model and thinking level remain environment configuration.
+The first Dashboard exposed Integrations, Sources, Templates, Blueprints, Workflows, Runs, events, permissions and memory. That was useful for validating the backend and demonstrating that the control plane was real, but it also made the product feel like an interface to the database.
 
-Gemini receives validated, scoped inputs. It does not receive unrestricted database access or provider credentials.
+After testing that version, I shifted the UI toward one operational view that answers a smaller set of questions: what changed, what needs attention, which release is blocked, what has already been checked and which conclusion still needs a human decision.
 
-### Secret Manager, Logging and Trace
+The underlying control-plane screens remain necessary for configuration and debugging. They should support the intelligence experience rather than become its main interface.
 
-Secret Manager owns provider credentials and service secrets.
+<ArticleScreenshotGallery
+  screenshots={[
+    {
+      src: "https://andriishupta.dev/images/blog/encois-designing-evidence-backed-organizational-intelligence-on-google-cloud/activity-attention.webp",
+      alt: "Encois Activity page grouping failed Runs, degraded Sources, integrations and pending approvals",
+      width: 2000,
+      height: 1001,
+      caption: "The Activity view groups operational signals by the decision or follow-up they require.",
+    },
+  ]}
+/>
 
-Cloud Logging, Cloud Trace and OpenTelemetry-compatible instrumentation make the workflow inspectable across the Gateway, Temporal execution, Runtime and private tool calls.
+## Current limits and next steps
 
-The system records events, timing, retries, evidence reads and error classes. It does not need to store hidden reasoning, full prompts, raw documents or tokens in logs.
+The local environment keeps the same application topology with Docker Compose, PostgreSQL, Temporal, Auth and Storage emulators, the Dashboard, Gateway, Runtime and Agent Gateway. It seeds a synthetic company called `Sun Inc` with real control-plane records and Temporal-backed Runs; provider fixtures and infrastructure mocks remain explicit adapter modes.
 
-## Permissions have to survive the whole workflow
+Real Gemini, Spanner Graph and Memory Bank integrations are opt-in because they require configured Google Cloud resources and may incur cost.
 
-Organization is the hard tenant boundary in Encois.
-
-Inside an organization, access may follow a hierarchy:
-
-```text
-Organization → Department → Team → Project → Person / System
-```
-
-The Gateway calculates the effective scope from the authenticated membership and selected unit. But checking permission only at the first HTTP request is not enough.
-
-The same organization, scope, actor and capability information travels through the outbox, Temporal Workflow and private tool requests. The Runtime and Agent Gateway check it again at their own boundaries.
-
-This matters because a workflow may continue long after the browser request has ended. A model-generated organization ID must never become authorization just because it appeared inside a payload.
-
-The system also fails closed. Missing or unknown data is not converted into a convenient successful state. A missing onboarding record is an error. An unknown Run status is a contract mismatch. A provider authentication failure remains visible as degraded or requiring reauthorization.
-
-## Using AI to build outside my main stack
-
-There was another AI lesson inside this project.
-
-I do not normally write Go. But Go was the practical language for parts of the Google integration, the Temporal worker and the agent runtime.
-
-AI wrote much of that part. I reviewed the code, checked it against the documentation and used the surrounding tests and contracts to validate the boundaries.
-
-This is a good example of where AI changes software development for me. I could work outside my main stack without first spending several weeks learning enough Go to build the first version alone.
-
-That does not mean blindly trusting generated code. The useful workflow was:
-
-1. Define the architecture and contracts first.
-2. Give the coding agent one bounded area.
-3. Review the result against the intended boundary.
-4. Compare unfamiliar SDK usage with official documentation.
-5. Keep cross-language communication behind versioned schemas.
-
-I also split the wider project work across different AI agents for the API, AI runtime, documentation, infrastructure, diagrams, testing and bug fixing.
-
-This worked because the system already had clear boundaries. The API agent did not need to understand every detail of Spanner. The infrastructure agent could work from explicit service responsibilities. The Go and TypeScript sides met through OpenAPI and JSON Schema rather than shared assumptions.
-
-The same principle applied both to the product and to building it: specialized agents are more useful when their scope is clear.
-
-## The UI lesson
-
-The Dashboard turned out well for a developer and hackathon demo.
-
-It exposes Integrations, Sources, Templates, Blueprints, Workflows, Runs, events, permissions and memory. That is helpful when demonstrating that the backend is real and when debugging the system.
-
-But it also revealed a product problem: the Dashboard was becoming a beautiful interface to the database.
-
-A real user should not need to understand every internal resource before Encois becomes useful.
-
-The product should move toward one operational picture that answers:
-
-- What changed?
-- What needs attention?
-- Which release is blocked?
-- Which Workflow should run?
-- What has already been checked automatically?
-- Which conclusion needs a human decision?
-
-That is a better product direction than ten pages of technically correct data.
-
-The underlying control plane is still necessary. Integrations, Sources, permissions and workflow definitions need somewhere to be managed. But they should support the intelligence experience rather than become the main experience.
-
-## Local demo and current limits
-
-The local environment keeps the same application topology using Docker Compose, PostgreSQL, Temporal, Auth and Storage emulators, the Dashboard, Gateway, Runtime and Agent Gateway.
-
-It creates a synthetic company called `Sun Inc` with real control-plane records and Temporal-backed Runs. Provider fixtures and infrastructure mocks are explicit adapter modes; the browser does not invent users, permissions or completed workflows.
-
-Real Gemini, Spanner Graph and Memory Bank integrations are opt-in because they require configured Google Cloud resources and can incur cost.
-
-The project is still a hackathon MVP. Some important work remains:
+The hackathon MVP still needs:
 
 - richer Graph entities and relationships;
 - production validation of hosted IAM, retention and cost;
+- full organization-unit isolation in the hosted Memory Bank adapter;
 - hardened provider authorization and lifecycle behavior;
 - independent outbox delivery at larger scale;
-- more granular Temporal/ADK execution;
-- stronger deployment and disaster-recovery processes;
-- an intelligence-first product UI.
+- more granular Temporal and ADK execution;
+- stronger deployment and disaster-recovery processes.
 
-I prefer keeping these limitations visible instead of describing planned architecture as a finished enterprise platform.
+The next product step is a smaller and more useful operational picture. Scheduled briefings and change detection could surface investigations before a user asks, while conversational or voice interfaces could help explore evidence without replacing identity, scope and audit boundaries.
 
-## Where Encois could go next
+Agents may later propose Sources, Blueprints or Workflow configurations, but those proposals should remain reviewable. External actions need stronger approval and recovery guarantees than recommendations.
 
-The next version should not start by adding more pages or giving the agent more tools.
+## Summary
 
-It should make the operational picture smaller and more useful.
+Encois explores organizational AI as an event-driven system rather than a chatbot over documents. Its design separates product state, durable execution, raw evidence, structured organizational facts, agent memory and model reasoning so each layer has one clear source of truth.
 
-Encois could prepare scheduled briefings, detect meaningful changes and suggest investigations before a user asks. A conversational or voice interface could help people explore evidence without replacing the same identity, scope and audit boundaries.
+Temporal makes long-running agent work recoverable. Google Cloud provides explicit boundaries for services, artifacts, secrets, organizational context and model execution. Signed scope and capabilities preserve authorization after the original browser request has ended, while evidence keeps facts, interpretations and recommendations distinguishable.
 
-Agents could also propose new Sources, Blueprints or workflow configurations based on organization context. Those proposals should remain reviewable and require the appropriate permission before becoming active.
-
-External actions may eventually be useful, but only as explicit capabilities. An agent that can create a Jira issue or change a deployment needs a much stronger approval and recovery model than an agent that recommends the action.
-
-## Conclusion
-
-Encois started from a simple idea: company context is always changing, and useful organizational AI has to change with it.
-
-The hard part is not connecting Gemini to a set of documents. It is building a system that knows:
-
-- what happened;
-- where the information came from;
-- who is allowed to see it;
-- which workflow produced the result;
-- what is fact, inference or recommendation;
-- what still needs a human decision.
-
-Temporal gave me a practical way to explore durable agent workflows. Google Cloud provided separate places for runtime services, control-plane data, raw artifacts, structured organization context, semantic memory, secrets and model execution. AI coding agents helped me build parts outside my normal stack, especially Go.
-
-The biggest product lesson came from the UI: users do not need another database browser. They need one clear operational picture of what changed and what deserves attention.
-
-That is what I want Encois to become.
-
-Thanks for reading! 🙇
+The main product direction is equally clear: users need one operational view of what changed and what deserves attention, with the architecture underneath making every result scoped, durable and inspectable.

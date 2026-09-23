@@ -65,6 +65,88 @@ const splitMdx = (source, filePath) => {
   };
 };
 
+const canonicalFrontmatterOrder = [
+  "draft",
+  "featured",
+  "lang",
+  "slug",
+  "title",
+  "subtitle",
+  "ogImage",
+  "topics",
+  "tags",
+  "distribution",
+];
+const requiredFrontmatterKeys = canonicalFrontmatterOrder.slice(0, -1);
+const allArticleFiles = (
+  await Promise.all(
+    [contentDirectory, ukrainianContentDirectory].map(async (directory) =>
+      (
+        await readdir(directory)
+      )
+        .filter((entry) => /\.mdx?$/.test(entry))
+        .map((entry) => path.join(directory, entry)),
+    ),
+  )
+).flat();
+
+for (const filePath of allArticleFiles) {
+  const source = await readFile(filePath, "utf8");
+  const { frontmatter } = splitMdx(source, filePath);
+  const keys = Array.from(
+    frontmatter.matchAll(/^([A-Za-z][A-Za-z0-9]*):/gm),
+    ([, key]) => key,
+  );
+  const unknownKeys = keys.filter(
+    (key) => !canonicalFrontmatterOrder.includes(key),
+  );
+  const missingKeys = requiredFrontmatterKeys.filter(
+    (key) => !keys.includes(key),
+  );
+  const expectedOrder = canonicalFrontmatterOrder.filter((key) =>
+    keys.includes(key),
+  );
+  const slug = frontmatter.match(/^slug:\s*["']?([^"'\n]+)["']?$/m)?.[1];
+  const lang = frontmatter.match(/^lang:\s*([a-z]+)$/m)?.[1];
+  const expectedLang = filePath.startsWith(ukrainianContentDirectory)
+    ? "uk"
+    : "en";
+  const filenameSlug = path
+    .basename(filePath)
+    .replace(/^\d{4}-\d{2}-\d{2}_/, "")
+    .replace(/\.mdx?$/, "");
+
+  if (unknownKeys.length > 0) {
+    failures.push(
+      `${filePath}: unsupported frontmatter keys ${unknownKeys.join(", ")}`,
+    );
+  }
+
+  if (missingKeys.length > 0) {
+    failures.push(
+      `${filePath}: missing frontmatter keys ${missingKeys.join(", ")}`,
+    );
+  }
+
+  if (keys.join(",") !== expectedOrder.join(",")) {
+    failures.push(
+      `${filePath}: frontmatter keys must follow ${canonicalFrontmatterOrder.join(" → ")}`,
+    );
+  }
+
+  if (slug !== filenameSlug) {
+    failures.push(
+      `${filePath}: slug must match filename (${filenameSlug}), found ${slug ?? "missing"}`,
+    );
+  }
+
+  if (lang !== expectedLang) {
+    failures.push(
+      `${filePath}: lang must be ${expectedLang}, found ${lang ?? "missing"}`,
+    );
+  }
+}
+
 const collectArticleImages = (body) => {
   const markdownImages = Array.from(
     body.matchAll(
@@ -150,10 +232,6 @@ for (const slug of articles) {
     failures.push(`${slug}: article body is missing or unexpectedly short`);
   }
 
-  if (frontmatter.includes("originalReadingMinutes:")) {
-    failures.push(`${slug}: still uses migration reading-time fallback`);
-  }
-
   if (/^#\s+/m.test(body)) {
     failures.push(`${slug}: contains a duplicate level-one heading`);
   }
@@ -215,9 +293,7 @@ for (const article of localizedArticles) {
 
   const { frontmatter, body } = splitMdx(source, article.filePath);
   const lang = frontmatter.match(/^lang:\s*([a-z]+)$/m)?.[1];
-  const translationKey = frontmatter.match(
-    /^translationKey:\s*["']?([^"'\n]+)["']?$/m,
-  )?.[1];
+  const slug = frontmatter.match(/^slug:\s*["']?([^"'\n]+)["']?$/m)?.[1];
 
   if (lang !== article.lang) {
     failures.push(
@@ -225,12 +301,12 @@ for (const article of localizedArticles) {
     );
   }
 
-  if (!translationKey) {
-    failures.push(`${article.filePath}: missing translationKey`);
+  if (!slug) {
+    failures.push(`${article.filePath}: missing slug`);
   } else {
-    const group = translationGroups.get(translationKey) ?? [];
+    const group = translationGroups.get(slug) ?? [];
     group.push({ lang, filePath: article.filePath });
-    translationGroups.set(translationKey, group);
+    translationGroups.set(slug, group);
   }
 
   if (/^defaultLang:/m.test(frontmatter)) {
@@ -318,6 +394,6 @@ if (failures.length > 0) {
   process.exitCode = 1;
 } else {
   console.log(
-    `${articles.length} articles verified: ${totalBodyCharacters.toLocaleString("en")} body characters, ${linkCount} links, ${codeBlockCount} code blocks, ${imageCount} local images`,
+    `${allArticleFiles.length} articles verified: ${totalBodyCharacters.toLocaleString("en")} body characters, ${linkCount} links, ${codeBlockCount} code blocks, ${imageCount} local images`,
   );
 }

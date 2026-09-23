@@ -46,6 +46,12 @@ dependencies. Keep pre-commit checks read-only and fast.
 - Canonical blog URLs are `https://andriishupta.dev/blog/[slug]`.
 - Source files use `YYYY-MM-DD_slug.mdx`; the prefix is the publication date
   at midnight UTC. Do not add duplicate `publishedAt` frontmatter.
+- Keep article frontmatter in this order: `draft`, `featured`, `lang`, `slug`,
+  `title`, `subtitle`, `ogImage`, `topics`, `tags`, then optional
+  `distribution`. Always write both booleans explicitly. Use `subtitle` for
+  article summaries and SEO, pair translations by `slug`, and derive reading
+  time during the build; do not add `description`, `translationKey`, `cover`,
+  `coverAlt`, or `originalReadingMinutes`.
 - Slugs are stable and match filenames. Filename dates never affect routes.
 - Drafts appear in development and stay out of production pages, feeds,
   sitemaps, and `llms.txt`.

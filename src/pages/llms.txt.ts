@@ -34,7 +34,7 @@ export async function GET() {
   const blogArticles = posts
     .map(
       (post) =>
-        `- [${post.data.title}](${new URL(getPostPath(post), homepage)}): ${post.data.description}`,
+        `- [${post.data.title}](${new URL(getPostPath(post), homepage)}): ${post.data.subtitle}`,
     )
     .join("\n");
   const llmsContent = `

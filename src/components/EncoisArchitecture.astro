@@ -1,0 +1,155 @@
+---
+const executionDiagram = `flowchart LR
+    inputs["Members and company events"]
+    api["Dashboard and Gateway API<br/>identity · permissions · scope"]
+    postgres[("PostgreSQL<br/>product state · Runs · outbox")]
+    temporal["Temporal<br/>Coordinator · Runs · ingestion"]
+    runtime["Go Runtime<br/>Google ADK"]
+
+    inputs -->|HTTPS · webhooks| api
+    api <-->|state| postgres
+    postgres -->|outbox| temporal
+    api <-->|commands · evidence| temporal
+    temporal <-->|tasks| runtime
+
+    classDef control fill:#f8fbff,stroke:#4285f4,color:#000000
+    classDef execution fill:#fff8f1,stroke:#f97316,color:#000000
+    class api,postgres control
+    class temporal,runtime execution`;
+
+const accessDiagram = `flowchart LR
+    api["Gateway API"]
+    runtime["Go Agent Runtime"]
+    gemini["Gemini<br/>bounded reasoning"]
+    memory[("Memory Bank<br/>workflow memory")]
+    gateway["Private Agent Gateway<br/>policy · tools · providers"]
+    data[("Providers · Cloud Storage<br/>Spanner Graph")]
+
+    api -. organization · actor · authorized scope .-> runtime
+    api -. signed capability · authorized scope .-> gateway
+    runtime <-->|model calls| gemini
+    runtime <-->|distill · retrieve| memory
+    runtime <-->|bounded tool calls| gateway
+    gateway <-->|scoped reads and artifacts| data
+
+    classDef control fill:#f8fbff,stroke:#4285f4,color:#000000
+    classDef execution fill:#fff8f1,stroke:#f97316,color:#000000
+    classDef data fill:#f8fafc,stroke:#64748b,color:#000000
+    class api control
+    class runtime,gemini execution
+    class gateway,data,memory data`;
+---
+
+<div class="encois-architecture article-mermaid">
+  <figure>
+    <figcaption>Control plane and durable execution</figcaption>
+    <div
+      class="diagram"
+      role="img"
+      aria-label="Encois control plane and durable execution: company events enter the Gateway API, product state and an outbox are stored in PostgreSQL, Temporal coordinates runs, and the Go Agent Runtime executes workflow tasks"
+    >
+      <pre class="mermaid">{executionDiagram}</pre>
+    </div>
+  </figure>
+
+  <figure>
+    <figcaption>Scoped AI and data access</figcaption>
+    <div
+      class="diagram"
+      role="img"
+      aria-label="Encois scoped AI and data access: the Gateway API passes authorized scope to the Go Agent Runtime and private Agent Gateway, which bound access to Gemini, Memory Bank, providers, Cloud Storage, and Spanner Graph"
+    >
+      <pre class="mermaid">{accessDiagram}</pre>
+    </div>
+  </figure>
+</div>
+
+<script>
+  const renderEncoisArchitecture = async () => {
+    const nodes = document.querySelectorAll<HTMLElement>(
+      ".article-mermaid .mermaid:not([data-processed='true'])",
+    );
+
+    if (nodes.length === 0) return;
+
+    const { default: mermaid } = await import("mermaid");
+    mermaid.initialize({
+      startOnLoad: false,
+      securityLevel: "strict",
+      theme: "base",
+      themeVariables: {
+        background: "#ffffff",
+        primaryColor: "#ffffff",
+        primaryTextColor: "#000000",
+        primaryBorderColor: "#000000",
+        lineColor: "#000000",
+        secondaryColor: "#f8fafc",
+        tertiaryColor: "#f8fbff",
+        clusterBkg: "#ffffff",
+        clusterBorder: "#64748b",
+        fontSize: "16px",
+      },
+    });
+
+    try {
+      await mermaid.run({ nodes });
+    } catch (error) {
+      console.error(
+        "Failed to render the Encois architecture:",
+        error instanceof Error ? error.message : JSON.stringify(error),
+      );
+    }
+  };
+
+  void renderEncoisArchitecture();
+  document.addEventListener("astro:page-load", () => void renderEncoisArchitecture());
+</script>
+
+<style>
+  .encois-architecture {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-block: 2rem;
+  }
+
+  figure {
+    display: flex;
+    min-width: 0;
+    margin: 0;
+    flex-direction: column;
+  }
+
+  figcaption {
+    padding: 0.75rem 1rem;
+    background: #fff;
+    color: #000;
+    border: 1px solid #d8d8d8;
+    border-bottom: 0;
+    font-weight: 700;
+  }
+
+  .diagram {
+    flex: 1;
+    padding: 1rem;
+    overflow-x: auto;
+    background: #fff;
+    color: #000;
+    border: 1px solid #d8d8d8;
+  }
+
+  .diagram :global(.mermaid) {
+    display: flex;
+    min-width: 40rem;
+    justify-content: center;
+    margin: 0;
+    background: #fff;
+    color: #000;
+  }
+
+  .diagram :global(svg) {
+    max-width: 100%;
+    height: auto;
+  }
+
+</style>

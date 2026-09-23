@@ -278,10 +278,7 @@ const importArticle = async (slug) => {
   const source = await (await fetchRequired(sourceUrl)).text();
   const cleaned = cleanMarkdown(source);
   const localized = await localizeImages(cleaned, slug);
-  const updatedFrontmatter = frontmatter
-    .replace(/^originalReadingMinutes:.*(?:\n|$)/m, "")
-    .trim();
-  const output = `---\n${updatedFrontmatter}\n---\n\n${localized.markdown}\n`;
+  const output = `---\n${frontmatter.trim()}\n---\n\n${localized.markdown}\n`;
 
   await writeFile(filePath, output);
 

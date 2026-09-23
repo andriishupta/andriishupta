@@ -12,13 +12,27 @@ interface Props {
 }
 
 const { screenshots } = Astro.props;
+const siteOrigin = "https://andriishupta.dev";
+const renderedScreenshots = screenshots.map((screenshot) => ({
+  ...screenshot,
+  renderedSrc:
+    import.meta.env.DEV && screenshot.src.startsWith(`${siteOrigin}/images/`)
+      ? screenshot.src.slice(siteOrigin.length)
+      : screenshot.src,
+}));
 ---
 
-<div class="article-screenshot-gallery">
-  {screenshots.map((screenshot) => (
+<div
+  class:list={[
+    "article-screenshot-gallery",
+    renderedScreenshots.length === 1 && "article-screenshot-gallery--single",
+    renderedScreenshots.length === 2 && "article-screenshot-gallery--pair",
+  ]}
+>
+  {renderedScreenshots.map((screenshot) => (
     <figure>
-      <a href={screenshot.src} target="_blank" rel="noopener noreferrer" aria-label={`Open full-size image: ${screenshot.alt}`}>
-        <img src={screenshot.src} alt={screenshot.alt} width={screenshot.width} height={screenshot.height} loading="lazy" decoding="async" />
+      <a href={screenshot.renderedSrc} target="_blank" rel="noopener noreferrer" aria-label={`Open full-size image: ${screenshot.alt}`}>
+        <img src={screenshot.renderedSrc} alt={screenshot.alt} width={screenshot.width} height={screenshot.height} loading="lazy" decoding="async" />
       </a>
       <figcaption>{screenshot.caption}</figcaption>
     </figure>
@@ -63,6 +77,14 @@ const { screenshots } = Astro.props;
     .article-screenshot-gallery {
       grid-template-columns: repeat(3, minmax(0, 1fr));
       align-items: start;
+    }
+
+    .article-screenshot-gallery--single {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .article-screenshot-gallery--pair {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 </style>

@@ -73,17 +73,12 @@ function getReadingText(body: string | undefined) {
     .replace(/<[^>]+>/g, " ");
 }
 
-export function getReadingStats(
-  body: string | undefined,
-  originalReadingMinutes?: number,
-) {
+export function getReadingStats(body: string | undefined) {
   const source = stripMdxModuleLines(body).trim();
   const text = getReadingText(body);
   const wordCount = text.match(wordPattern)?.length ?? 0;
   const readingMinutes =
-    wordCount > 0
-      ? Math.max(1, Math.ceil(wordCount / 220))
-      : (originalReadingMinutes ?? 0);
+    wordCount > 0 ? Math.max(1, Math.ceil(wordCount / 220)) : 0;
 
   return { wordCount, readingMinutes, isStub: source.length === 0 };
 }
@@ -93,7 +88,7 @@ function isBlogPostReady(post: BlogPost) {
 }
 
 function getTranslationKey(post: BlogPost) {
-  return post.data.translationKey ?? post.data.slug;
+  return post.data.slug;
 }
 
 function selectPrimaryTranslations(posts: BlogPost[]) {
