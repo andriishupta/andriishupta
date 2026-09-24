@@ -1,5 +1,5 @@
 ---
-draft: true
+draft: false
 featured: false
 lang: en
 slug: "encois-designing-evidence-backed-organizational-intelligence-on-google-cloud"
@@ -78,7 +78,8 @@ The recommendation does not hide its evidence. The user can inspect the issue, f
       alt: "Encois dashboard showing the morning brief, workspace assistant and operational summaries for Sun Inc",
       width: 2000,
       height: 1009,
-      caption: "The main Dashboard brings briefings, questions and recent operational changes into one workspace view.",
+      caption:
+        "The main Dashboard brings briefings, questions and recent operational changes into one workspace view.",
     },
   ]}
 />
@@ -121,14 +122,16 @@ This structure makes execution inspectable. If a Template changes tomorrow, an o
       alt: "Encois Workflow canvas showing Blueprint resolution and the running, completed and pending steps of one Run",
       width: 2000,
       height: 1001,
-      caption: "A Run exposes the resolved Blueprint and the current state of every Workflow step.",
+      caption:
+        "A Run exposes the resolved Blueprint and the current state of every Workflow step.",
     },
     {
       src: "https://andriishupta.dev/images/blog/encois-designing-evidence-backed-organizational-intelligence-on-google-cloud/source-revision-provenance.webp",
       alt: "Encois Source details showing freshness, immutable revision, scope, provenance and ingestion status",
       width: 2000,
       height: 1121,
-      caption: "A Source keeps freshness, access scope, immutable revisions and ingestion history together.",
+      caption:
+        "A Source keeps freshness, access scope, immutable revisions and ingestion history together.",
     },
   ]}
 />
@@ -174,7 +177,8 @@ The current implementation runs one approved Google ADK Agent Definition as one 
       alt: "Temporal Web showing Encois Workflows in running, completed and failed states",
       width: 2000,
       height: 1072,
-      caption: "Temporal remains the execution source of truth for active, completed and failed Workflows.",
+      caption:
+        "Temporal remains the execution source of truth for active, completed and failed Workflows.",
     },
   ]}
 />
@@ -208,13 +212,13 @@ Each Google Cloud service has a specific responsibility:
 
 The source-of-truth split is easier to see as state ownership:
 
-| State | Source of truth | Consumer-facing role |
-| --- | --- | --- |
-| Identity, permissions, configuration, Runs and outbox | PostgreSQL | Gateway authorization and Dashboard projections |
-| Workflow history, retries, waits and cancellation | Temporal | Durable execution and live Run status |
-| Original Source payloads and large artifacts | Cloud Storage | Scoped reads through the Agent Gateway |
-| Structured facts and relationships | Spanner Graph | Evidence-linked organizational queries |
-| Agent-specific semantic context | Memory Bank | Scoped retrieval across related Workflows |
+| State                                                 | Source of truth | Consumer-facing role                            |
+| ----------------------------------------------------- | --------------- | ----------------------------------------------- |
+| Identity, permissions, configuration, Runs and outbox | PostgreSQL      | Gateway authorization and Dashboard projections |
+| Workflow history, retries, waits and cancellation     | Temporal        | Durable execution and live Run status           |
+| Original Source payloads and large artifacts          | Cloud Storage   | Scoped reads through the Agent Gateway          |
+| Structured facts and relationships                    | Spanner Graph   | Evidence-linked organizational queries          |
+| Agent-specific semantic context                       | Memory Bank     | Scoped retrieval across related Workflows       |
 
 The separation between PostgreSQL, Spanner Graph and Memory Bank is deliberate. PostgreSQL is the control plane, Spanner Graph models durable organizational facts and relationships, and Memory Bank supports agent retrieval. None of them replaces Temporal's execution history or the original Source artifact.
 
@@ -237,7 +241,8 @@ Organization is the hard tenant boundary in Encois. Inside it, access narrows th
       alt: "Encois organization hierarchy showing inherited membership across departments, teams and projects",
       width: 2000,
       height: 1240,
-      caption: "The organization tree makes direct and inherited scope visible before a Workflow starts.",
+      caption:
+        "The organization tree makes direct and inherited scope visible before a Workflow starts.",
     },
   ]}
 />
@@ -263,7 +268,8 @@ The underlying control-plane screens remain necessary for configuration and debu
       alt: "Encois Activity page grouping failed Runs, degraded Sources, integrations and pending approvals",
       width: 2000,
       height: 1001,
-      caption: "The Activity view groups operational signals by the decision or follow-up they require.",
+      caption:
+        "The Activity view groups operational signals by the decision or follow-up they require.",
     },
   ]}
 />

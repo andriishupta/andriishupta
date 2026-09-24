@@ -59,6 +59,9 @@ dependencies. Keep pre-commit checks read-only and fast.
   Agents can prepare and verify drafts, but must leave publication to the owner.
 - English represents a translation pair on the blog index. RSS, sitemaps, and
   `llms.txt` include every published language version.
+- Write articles in English by default. Do not propose, create, or prepare a
+  Ukrainian translation unless the site owner explicitly requests it for that
+  article.
 - `featured: true` affects only blog-index ordering. Featured and regular groups
   are each sorted newest first.
 - Keep `tags` article-specific and `topics` limited to the shared allowlist.
