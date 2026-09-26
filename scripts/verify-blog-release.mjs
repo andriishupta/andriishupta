@@ -1,6 +1,11 @@
-import { access, readdir, readFile } from "node:fs/promises";
+import { access, readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import {
+  createAssertions,
+  readMarkdownFiles,
+  splitFrontmatter,
+} from "./lib/content-utils.mjs";
 
 const repositoryRoot = fileURLToPath(new URL("../", import.meta.url));
 const contentDirectory = path.join(repositoryRoot, "src/content/blog");
@@ -11,17 +16,7 @@ const ukrainianContentDirectory = path.join(
 const distDirectory = path.join(repositoryRoot, "dist");
 const failures = [];
 
-const requireText = (source, value, label) => {
-  if (!source.includes(value)) {
-    failures.push(`${label}: missing ${value}`);
-  }
-};
-
-const rejectText = (source, value, label) => {
-  if (source.includes(value)) {
-    failures.push(`${label}: still contains ${value}`);
-  }
-};
+const { requireText, rejectText } = createAssertions(failures);
 
 const posts = [];
 
@@ -29,33 +24,24 @@ for (const { directory, fallbackLang } of [
   { directory: contentDirectory, fallbackLang: "en" },
   { directory: ukrainianContentDirectory, fallbackLang: "uk" },
 ]) {
-  let contentFiles = [];
+  const contentFiles = (await readMarkdownFiles(directory)).sort();
 
-  try {
-    contentFiles = (await readdir(directory))
-      .filter((file) => /\.(?:md|mdx)$/.test(file))
-      .sort();
-  } catch {
-    continue;
-  }
+  for (const filePath of contentFiles) {
+    const file = path.basename(filePath);
+    const source = await readFile(filePath, "utf8");
+    const parsed = splitFrontmatter(source);
 
-  for (const file of contentFiles) {
-    const source = await readFile(path.join(directory, file), "utf8");
-    const frontmatter = source.match(/^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/);
-
-    if (!frontmatter) {
+    if (!parsed) {
       failures.push(`${file}: missing frontmatter`);
       continue;
     }
 
-    const slug = frontmatter[1].match(
-      /^slug:\s*["']?([^"'\s]+)["']?\s*$/m,
-    )?.[1];
+    const { frontmatter, body } = parsed;
+    const slug = frontmatter.match(/^slug:\s*["']?([^"'\s]+)["']?\s*$/m)?.[1];
     const filename = file.match(/^(\d{4}-\d{2}-\d{2})_(.+)\.(?:md|mdx)$/);
     const lang =
-      frontmatter[1].match(/^lang:\s*([a-z]+)\s*$/m)?.[1] ?? fallbackLang;
-    const draft = /^draft:\s*true\s*$/m.test(frontmatter[1]);
-    const body = source.slice(frontmatter[0].length).trim();
+      frontmatter.match(/^lang:\s*([a-z]+)\s*$/m)?.[1] ?? fallbackLang;
+    const draft = /^draft:\s*true\s*$/m.test(frontmatter);
 
     if (!slug) {
       failures.push(`${file}: missing slug`);
@@ -79,7 +65,7 @@ for (const { directory, fallbackLang } of [
       }
     }
 
-    if (/^publishedAt:/m.test(frontmatter[1])) {
+    if (/^publishedAt:/m.test(frontmatter)) {
       failures.push(`${file}: obsolete publishedAt frontmatter`);
     }
 

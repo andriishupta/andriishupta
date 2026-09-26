@@ -1,0 +1,74 @@
+---
+import ArrowRight from "@lucide/astro/icons/arrow-right";
+import ArrowUpRight from "@lucide/astro/icons/arrow-up-right";
+import PenLine from "@lucide/astro/icons/pen-line";
+import Star from "@lucide/astro/icons/star";
+import { getPortfolioPath, type PortfolioItem } from "../lib/portfolio";
+import "../styles/portfolio.css";
+
+interface Props {
+  item: PortfolioItem;
+  revealOrder: number;
+}
+
+const { item, revealOrder } = Astro.props;
+const articleHref = item.data.linkedArticle
+  ? `/blog/${item.data.linkedArticle}`
+  : undefined;
+---
+
+<article
+  class="portfolio-card"
+  data-reveal-item
+  style={`--reveal-order: ${revealOrder}`}
+>
+  <a class="portfolio-card__link" href={getPortfolioPath(item)}>
+    <figure class="portfolio-card__preview">
+      <img
+        src={item.data.preview}
+        alt={`${item.data.title} case study cover`}
+        width="636"
+        height="900"
+        loading="lazy"
+        decoding="async"
+      />
+    </figure>
+    <div class="portfolio-card__body">
+      <div class="portfolio-card__meta">
+        <span>Case study</span>
+        <span class="portfolio-card__indicators">
+          {item.data.featured && (
+            <span
+              class="portfolio-card__indicator portfolio-card__indicator--featured"
+              aria-label="Featured case study"
+              title="Featured case study"
+            >
+              <Star aria-hidden="true" />
+            </span>
+          )}
+          {import.meta.env.DEV && item.data.draft && (
+            <span
+              class="portfolio-card__indicator portfolio-card__indicator--draft"
+              aria-label="Draft case study"
+              title="Draft case study"
+            >
+              <PenLine aria-hidden="true" />
+            </span>
+          )}
+        </span>
+      </div>
+      <h3>{item.data.title}</h3>
+      <p class="portfolio-card__subtitle">{item.data.subtitle}</p>
+      <span class="portfolio-card__open">
+        View case study
+        <ArrowRight aria-hidden="true" />
+      </span>
+    </div>
+  </a>
+  {articleHref && (
+    <a class="portfolio-card__article text-link" href={articleHref}>
+      Read the connected article
+      <ArrowUpRight aria-hidden="true" />
+    </a>
+  )}
+</article>

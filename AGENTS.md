@@ -15,6 +15,8 @@ Personal website and first-party blog for `andriishupta.dev`.
 - `npm run check` — read-only Biome checks
 - `pnpm blog:verify` — validate article content and images
 - `pnpm blog:release-check` — complete pre-release blog check
+- `pnpm portfolio:verify` — validate portfolio content, assets, dates, and links
+- `pnpm portfolio:build` — complete pre-release portfolio check
 
 Run `npm run build` after changes to rendering, routes, configuration, or
 dependencies. Keep pre-commit checks read-only and fast.
@@ -26,10 +28,15 @@ dependencies. Keep pre-commit checks read-only and fast.
 - `src/components/` — reusable Astro components
 - `src/content/blog/` — English articles
 - `src/content/blog-ua/` — Ukrainian articles
+- `src/content/portfolio/` — English portfolio case studies
+- `src/content/portfolio-ua/` — Ukrainian portfolio case studies
 - `src/lib/blog.ts` — blog dates, ordering, URLs, and reading stats
+- `src/lib/portfolio.ts` — portfolio dates, ordering, URLs, and translations
 - `public/images/blog/[slug]/` — article media
 - `public/blog/[slug]/og.png` — article share images
+- `public/portfolio/` — portfolio PDFs and preview media
 - `docs/blog-authoring.md` — content schema and publishing workflow
+- `docs/portfolio-authoring.md` — portfolio schema and publishing workflow
 
 ## Engineering principles
 
@@ -44,14 +51,21 @@ dependencies. Keep pre-commit checks read-only and fast.
 ## Content and SEO
 
 - Canonical blog URLs are `https://andriishupta.dev/blog/[slug]`.
+- Canonical portfolio URLs are `https://andriishupta.dev/portfolio/[slug]`.
 - Source files use `YYYY-MM-DD_slug.mdx`; the prefix is the publication date
   at midnight UTC. Do not add duplicate `publishedAt` frontmatter.
 - Keep article frontmatter in this order: `draft`, `featured`, `lang`, `slug`,
   `title`, `subtitle`, `ogImage`, `topics`, `tags`, then optional
-  `distribution`. Always write both booleans explicitly. Use `subtitle` for
-  article summaries and SEO, pair translations by `slug`, and derive reading
-  time during the build; do not add `description`, `translationKey`, `cover`,
-  `coverAlt`, or `originalReadingMinutes`.
+  `linkedPortfolio` and `distribution`. Always write both booleans explicitly.
+  Use `subtitle` for article summaries and SEO, pair translations by `slug`,
+  and derive reading time during the build; do not add `description`,
+  `translationKey`, `cover`, `coverAlt`, or `originalReadingMinutes`.
+- Keep portfolio frontmatter in this order: `draft`, `featured`, `lang`,
+  `slug`, `title`, `subtitle`, `ogImage`, `preview`, `tags`, optional
+  `pdf`, then optional `linkedArticle`. Portfolio content may be MDX-only.
+  Portfolio has no distribution fields.
+- Blog and portfolio cross-links use stable slugs: blog uses `linkedPortfolio`,
+  portfolio uses `linkedArticle`. Verify both directions before release.
 - Slugs are stable and match filenames. Filename dates never affect routes.
 - Drafts appear in development and stay out of production pages, feeds,
   sitemaps, and `llms.txt`.

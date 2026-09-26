@@ -6,7 +6,7 @@ export type LinkBrand =
   | "medium"
   | "hashnode";
 
-export type LinkIconName = "upwork" | "cv" | "blog" | "email";
+export type LinkIconName = "upwork" | "cv" | "blog" | "portfolio" | "email";
 
 export const isExternalHref = (href: string) =>
   href.startsWith("https://") || href.startsWith("http://");

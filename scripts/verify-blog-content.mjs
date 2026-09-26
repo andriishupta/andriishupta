@@ -1,12 +1,21 @@
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import {
+  createPngValidator,
+  getFrontmatterKeys,
+  splitFrontmatter,
+} from "./lib/content-utils.mjs";
 
 const repositoryRoot = fileURLToPath(new URL("../", import.meta.url));
 const contentDirectory = path.join(repositoryRoot, "src/content/blog");
 const ukrainianContentDirectory = path.join(
   repositoryRoot,
   "src/content/blog-ua",
+);
+const portfolioContentDirectory = path.join(
+  repositoryRoot,
+  "src/content/portfolio",
 );
 const publicDirectory = path.join(repositoryRoot, "public");
 const articleImageDirectory = path.join(publicDirectory, "images/blog");
@@ -44,6 +53,13 @@ const localizedArticles = [
     lang: "uk",
   },
 ];
+const portfolioSlugs = new Set(
+  (await readdir(portfolioContentDirectory))
+    .filter((entry) => /\.mdx?$/.test(entry))
+    .map((entry) =>
+      entry.replace(/^\d{4}-\d{2}-\d{2}_/, "").replace(/\.mdx?$/, ""),
+    ),
+);
 
 const failures = [];
 const referencedImages = new Set();
@@ -53,16 +69,13 @@ let codeBlockCount = 0;
 let totalBodyCharacters = 0;
 
 const splitMdx = (source, filePath) => {
-  const match = source.match(/^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/);
+  const parsed = splitFrontmatter(source);
 
-  if (!match) {
+  if (!parsed) {
     throw new Error(`Missing frontmatter in ${filePath}`);
   }
 
-  return {
-    frontmatter: match[1],
-    body: source.slice(match[0].length).trim(),
-  };
+  return parsed;
 };
 
 const canonicalFrontmatterOrder = [
@@ -75,9 +88,12 @@ const canonicalFrontmatterOrder = [
   "ogImage",
   "topics",
   "tags",
+  "linkedPortfolio",
   "distribution",
 ];
-const requiredFrontmatterKeys = canonicalFrontmatterOrder.slice(0, -1);
+const requiredFrontmatterKeys = canonicalFrontmatterOrder.filter(
+  (key) => !["linkedPortfolio", "distribution"].includes(key),
+);
 const allArticleFiles = (
   await Promise.all(
     [contentDirectory, ukrainianContentDirectory].map(async (directory) =>
@@ -93,10 +109,7 @@ const allArticleFiles = (
 for (const filePath of allArticleFiles) {
   const source = await readFile(filePath, "utf8");
   const { frontmatter } = splitMdx(source, filePath);
-  const keys = Array.from(
-    frontmatter.matchAll(/^([A-Za-z][A-Za-z0-9]*):/gm),
-    ([, key]) => key,
-  );
+  const keys = getFrontmatterKeys(frontmatter);
   const unknownKeys = keys.filter(
     (key) => !canonicalFrontmatterOrder.includes(key),
   );
@@ -108,6 +121,9 @@ for (const filePath of allArticleFiles) {
   );
   const slug = frontmatter.match(/^slug:\s*["']?([^"'\n]+)["']?$/m)?.[1];
   const lang = frontmatter.match(/^lang:\s*([a-z]+)$/m)?.[1];
+  const linkedPortfolio = frontmatter.match(
+    /^linkedPortfolio:\s*["']?([^"'\n]+)["']?$/m,
+  )?.[1];
   const expectedLang = filePath.startsWith(ukrainianContentDirectory)
     ? "uk"
     : "en";
@@ -145,6 +161,12 @@ for (const filePath of allArticleFiles) {
       `${filePath}: lang must be ${expectedLang}, found ${lang ?? "missing"}`,
     );
   }
+
+  if (linkedPortfolio && !portfolioSlugs.has(linkedPortfolio)) {
+    failures.push(
+      `${filePath}: linkedPortfolio does not match a portfolio slug`,
+    );
+  }
 }
 
 const collectArticleImages = (body) => {
@@ -175,44 +197,7 @@ const collectArticleImages = (body) => {
   return [...markdownImages, ...phoneScreenshots, ...galleryScreenshots];
 };
 
-const validatePng = async (publicPath, slug, expectedDimensions) => {
-  const absolutePath = path.join(
-    publicDirectory,
-    publicPath.replace(/^\//, ""),
-  );
-  let buffer;
-
-  try {
-    buffer = await readFile(absolutePath);
-  } catch {
-    failures.push(`${slug}: missing image ${publicPath}`);
-    return;
-  }
-
-  const pngSignature = "89504e470d0a1a0a";
-
-  if (
-    buffer.length < 24 ||
-    buffer.subarray(0, 8).toString("hex") !== pngSignature
-  ) {
-    failures.push(`${slug}: ${publicPath} is not a valid PNG`);
-    return;
-  }
-
-  const width = buffer.readUInt32BE(16);
-  const height = buffer.readUInt32BE(20);
-
-  if (width === 0 || height === 0) {
-    failures.push(`${slug}: ${publicPath} has invalid dimensions`);
-  } else if (
-    expectedDimensions &&
-    (width !== expectedDimensions.width || height !== expectedDimensions.height)
-  ) {
-    failures.push(
-      `${slug}: ${publicPath} must be ${expectedDimensions.width}×${expectedDimensions.height}, found ${width}×${height}`,
-    );
-  }
-};
+const validatePng = createPngValidator({ publicDirectory, failures });
 
 for (const slug of articles) {
   const filePath = await findArticlePath(contentDirectory, slug);

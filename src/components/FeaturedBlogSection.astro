@@ -1,0 +1,42 @@
+---
+import ArrowRight from "@lucide/astro/icons/arrow-right";
+import { getBlogPosts } from "../lib/blog";
+import BlogCard from "./BlogCard.astro";
+import SectionHeading from "./SectionHeading.astro";
+import "../styles/blog.css";
+
+const selectedSlugs = new Set([
+  "encois-designing-evidence-backed-organizational-intelligence-on-google-cloud",
+  "miyko-turning-shared-grocery-shopping-into-a-durable-ai-workflow",
+  "i-built-a-fasting-app-id-actually-use-apple-rejected-it",
+]);
+const selectedPosts = (await getBlogPosts({ lang: "en" })).filter((post) =>
+  selectedSlugs.has(post.data.slug),
+);
+---
+
+<section
+  class="featured-blog-section"
+  id="blog"
+  data-reveal-group
+  aria-labelledby="featured-blog-title"
+>
+  <div class="featured-blog-section__inner site-container">
+    <SectionHeading
+      id="featured-blog-title"
+      heading="Selected blog articles"
+      description="Notes on software architecture, AI workflows, and the engineering decisions behind shipped products."
+    />
+
+    <div class="blog-archive">
+      {selectedPosts.map((post, index) => (
+        <BlogCard post={post} revealOrder={index} />
+      ))}
+    </div>
+
+    <a class="text-link featured-blog-section__all" href="/blog">
+      View Full Blog
+      <ArrowRight aria-hidden="true" />
+    </a>
+  </div>
+</section>

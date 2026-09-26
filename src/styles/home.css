@@ -93,9 +93,7 @@
 }
 
 .consulting-hero__actions svg,
-.text-link svg,
-.proof-platform__heading a svg,
-.open-source-item .text-link svg {
+.proof-platform__heading a svg {
   width: var(--text-sm);
   height: var(--text-sm);
   transition: transform 220ms var(--ease-out);
@@ -103,27 +101,14 @@
 
 .consulting-hero__actions a:hover svg,
 .consulting-hero__actions a:focus-visible svg,
-.text-link:hover svg,
-.text-link:focus-visible svg,
 .proof-platform__heading a:hover svg,
-.proof-platform__heading a:focus-visible svg,
-.open-source-item .text-link:hover svg,
-.open-source-item .text-link:focus-visible svg {
+.proof-platform__heading a:focus-visible svg {
   transform: translate(2px, -2px);
 }
 
 .consulting-hero__actions .button:hover svg,
 .consulting-hero__actions .button:focus-visible svg {
   transform: none;
-}
-
-.text-link {
-  display: inline-flex;
-  gap: var(--spacing-2);
-  align-items: center;
-  font-size: var(--text-action);
-  font-weight: 620;
-  text-decoration-thickness: 1px;
 }
 
 .consulting-hero__rail {
@@ -195,6 +180,8 @@
 .consulting-approach,
 .consulting-use-cases,
 .open-source,
+.portfolio-section,
+.featured-blog-section,
 .home-experience {
   background: var(--page);
   color: var(--ink);
@@ -206,11 +193,18 @@
 .consulting-proof__inner,
 .consulting-use-cases__inner,
 .open-source__inner,
+.portfolio-section__inner,
+.featured-blog-section__inner,
 .home-experience .experience__inner {
   display: flex;
   flex-direction: column;
   gap: var(--section-content-gap);
   margin-inline: auto;
+}
+
+.portfolio-section__all,
+.featured-blog-section__all {
+  align-self: center;
 }
 
 .technology-pyramid {
@@ -994,9 +988,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .consulting-hero__actions svg,
-  .text-link svg,
   .proof-platform__heading a svg,
-  .open-source-item .text-link svg,
   .home-experience .experience__more svg {
     transition: none;
   }

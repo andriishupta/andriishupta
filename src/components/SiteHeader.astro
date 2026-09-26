@@ -6,7 +6,7 @@ import SocialProfileLinks from "./SocialProfileLinks.astro";
 import ThemeSwitcher from "./ThemeSwitcher.astro";
 
 interface Props {
-  context?: "home" | "blog";
+  context?: "home" | "blog" | "portfolio";
   animated?: boolean;
 }
 
@@ -16,6 +16,7 @@ const homeLinks = [
   { label: "Proof", href: "#proof" },
   { label: "Approach", href: "#approach" },
   { label: "Use cases", href: "#work" },
+  { label: "Portfolio", href: "/portfolio", icon: "portfolio" as const },
   { label: "Blog", href: urls.blogPath, icon: "blog" as const },
 ] as const;
 ---
@@ -44,6 +45,8 @@ const homeLinks = [
             </a>
           ))}
         </nav>
+      ) : context === "portfolio" ? (
+        <div class="site-header__spacer" aria-hidden="true"></div>
       ) : (
         <PlatformLinks
           class="site-header__platforms"

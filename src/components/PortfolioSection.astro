@@ -1,0 +1,32 @@
+---
+import ArrowRight from "@lucide/astro/icons/arrow-right";
+import { getPortfolioItems } from "../lib/portfolio";
+import SectionHeading from "./SectionHeading.astro";
+import PortfolioCard from "./PortfolioCard.astro";
+import "../styles/portfolio.css";
+
+const featuredPortfolioItems = (
+  await getPortfolioItems({ featuredFirst: true })
+).slice(0, 3);
+---
+
+<section class="portfolio-section" id="portfolio" data-reveal-group aria-labelledby="portfolio-title">
+  <div class="portfolio-section__inner site-container">
+    <SectionHeading
+      id="portfolio-title"
+      heading="Selected case studies"
+      description="A few product and architecture engagements, shown as case studies with the decisions and outcomes behind the work."
+    />
+
+    <div class="portfolio-grid">
+      {featuredPortfolioItems.map((item, index) => (
+        <PortfolioCard item={item} revealOrder={index} />
+      ))}
+    </div>
+
+    <a class="text-link portfolio-section__all" href="/portfolio">
+      View the full portfolio
+      <ArrowRight aria-hidden="true" />
+    </a>
+  </div>
+</section>

@@ -1,5 +1,6 @@
 import { copy, urls } from "../copy";
 import { getBlogPosts, getPostPath } from "../lib/blog";
+import { getPortfolioItems, getPortfolioPath } from "../lib/portfolio";
 
 const homepage = "https://andriishupta.dev";
 const blog = new URL(urls.blogPath, homepage).toString();
@@ -31,6 +32,7 @@ export async function GET() {
     includeStubs: false,
     includeTranslations: true,
   });
+  const portfolioItems = await getPortfolioItems();
   const blogArticles = posts
     .map(
       (post) =>
@@ -47,6 +49,17 @@ ${copy.seo.description}
 - [Home](${homepage}): ${copy.mainPage.intro.heading}
 - [CV](${homepage}${urls.cv}): Concise professional experience and skills.
 - [Blog](${blog}): Technical writing by ${copy.identity.fullName}.
+- [Portfolio](${homepage}/portfolio): Selected product and architecture case studies.
+
+## Portfolio case studies
+${portfolioItems
+  .map((item) => {
+    const portfolioLine = `- [${item.data.title}](${new URL(getPortfolioPath(item), homepage)}): ${item.data.subtitle}`;
+    return item.data.pdf
+      ? `${portfolioLine}\n  PDF: ${new URL(item.data.pdf, homepage)}`
+      : portfolioLine;
+  })
+  .join("\n")}
 
 ## Blog articles
 ${blogArticles}

@@ -2,6 +2,7 @@
 import BriefcaseBusiness from "@lucide/astro/icons/briefcase-business";
 import FileUser from "@lucide/astro/icons/file-user";
 import Mail from "@lucide/astro/icons/mail";
+import PanelsTopLeft from "@lucide/astro/icons/panels-top-left";
 import PenLine from "@lucide/astro/icons/pen-line";
 import type { LinkBrand, LinkIconName } from "../lib/links";
 import BrandIcon from "./BrandIcon.astro";
@@ -17,6 +18,7 @@ const icons = {
   upwork: BriefcaseBusiness,
   cv: FileUser,
   blog: PenLine,
+  portfolio: PanelsTopLeft,
   email: Mail,
 } as const;
 const Icon = icon ? icons[icon] : undefined;

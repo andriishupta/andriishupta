@@ -12,6 +12,8 @@
     "blog:import": "node scripts/import-hashnode-articles.mjs",
     "blog:verify": "node scripts/verify-blog-content.mjs",
     "blog:release-check": "pnpm blog:verify && astro build && node scripts/verify-blog-release.mjs",
+    "portfolio:verify": "node scripts/verify-portfolio-content.mjs",
+    "portfolio:build": "pnpm portfolio:verify && astro build && node scripts/verify-portfolio-release.mjs",
     "preview": "npm run build && wrangler pages dev dist",
     "astro": "astro",
     "check": "biome check .",

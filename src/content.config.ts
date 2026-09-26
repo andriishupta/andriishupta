@@ -16,7 +16,7 @@ const languageSchema = z.enum(["en", "uk"]);
 const blog = defineCollection({
   loader: glob({
     base: "./src/content",
-    pattern: "**/*.{md,mdx}",
+    pattern: "blog{,-ua}/**/*.{md,mdx}",
     generateId: ({ entry }) =>
       entry.replace(/\.(md|mdx)$/i, "").replaceAll("/", "-"),
   }),
@@ -30,8 +30,37 @@ const blog = defineCollection({
     ogImage: z.string().startsWith("/"),
     topics: z.array(z.enum(blogTopicSlugs)),
     tags: z.array(z.string()),
+    linkedPortfolio: z
+      .string()
+      .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/)
+      .optional(),
     distribution: distributionSchema,
   }),
 });
 
-export const collections = { blog };
+const portfolio = defineCollection({
+  loader: glob({
+    base: "./src/content",
+    pattern: "portfolio{,-ua}/**/*.{md,mdx}",
+    generateId: ({ entry }) =>
+      entry.replace(/\.(md|mdx)$/i, "").replaceAll("/", "-"),
+  }),
+  schema: z.object({
+    draft: z.boolean(),
+    featured: z.boolean(),
+    lang: languageSchema,
+    slug: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
+    title: z.string().min(1),
+    subtitle: z.string().min(1).max(200),
+    ogImage: z.string().startsWith("/"),
+    preview: z.string().startsWith("/"),
+    tags: z.array(z.string()),
+    pdf: z.string().startsWith("/").optional(),
+    linkedArticle: z
+      .string()
+      .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/)
+      .optional(),
+  }),
+});
+
+export const collections = { blog, portfolio };

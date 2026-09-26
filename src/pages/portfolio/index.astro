@@ -1,0 +1,71 @@
+---
+import SiteFooter from "../../components/SiteFooter.astro";
+import SiteHeader from "../../components/SiteHeader.astro";
+import PortfolioCard from "../../components/PortfolioCard.astro";
+import { getPortfolioItems, getPortfolioPath } from "../../lib/portfolio";
+import { copy } from "../../copy";
+import Layout from "../../layouts/Layout.astro";
+import "../../styles/portfolio.css";
+
+const title = `Portfolio | ${copy.identity.fullName}`;
+const description =
+  "Selected product and architecture case studies by Andrii Shupta.";
+const portfolioItems = await getPortfolioItems({ featuredFirst: true });
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: title,
+  description,
+  url: "https://andriishupta.dev/portfolio",
+  isPartOf: { "@id": "https://andriishupta.dev/#website" },
+  mainEntity: {
+    "@type": "ItemList",
+    itemListElement: portfolioItems.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.data.title,
+      url: new URL(
+        getPortfolioPath(item),
+        "https://andriishupta.dev",
+      ).toString(),
+    })),
+  },
+};
+---
+
+<Layout
+  title={title}
+  description={description}
+  pathname="/portfolio"
+  image="/og-image.png"
+  imageAlt="Andrii Shupta portfolio case studies"
+  structuredData={structuredData}
+  showThemeSwitcher={false}
+>
+  <SiteHeader context="portfolio" />
+
+  <main class="portfolio-index">
+    <header class="portfolio-index__intro content-container">
+      <h1 class="heading-display">Portfolio and Case Studies</h1>
+      <p>Case studies from product work, architecture reviews, and technical delivery.</p>
+    </header>
+
+    <section
+      class="portfolio-grid content-container"
+      aria-label="Case studies"
+      data-reveal-group
+    >
+      {portfolioItems.map((item, index) => (
+        <PortfolioCard item={item} revealOrder={Math.min(index, 3)} />
+      ))}
+    </section>
+  </main>
+
+  <SiteFooter />
+</Layout>
+
+<script>
+  import { revealOnce } from "../../lib/reveal";
+
+  revealOnce();
+</script>

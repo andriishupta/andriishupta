@@ -48,6 +48,93 @@
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+.content-meta-card {
+  padding: var(--spacing-5);
+  border: 1px solid var(--line-on-page);
+  border-radius: var(--radius-surface);
+  background: var(--page);
+  color: var(--ink);
+}
+
+/* Shared underlined text action with a trailing arrow. */
+.text-link {
+  display: inline-flex;
+  gap: var(--spacing-2);
+  align-items: center;
+  font-size: var(--text-action);
+  font-weight: 620;
+  text-decoration-thickness: 1px;
+}
+
+.text-link svg {
+  width: var(--text-sm);
+  height: var(--text-sm);
+  transition: transform 220ms var(--ease-out);
+}
+
+.text-link:hover svg,
+.text-link:focus-visible svg {
+  transform: translate(2px, -2px);
+}
+
+/* Shared card grid: three columns on desktop, two on tablet, one on mobile. */
+.blog-archive,
+.portfolio-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.25rem, 2vw, 1.75rem);
+}
+
+/* Shared status badges for card and archive entries. */
+.blog-entry__indicators,
+.portfolio-card__indicators {
+  display: flex;
+  gap: var(--spacing-2);
+  align-items: center;
+  margin-left: auto;
+}
+
+.blog-entry__indicator,
+.portfolio-card__indicator {
+  display: grid;
+  width: 1.75rem;
+  height: 1.75rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid var(--line-on-page);
+  border-radius: var(--radius-pill);
+  background: var(--surface-card);
+  color: var(--ink);
+}
+
+.blog-entry__indicator--draft,
+.portfolio-card__indicator--draft {
+  border-color: oklch(0.72 0.14 87);
+  background: oklch(0.91 0.14 95);
+  color: oklch(0.45 0.12 75);
+}
+
+.blog-entry__indicator svg,
+.portfolio-card__indicator svg {
+  width: var(--text-sm);
+  height: var(--text-sm);
+  stroke-width: 1.8;
+}
+
+@media (max-width: 64rem) {
+  .blog-archive,
+  .portfolio-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 48rem) {
+  .blog-archive,
+  .portfolio-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 :root {
   /* Theme-aware text and rules */
   --muted-on-page: color-mix(in srgb, var(--ink) 72%, transparent);
@@ -352,6 +439,7 @@ body {
   }
 
   .site-header__brand,
+  .site-header__spacer,
   .site-header__primary,
   .site-header__actions {
     display: flex;
@@ -856,6 +944,10 @@ body {
       display: none;
     }
 
+    .site-header__spacer {
+      display: none;
+    }
+
     .site-header__primary a,
     .site-header__platforms a {
       flex: 0 0 auto;
@@ -894,6 +986,7 @@ body {
   }
 
   .site-link__external-icon,
+  .text-link svg,
   .theme-switcher__trigger,
   .theme-switcher__option {
     animation: none;

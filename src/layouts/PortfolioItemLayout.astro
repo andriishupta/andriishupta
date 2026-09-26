@@ -1,0 +1,164 @@
+---
+import ArrowLeft from "@lucide/astro/icons/arrow-left";
+import ArrowUpRight from "@lucide/astro/icons/arrow-up-right";
+import { render } from "astro:content";
+import SiteFooter from "../components/SiteFooter.astro";
+import SiteHeader from "../components/SiteHeader.astro";
+import { copy } from "../copy";
+import {
+  formatPortfolioDate,
+  getPortfolioPath,
+  toIsoDate,
+  type PortfolioItemPageProps,
+} from "../lib/portfolio";
+import "../styles/portfolio.css";
+import Layout from "./Layout.astro";
+
+type Props = PortfolioItemPageProps;
+
+const { item, alternateItem } = Astro.props;
+const { Content } = await render(item);
+const { data } = item;
+const language = data.lang;
+const isUkrainian = language === "uk";
+const path = getPortfolioPath(item);
+const alternatePath = alternateItem
+  ? getPortfolioPath(alternateItem)
+  : undefined;
+const canonicalUrl = new URL(path, "https://andriishupta.dev").toString();
+const linkedArticlePath = data.linkedArticle
+  ? `/blog/${data.linkedArticle}`
+  : undefined;
+const ogImage = data.ogImage;
+const labels = isUkrainian
+  ? {
+      back: "Назад до портфоліо",
+      published: "Опубліковано",
+      connectedArticle: "Пов’язана стаття",
+      type: "Тип",
+      caseStudy: "Case study",
+      openPdf: "Відкрити PDF у новій вкладці",
+      viewerUnavailable: "Якщо вбудований переглядач не працює,",
+      viewPdfDirectly: "переглянути PDF напряму",
+    }
+  : {
+      back: "Back to portfolio",
+      published: "Published",
+      connectedArticle: "Connected article",
+      type: "Type",
+      caseStudy: "Case study",
+      openPdf: "Open PDF in a new tab",
+      viewerUnavailable: "If the embedded viewer isn't working,",
+      viewPdfDirectly: "view the PDF directly",
+    };
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "CreativeWork",
+  "@id": `${canonicalUrl}#case-study`,
+  name: data.title,
+  headline: data.title,
+  description: data.subtitle,
+  datePublished: toIsoDate(data.publishedAt),
+  inLanguage: isUkrainian ? "uk-UA" : "en-US",
+  mainEntityOfPage: canonicalUrl,
+  image: new URL(ogImage, canonicalUrl).toString(),
+  url: canonicalUrl,
+  author: {
+    "@type": "Person",
+    "@id": "https://andriishupta.dev/#person",
+    name: copy.identity.fullName,
+    url: "https://andriishupta.dev",
+  },
+};
+---
+
+<Layout
+  title={`${data.title} | ${copy.identity.fullName}`}
+  description={data.subtitle}
+  pathname={path}
+  image={ogImage}
+  imageAlt={data.title}
+  ogType="article"
+  structuredData={structuredData}
+  robots={data.draft ? "noindex, follow" : undefined}
+  showThemeSwitcher={false}
+  publishedTime={data.publishedAt.toISOString()}
+  tags={data.tags}
+  lang={language}
+  alternateLanguages={
+    alternateItem
+      ? [{ lang: alternateItem.data.lang, href: alternatePath ?? path }]
+      : []
+  }
+>
+  <SiteHeader context="portfolio" />
+
+  <main class="portfolio-detail">
+    <header class="portfolio-detail__intro">
+      <a class="portfolio-detail__back" href="/portfolio">
+        <ArrowLeft aria-hidden="true" />
+        {labels.back}
+      </a>
+      <h1 class="heading-display">{data.title}</h1>
+      <p class="portfolio-detail__subtitle">{data.subtitle}</p>
+    </header>
+
+    <section
+      class="portfolio-detail__meta-card content-meta-card"
+      aria-label={labels.caseStudy}
+    >
+      <dl class="portfolio-detail__facts">
+        <div>
+          <dt>{labels.published}</dt>
+          <dd>
+            <time datetime={toIsoDate(data.publishedAt)}>
+              {formatPortfolioDate(data.publishedAt, language)}
+            </time>
+          </dd>
+        </div>
+        <div>
+          <dt>{labels.type}</dt>
+          <dd>{labels.caseStudy}</dd>
+        </div>
+      </dl>
+      <div class="portfolio-detail__meta-actions">
+        {linkedArticlePath && (
+          <a class="portfolio-detail__meta-link" href={linkedArticlePath}>
+            {labels.connectedArticle}
+            <ArrowUpRight aria-hidden="true" />
+          </a>
+        )}
+        {data.pdf && (
+          <a
+            class="portfolio-detail__meta-link"
+            href={data.pdf}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {labels.openPdf}
+            <ArrowUpRight aria-hidden="true" />
+          </a>
+        )}
+      </div>
+    </section>
+
+    {data.pdf && (
+      <section class="portfolio-viewer" aria-label={`${data.title} PDF viewer`}>
+        <iframe src={data.pdf} title={`${data.title} PDF viewer`}></iframe>
+        <p class="portfolio-viewer__fallback">
+          {labels.viewerUnavailable}
+          <a href={data.pdf} target="_blank" rel="noopener noreferrer">
+            {labels.viewPdfDirectly}
+            <ArrowUpRight aria-hidden="true" />
+          </a>.
+        </p>
+      </section>
+    )}
+
+    <article class="portfolio-detail__content">
+      <Content />
+    </article>
+  </main>
+
+  <SiteFooter />
+</Layout>

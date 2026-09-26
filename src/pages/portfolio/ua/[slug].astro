@@ -1,0 +1,17 @@
+---
+import PortfolioItemLayout from "../../../layouts/PortfolioItemLayout.astro";
+import {
+  getPortfolioStaticPaths,
+  type PortfolioItemPageProps,
+} from "../../../lib/portfolio";
+
+type Props = PortfolioItemPageProps;
+
+export async function getStaticPaths() {
+  return getPortfolioStaticPaths("uk");
+}
+
+const { item, alternateItem } = Astro.props;
+---
+
+<PortfolioItemLayout item={item} alternateItem={alternateItem} />

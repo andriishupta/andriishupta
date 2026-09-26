@@ -1,0 +1,104 @@
+---
+import ArrowRight from "@lucide/astro/icons/arrow-right";
+import PenLine from "@lucide/astro/icons/pen-line";
+import Star from "@lucide/astro/icons/star";
+import {
+  formatBlogDate,
+  getPostPath,
+  getReadingStats,
+  toIsoDate,
+  type BlogPost,
+} from "../lib/blog";
+import "../styles/blog.css";
+
+interface Props {
+  post: BlogPost;
+  revealOrder: number;
+  archive?: boolean;
+}
+
+const { post, revealOrder, archive = false } = Astro.props;
+const stats = getReadingStats(post.body);
+const image = post.data.ogImage ?? "/blog/og.png";
+---
+
+<article
+  class="blog-entry"
+  data-blog-entry={archive ? "" : undefined}
+  data-topics={archive ? post.data.topics.join(",") : undefined}
+  data-reveal-item={archive ? undefined : ""}
+  style={`--reveal-order: ${revealOrder}`}
+>
+  <a class="blog-entry__link" href={getPostPath(post)}>
+    <div class="blog-entry__content">
+      <div class="blog-entry__meta">
+        <div class="blog-entry__meta-copy">
+          <time datetime={toIsoDate(post.data.publishedAt)}>
+            {formatBlogDate(post.data.publishedAt)}
+          </time>
+          {
+            stats.readingMinutes > 0 && (
+              <span>
+                {stats.readingMinutes} min {stats.isStub ? "original " : ""}read
+              </span>
+            )
+          }
+        </div>
+        {
+          archive && (
+            <div class="blog-entry__indicators">
+              {post.data.featured && (
+                <span
+                  class="blog-entry__indicator blog-entry__indicator--featured"
+                  aria-label="Featured article"
+                  title="Featured article"
+                >
+                  <Star aria-hidden="true" />
+                </span>
+              )}
+              {import.meta.env.DEV && post.data.draft && (
+                <span
+                  class="blog-entry__indicator blog-entry__indicator--draft"
+                  aria-label="Draft article"
+                  title="Draft article"
+                >
+                  <PenLine aria-hidden="true" />
+                </span>
+              )}
+            </div>
+          )
+        }
+      </div>
+
+      {
+        archive && stats.isStub && (
+          <span class="blog-entry__status">Import pending</span>
+        )
+      }
+
+      <h2>{post.data.title}</h2>
+      <p>{post.data.subtitle}</p>
+
+      <div class="blog-entry__footer">
+        <ul class="blog-entry__tags" aria-label="Tags">
+          {post.data.tags.map((tag) => <li>#{tag}</li>)}
+        </ul>
+        <span class="blog-entry__read">
+          <span class="blog-entry__read-label">Read article</span>
+          <ArrowRight aria-hidden="true" />
+        </span>
+      </div>
+    </div>
+
+    <figure class="blog-entry__image">
+      <img
+        src={image}
+        alt={post.data.title}
+        width="1200"
+        height="630"
+        loading="lazy"
+        decoding="async"
+      />
+    </figure>
+  </a>
+</article>

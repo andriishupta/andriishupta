@@ -32,6 +32,7 @@ topics:
 tags:
   - astro
   - seo
+linkedPortfolio: "example-case-study"
 distribution:
   devto: "https://dev.to/example/migrating-blog-to-subpath"
   medium: "https://medium.com/@example/migrating-blog-to-subpath"
@@ -44,7 +45,8 @@ Article content starts here.
 ### Field rules
 
 - Keep frontmatter in this order: `draft`, `featured`, `lang`, `slug`, `title`,
-  `subtitle`, `ogImage`, `topics`, `tags`, then optional `distribution`.
+  `subtitle`, `ogImage`, `topics`, `tags`, then optional `linkedPortfolio` and
+  `distribution`.
 - Always write `draft` and `featured` explicitly. New articles start with
   `draft: true`; only the site owner changes them to `draft: false`.
 - `slug` matches the filename and remains stable.
@@ -60,6 +62,8 @@ Article content starts here.
 - `draft: true` makes the article visible in development only.
 - `tags` are article-specific. `topics` use the slugs defined in
   `src/lib/blog-topics.ts`; labels are for display only.
+- `linkedPortfolio` is the stable portfolio slug for a connected case study.
+  The portfolio item must point back with `linkedArticle`.
 - Open with what was built, why, and what the reader gains. Close with a general summary or concrete improvements, not a generic "What I learned" section.
 - Keep headings text-only except for `## 🔗 Links`.
 - Put cross-post URLs in `distribution`, not in the article body.

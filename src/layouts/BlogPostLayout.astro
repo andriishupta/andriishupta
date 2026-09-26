@@ -16,6 +16,7 @@ import {
   toIsoDate,
   type BlogPostPageProps,
 } from "../lib/blog";
+import { getPortfolioItemBySlug, getPortfolioPath } from "../lib/portfolio";
 import "../styles/blog.css";
 import Layout from "./Layout.astro";
 
@@ -31,6 +32,9 @@ const isUkrainian = language === "uk";
 const stats = getReadingStats(post.body);
 const path = getPostPath(post);
 const alternatePath = alternatePost ? getPostPath(alternatePost) : undefined;
+const linkedPortfolio = data.linkedPortfolio
+  ? await getPortfolioItemBySlug(data.linkedPortfolio)
+  : undefined;
 const canonicalUrl = new URL(path, "https://andriishupta.dev").toString();
 const ogImage = data.ogImage ?? "/blog/og.png";
 const isLegacyBlogUrl = (href: string | undefined) =>
@@ -73,6 +77,13 @@ const articleStructuredData = {
     name: `${copy.identity.fullName} — Blog`,
   },
   keywords: data.tags.join(", "),
+  ...(linkedPortfolio
+    ? {
+        subjectOf: {
+          "@id": `${new URL(getPortfolioPath(linkedPortfolio), "https://andriishupta.dev")}#case-study`,
+        },
+      }
+    : {}),
   ...(stats.wordCount > 0
     ? {
         wordCount: stats.wordCount,
@@ -101,6 +112,7 @@ const labels = isUkrainian
       availableLanguages: "Доступні мови",
       english: "English",
       ukrainian: "Українська",
+      relatedCaseStudy: "Пов’язаний case study",
     }
   : {
       back: "Back to blog",
@@ -118,6 +130,7 @@ const labels = isUkrainian
       availableLanguages: "Available in languages",
       english: "English",
       ukrainian: "Українська",
+      relatedCaseStudy: "Related case study",
     };
 ---
 
@@ -154,7 +167,7 @@ const labels = isUkrainian
     </header>
 
     <div class="article-page">
-      <div class="article-meta">
+      <div class="article-meta content-meta-card">
         <div class="article-meta__main">
           <dl>
             <div>
@@ -230,6 +243,16 @@ const labels = isUkrainian
           <ul class="article-meta__tags" aria-label={labels.tags}>
             {data.tags.map((tag) => <li>#{tag}</li>)}
           </ul>
+          {linkedPortfolio && (
+            <a
+              class="article-related-work"
+              href={getPortfolioPath(linkedPortfolio)}
+            >
+              <small>{labels.relatedCaseStudy}</small>
+              <strong>{linkedPortfolio.data.title}</strong>
+              <ArrowRight aria-hidden="true" />
+            </a>
+          )}
         </div>
       </div>
 
