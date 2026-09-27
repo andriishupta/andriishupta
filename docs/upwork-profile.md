@@ -1,63 +1,69 @@
 # Upwork Profile
 
-## Recommended title
+## Title
 
-**Solution Architect | Full-Stack Engineering, System Design & Audits**
+**Senior Full Stack Developer & Solution Architect | Node.js, React, AI**
 
-This leads with architecture while making hands-on engineering explicit. The overview carries the audit and system-design terms.
+## Overview
 
-## Profile overview
+I work for results as a partner. I build and fix products, help businesses with technical transformation, and take ownership of the outcome.
 
-I help teams audit and fix vibe-coded apps and AI-generated code, then turn what works into reliable, maintainable production software. I review the system, identify what to keep, fix, or redesign, and give the team a clear path forward.
+✅ 10 years of software engineering behind every technical decision.  
+🚀 Clear plan: what to keep, fix, refactor, or rebuild.  
+🤖 AI-assisted engineering and spec-driven development: think -> design -> plan -> implement -> test -> deliver.
 
-⭐⭐⭐⭐⭐ “First and foremost, I was impressed by Andrii's ability to ask pertinent and insightful questions.”
+100% Job Success Score. Previously Top Rated.
 
-⭐⭐⭐⭐⭐ “The codebase was well-structured, maintainable, and accompanied by comprehensive documentation.”
+Message me or invite me to your job — we can discuss if our visions align.
 
-⭐⭐⭐⭐⭐ “Give him some requirements and let him do his thing!”
+CLIENT FEEDBACK
 
-### Architecture, consulting & system design
+⭐ First and foremost, I was impressed by Andrii's ability to ask pertinent and insightful questions.  
+⭐ The codebase was well-structured, maintainable, and accompanied by comprehensive documentation.  
+⭐ Give him some requirements and let him do his thing!
 
-- Architecture reviews and technical audits
-- Audits, debugging, and stabilization for vibe-coded apps and AI-generated code
-- System design for new products, SaaS platforms, APIs, and internal tools
-- Scalability, reliability, performance, and technical-risk assessments
-- Technical due diligence and implementation-readiness reviews
-- Cloud architecture and third-party integration planning
-- AI and LLM adoption, product fit, and integration strategy
-- Agentic engineering: guiding coding-agent workflows and reviewing generated changes against the product and system requirements
-- Legacy modernization, migration planning, and technical roadmaps
-- Engineering-team support, code reviews, and technical direction
+WHAT I CAN HELP WITH
 
-### From recommendations to production
+- Architecture and system design for SaaS, platforms, internal tools, and APIs.
+- Code and architecture audits, legacy modernization, technical debt reduction.
+- Production readiness: reliability, security, performance, CI/CD, testing.
+- AI agents and AI workflows: from prototype to production.
+- Vibe-coded apps: fixes and a clear plan for what comes next.
+- Team support: delivery and technical alignment across teams.
+- Software and AI strategy as a Software Architect or a fractional CTO.
 
-Engagements can start with an architecture review, technical audit, system-design workshop, or AI-adoption assessment. For AI-assisted or vibe-coded software, I assess the code and architecture, then help prioritize what to keep, fix, refactor, or redesign. I document the findings and trade-offs, and can guide implementation or make the changes hands-on. Coding agents can speed up the work; engineering judgment, review, and validation keep it dependable.
+ACHIEVEMENTS
 
-I bring 10+ years of software experience across product engineering and technical leadership. That includes full-stack web applications, mobile products, APIs, cloud platforms, data-heavy systems, and AI-powered workflows. I stay involved through implementation when needed, so recommendations account for the code, team, timeline, and operational reality.
+- Replaced a legacy PHP platform with a modern React and microservice architecture.
+- Built a high-volume analytics platform on BigQuery and a retail CMS with AI features on the OpenAI API.
+- Modernized billing and invoicing on a high-load finance platform with Stripe and AWS.
+- Migrated 10+ services to TypeScript and cut response times to near zero with caching.
+- Improved delivery on a large Angular app: build time from 30 to 15 minutes, tests under 10 minutes.
+- Led teams and sub-teams, ran 35+ interviews, and mentored engineers.
+- Advised a Web3 platform on security and performance ahead of production launch.
 
-### Portfolio & writing
+NOT A FIT IF:
 
-My portfolio brings together case studies across architecture, product development, AI, and modernization. Browse the examples most relevant to your use case; I can tailor a deeper walkthrough around your product and technical questions. My blog shares more of the thinking behind architecture and implementation decisions.
+- You want to ship fast to production and don't think about your users.
+- You don't know what you want and don't plan to figure it out.
+- You want a silent hourly executor, not a partner.
+- You don't want questions about your product, just a task list.
+- You are looking only for the lowest price.
 
-### Technical experience
+CORE TECHNOLOGIES
 
-**Architecture & product concerns:** system boundaries, APIs, authentication, data modeling, event-driven systems, AI workflows, AI-generated code review, performance, security, maintainability, cloud delivery, and migrations.
+- TypeScript, JavaScript
+- Node.js, Hono.js, NestJS, Express.js
+- React, Next.js, React Native
+- PostgreSQL, Supabase, Redis, Kafka
+- AWS, Cloudflare, Vercel, Docker
+- Tailwind CSS, ShadCN, Material UI
+- Python, AI agents, LLMs, Codex, Cursor, Claude
+- Other technologies: I adapt quickly to whatever the project needs.
 
-**Core tools:** TypeScript, JavaScript, React, Next.js, Node.js, NestJS, PostgreSQL, Supabase, AWS, Google Cloud, Cloudflare, Vercel, Redis, Kafka, Docker, React Native, Flutter, and AI/LLM APIs.
+I have delivered for FinTech, HRTech, SportsTech, and Enterprise Data companies, both as a contractor and in product teams. I hold a Master's degree in Computer Science.
 
-The technology should fit the product, constraints, and team. I can work with an existing stack or help choose a practical one.
+## Keywords
 
-Computer Science degree. I also write technical articles and maintain public software projects.
+software architect, solution architecture, system design, architecture review, technical audit, codebase audit, full stack development, backend development, SaaS development, MVP development, API design, AI integration, LLM integration, AI agents, agentic engineering, RAG, chatbots, vibe coding, legacy modernization, technical consulting, technical leadership, production readiness
 
-**Keywords:** Solution Architect, Software Architect, Software Architecture, System Design, Architecture Review, Technical Audit, Technical Consulting, Technical Due Diligence, Vibe Coding, AI-Generated Code, AI Code Review, Agentic Engineering, Coding Agents, Scalability, Cloud Architecture, AI Integration, LLM Integration, Technical Roadmap, Full-Stack Development, TypeScript, React, Next.js, Node.js, PostgreSQL, Supabase.
-
-## Why this structure
-
-- Keeps the existing hook → client proof → services → technical capabilities rhythm, while moving consulting and architecture to the top.
-- Uses the strongest real client feedback from the current profile. Keep quotes verbatim; do not replace them with newly written testimonials.
-- Replaces a stack-first pitch with architecture services and an engagement path, then retains the stack as supporting evidence.
-- Keep project and client detail in the portfolio, where clients can choose the examples relevant to their needs. The profile should sell the expertise and engagement, not repeat case-study content.
-
-Upwork recommends a specific, searchable title and notes that only the opening sentences of an overview may appear in search previews. The proposed title is eight words, and the first two sentences state the client problem and outcome before the detailed sections.
-
-Sources: [current Upwork profile](https://www.upwork.com/freelancers/andriishupta), [Upwork title and overview guidance](https://www.upwork.com/resources/upwork-profiles-why-a-great-title-and-overview-can-make-a-difference/), [examples of freelancer profiles](https://support.upwork.com/hc/en-us/articles/211063208-See-examples-of-great-Upwork-freelancer-profiles).
