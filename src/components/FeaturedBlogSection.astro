@@ -1,6 +1,7 @@
 ---
 import ArrowRight from "@lucide/astro/icons/arrow-right";
 import { getBlogPosts } from "../lib/blog";
+import { copy } from "../copy";
 import BlogCard from "./BlogCard.astro";
 import SectionHeading from "./SectionHeading.astro";
 import "../styles/blog.css";
@@ -24,8 +25,8 @@ const selectedPosts = (await getBlogPosts({ lang: "en" })).filter((post) =>
   <div class="featured-blog-section__inner site-container">
     <SectionHeading
       id="featured-blog-title"
-      heading="Selected blog articles"
-      description="Notes on software architecture, AI workflows, and the engineering decisions behind shipped products."
+      heading={copy.pages.blog.sectionHeading}
+      description={copy.pages.blog.sectionDescription}
     />
 
     <div class="blog-archive">
@@ -34,8 +35,8 @@ const selectedPosts = (await getBlogPosts({ lang: "en" })).filter((post) =>
       ))}
     </div>
 
-    <a class="text-link featured-blog-section__all" href="/blog">
-      View Full Blog
+    <a class="text-link featured-blog-section__all" href={copy.pages.blog.path}>
+      {copy.pages.blog.sectionLinkLabel}
       <ArrowRight aria-hidden="true" />
     </a>
   </div>

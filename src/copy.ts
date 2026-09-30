@@ -11,6 +11,7 @@ export const urls = {
   about: "/#services",
   experience: "/#experience",
   blogPath: "/blog",
+  portfolioPath: "/portfolio",
   devto: "https://dev.to/andriishupta",
   medium: "https://medium.com/@andriishupta",
   hashnode: "https://andriishupta.hashnode.dev/",
@@ -68,6 +69,38 @@ export const copy = {
       "Supabase",
       "PostgreSQL",
     ],
+  },
+  pages: {
+    blog: {
+      path: urls.blogPath,
+      title: "Software Engineering Blog",
+      label: "Blog",
+      description:
+        "Blog posts on software architecture, web development, integrations, security, and production engineering.",
+      heading: "Software Engineering Blog",
+      intro: "Articles on software, systems, and the work behind them.",
+      imageAlt: "Andrii Shupta — technical writing on software and systems",
+      sectionHeading: "Selected blog articles",
+      sectionDescription:
+        "Notes on software architecture, AI workflows, and the engineering decisions behind shipped products.",
+      sectionLinkLabel: "View full blog",
+    },
+    portfolio: {
+      path: urls.portfolioPath,
+      title: "Software Engineering Portfolio",
+      label: "Portfolio",
+      description:
+        "Selected product, architecture, and software engineering case studies.",
+      heading: "Selected Work and Case Studies",
+      intro:
+        "Product, architecture, and software engineering work, with context on what was built and why.",
+      imageAlt:
+        "Software engineering portfolio and case studies by Andrii Shupta",
+      sectionHeading: "Selected case studies",
+      sectionDescription:
+        "A few product and architecture engagements, shown as case studies with the decisions and outcomes behind the work.",
+      sectionLinkLabel: "View the full portfolio",
+    },
   },
   mainPage: {
     header: {

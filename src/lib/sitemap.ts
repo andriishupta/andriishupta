@@ -1,9 +1,52 @@
+import { urls } from "../copy";
+import { getBlogPosts, getPostPath } from "./blog";
+import { getPortfolioItems, getPortfolioPath } from "./portfolio";
+
 interface SitemapPage {
   path: string;
   lastmod?: string;
 }
 
 const siteUrl = "https://andriishupta.dev";
+const rootPages: SitemapPage[] = [
+  { path: "/", lastmod: undefined },
+  { path: urls.cv, lastmod: undefined },
+  { path: "/llms.txt", lastmod: undefined },
+];
+
+export async function getBlogSitemapPages(): Promise<SitemapPage[]> {
+  const posts = await getBlogPosts({
+    includeStubs: false,
+    includeTranslations: true,
+  });
+  return [
+    { path: urls.blogPath, lastmod: undefined },
+    ...posts.map((post) => ({ path: getPostPath(post) })),
+  ];
+}
+
+export async function getPortfolioSitemapPages(
+  options: { includePdfs?: boolean } = {},
+): Promise<SitemapPage[]> {
+  const items = await getPortfolioItems({ includeTranslations: true });
+  return [
+    { path: urls.portfolioPath, lastmod: undefined },
+    ...items.map((item) => ({ path: getPortfolioPath(item) })),
+    ...(options.includePdfs
+      ? items.flatMap((item) =>
+          item.data.pdf ? [{ path: item.data.pdf }] : [],
+        )
+      : []),
+  ];
+}
+
+export async function getRootSitemapPages(): Promise<SitemapPage[]> {
+  const [blogPages, portfolioPages] = await Promise.all([
+    getBlogSitemapPages(),
+    getPortfolioSitemapPages({ includePdfs: true }),
+  ]);
+  return [...rootPages, ...blogPages, ...portfolioPages];
+}
 
 function renderUrl({ path, lastmod }: SitemapPage) {
   const values = ["    <url>", `        <loc>${new URL(path, siteUrl)}</loc>`];

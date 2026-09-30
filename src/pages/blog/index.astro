@@ -24,17 +24,18 @@ for (const post of posts) {
 const topicFilters = blogTopicDefinitions
   .map(({ label, slug }) => [label, slug, topicCounts.get(slug) ?? 0] as const)
   .filter(([, , count]) => count > 0);
-const title = `Software Engineering Blog | ${copy.identity.fullName}`;
-const description =
-  "Blog posts by Andrii Shupta on software architecture, web development, integrations, security, and production engineering.";
+const pageCopy = copy.pages.blog;
+const title = `${pageCopy.title} | ${copy.identity.fullName}`;
+const description = pageCopy.description;
+const pageUrl = new URL(pageCopy.path, "https://andriishupta.dev").toString();
 const structuredData = {
   "@context": "https://schema.org",
   "@graph": [
     {
       "@type": "Blog",
-      "@id": "https://andriishupta.dev/blog/#blog",
-      url: "https://andriishupta.dev/blog",
-      name: `${copy.identity.fullName} — Blog`,
+      "@id": `${pageUrl}/#blog`,
+      url: pageUrl,
+      name: `${copy.identity.fullName} — ${pageCopy.label}`,
       description,
       inLanguage: "en",
       author: { "@id": "https://andriishupta.dev/#person" },
@@ -47,10 +48,10 @@ const structuredData = {
     },
     {
       "@type": "CollectionPage",
-      url: "https://andriishupta.dev/blog",
+      url: pageUrl,
       name: title,
       isPartOf: { "@id": "https://andriishupta.dev/#website" },
-      mainEntity: { "@id": "https://andriishupta.dev/blog/#blog" },
+      mainEntity: { "@id": `${pageUrl}/#blog` },
     },
   ],
 };
@@ -59,9 +60,9 @@ const structuredData = {
 <Layout
   title={title}
   description={description}
-  pathname="/blog"
+  pathname={pageCopy.path}
   image="/blog/og.png"
-  imageAlt="Andrii Shupta — technical writing on software and systems"
+  imageAlt={pageCopy.imageAlt}
   structuredData={structuredData}
   showThemeSwitcher={false}
   rss
@@ -71,9 +72,9 @@ const structuredData = {
   <main class="blog-index">
     <header class="blog-index__intro content-container">
       <h1 class="heading-display">
-        Software Engineering Blog by {copy.identity.fullName}
+        {pageCopy.heading} by {copy.identity.fullName}
       </h1>
-      <p>Articles on software, systems, and the work behind them.</p>
+      <p>{pageCopy.intro}</p>
     </header>
 
     <section

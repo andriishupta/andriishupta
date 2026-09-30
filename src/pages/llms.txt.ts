@@ -3,7 +3,8 @@ import { getBlogPosts, getPostPath } from "../lib/blog";
 import { getPortfolioItems, getPortfolioPath } from "../lib/portfolio";
 
 const homepage = "https://andriishupta.dev";
-const blog = new URL(urls.blogPath, homepage).toString();
+const blog = new URL(copy.pages.blog.path, homepage).toString();
+const portfolio = new URL(copy.pages.portfolio.path, homepage).toString();
 
 const socials = ["LinkedIn", "GitHub", "X", "Upwork"]
   .map((label) =>
@@ -48,8 +49,8 @@ ${copy.seo.description}
 
 - [Home](${homepage}): ${copy.mainPage.intro.heading}
 - [CV](${homepage}${urls.cv}): Concise professional experience and skills.
-- [Blog](${blog}): Technical writing by ${copy.identity.fullName}.
-- [Portfolio](${homepage}/portfolio): Selected product and architecture case studies.
+- [Blog](${blog}): ${copy.pages.blog.description}
+- [Portfolio](${portfolio}): ${copy.pages.portfolio.description}
 
 ## Portfolio case studies
 ${portfolioItems

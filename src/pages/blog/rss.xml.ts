@@ -1,5 +1,6 @@
 import rss from "@astrojs/rss";
 import { marked } from "marked";
+import { copy } from "../../copy";
 import { getBlogPosts, getPostPath, stripMdxModuleLines } from "../../lib/blog";
 
 export const prerender = true;
@@ -13,9 +14,8 @@ export async function GET(context: { site?: URL }) {
   const siteOrigin = site.origin;
 
   const response = await rss({
-    title: "Andrii Shupta — Blog",
-    description:
-      "Technical notes on software architecture, web development, integrations, security, and production engineering.",
+    title: `${copy.identity.fullName} — ${copy.pages.blog.label}`,
+    description: copy.pages.blog.description,
     site,
     trailingSlash: false,
     xmlns: {

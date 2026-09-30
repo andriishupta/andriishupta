@@ -7,38 +7,47 @@ import { copy } from "../../copy";
 import Layout from "../../layouts/Layout.astro";
 import "../../styles/portfolio.css";
 
-const title = `Portfolio | ${copy.identity.fullName}`;
-const description =
-  "Selected product and architecture case studies by Andrii Shupta.";
+const pageCopy = copy.pages.portfolio;
+const title = `${pageCopy.title} | ${copy.identity.fullName}`;
+const description = pageCopy.description;
+const pageUrl = new URL(pageCopy.path, "https://andriishupta.dev").toString();
 const portfolioItems = await getPortfolioItems({ featuredFirst: true });
 const structuredData = {
   "@context": "https://schema.org",
-  "@type": "CollectionPage",
-  name: title,
-  description,
-  url: "https://andriishupta.dev/portfolio",
-  isPartOf: { "@id": "https://andriishupta.dev/#website" },
-  mainEntity: {
-    "@type": "ItemList",
-    itemListElement: portfolioItems.map((item, index) => ({
-      "@type": "ListItem",
-      position: index + 1,
-      name: item.data.title,
-      url: new URL(
-        getPortfolioPath(item),
-        "https://andriishupta.dev",
-      ).toString(),
-    })),
-  },
+  "@graph": [
+    {
+      "@type": "CollectionPage",
+      "@id": `${pageUrl}/#portfolio`,
+      name: title,
+      description,
+      url: pageUrl,
+      isPartOf: { "@id": "https://andriishupta.dev/#website" },
+      mainEntity: { "@id": `${pageUrl}/#case-studies` },
+    },
+    {
+      "@type": "ItemList",
+      "@id": `${pageUrl}/#case-studies`,
+      itemListElement: portfolioItems.map((item, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: item.data.title,
+        description: item.data.subtitle,
+        url: new URL(
+          getPortfolioPath(item),
+          "https://andriishupta.dev",
+        ).toString(),
+      })),
+    },
+  ],
 };
 ---
 
 <Layout
   title={title}
   description={description}
-  pathname="/portfolio"
-  image="/og-image.png"
-  imageAlt="Andrii Shupta portfolio case studies"
+  pathname={pageCopy.path}
+  image="/portfolio/og.png"
+  imageAlt={pageCopy.imageAlt}
   structuredData={structuredData}
   showThemeSwitcher={false}
 >
@@ -46,8 +55,8 @@ const structuredData = {
 
   <main class="portfolio-index">
     <header class="portfolio-index__intro content-container">
-      <h1 class="heading-display">Portfolio and Case Studies</h1>
-      <p>Case studies from product work, architecture reviews, and technical delivery.</p>
+      <h1 class="heading-display">{pageCopy.heading} by {copy.identity.fullName}</h1>
+      <p>{pageCopy.intro}</p>
     </header>
 
     <section
