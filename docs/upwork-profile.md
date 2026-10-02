@@ -42,7 +42,6 @@ ACHIEVEMENTS
 - Migrated 10+ services to TypeScript and cut response times to near zero with caching.
 - Improved delivery on a large Angular app: build time from 30 to 15 minutes, tests under 10 minutes.
 - Led teams and sub-teams, ran 35+ interviews, and mentored engineers.
-- Advised a Web3 platform on security and performance ahead of production launch.
 
 NOT A FIT IF
 
