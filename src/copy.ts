@@ -7,7 +7,7 @@ export const urls = {
   github: "https://github.com/andriishupta/",
   x: "https://x.com/andriishupta",
   upwork: "https://www.upwork.com/freelancers/andriishupta",
-  cv: "/Andrii_Shupta_Lead_Full_Stack_CV.pdf",
+  cv: "/Andrii_Shupta_CV.pdf",
   about: "/#services",
   experience: "/#experience",
   blogPath: "/blog",

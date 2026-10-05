@@ -1,6 +1,9 @@
 # Canonical home URL
 /index.html / 301
 
+# Renamed CV PDF
+/Andrii_Shupta_Lead_Full_Stack_CV.pdf /Andrii_Shupta_CV.pdf 301
+
 # Articles moved from legacy apex paths to the first-party blog
 /simplify-usage-of-lens-api-with-use-lens-and-graphql-codegen /blog/simplify-usage-of-lens-api-with-use-lens-and-graphql-codegen 301
 /simplify-usage-of-lens-api-with-use-lens-and-graphql-codegen/ /blog/simplify-usage-of-lens-api-with-use-lens-and-graphql-codegen 301
