@@ -25,6 +25,7 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+.zed/
 
 # wrangler files
 .wrangler
